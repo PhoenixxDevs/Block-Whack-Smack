@@ -6,6 +6,7 @@ let running = false;
 let blocks = [];
 let blocksNum = 6;
 let player;
+let score = 0;
 
 function init() {
   WIDTH = window.innerWidth;
@@ -92,7 +93,9 @@ class Block {
 
     // main log
     ctx.fillStyle = this.color;
+    ctx.strokeStyle = '#FF4622'
     ctx.fillRect(this.pos.x, this.pos.y * this.height, this.width, this.height);
+    ctx.strokeRect(this.pos.x, this.pos.y * this.height, this.width, this.height);
     
   }
   update() {
@@ -108,6 +111,26 @@ function removeBlock(){
   blocks.unshift(new Block(0));
 }
 
+function checkDeath(){
+  removeBlock();
+  if(player.pos === 0 && blocks[blocks.length - 1].type === 1){
+    gameOver();
+  }
+  else if(player.pos === 1 && blocks[blocks.length - 1].type === 2){
+    gameOver();
+  }
+  else {
+    score++;
+    console.log(score)
+  }
+}
+
+function gameOver(){
+  console.log('game over bitch')
+}
+
+
+//GAMELOOP
 function animate() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
   
@@ -125,12 +148,12 @@ window.addEventListener('keydown', function(e) {
   if(e.repeat){return;}
   switch(e.key){
     case 'ArrowLeft':
-      removeBlock();
       player.pos = 0;
+      checkDeath();
       break;
       case 'ArrowRight':
-      removeBlock();
       player.pos = 1;
-    break;
+      checkDeath();
+      break;
   }
 })
