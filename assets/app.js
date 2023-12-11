@@ -5,6 +5,7 @@ let WIDTH, HEIGHT, chunk;
 let running = false;
 let blocks = [];
 let blocksNum = 6;
+let player;
 
 function init() {
   WIDTH = window.innerWidth;
@@ -14,13 +15,53 @@ function init() {
   canvas.height = HEIGHT;
   
   //generate starting blocks
+  blocks = [];
   for(let i = 0; i < blocksNum; i++) {
     blocks.push(new Block(i));
-    console.log(blocks[i].type);
   }
+
+  // check where to spawn player and spawn
+  switch(blocks[blocks.length - 1].type){
+    case 1: player = new Player(1);
+    break;
+    case 2: default: player = new Player(0);
+    break;
+  }
+
+  console.log(player)
   
   if(!running) {
     animate();
+  }
+}
+
+class Player {
+  constructor(pos){
+    this.width = Math.floor(chunk * 0.5);
+    this.height = Math.floor(chunk * 0.7);
+    this.pos = pos;
+    this.pos0 = {
+      x: Math.floor(WIDTH / 2 - chunk),
+      y: Math.floor(HEIGHT - this.height)
+    };
+    this.pos1 = {
+      x: Math.floor(WIDTH / 2 + chunk * 0.5), 
+      y: Math.floor(HEIGHT - this.height)
+    };
+    this.color = '#FF44FF';
+  }
+  draw(){
+    ctx.fillStyle = this.color;
+    switch(this.pos){
+      case 0: ctx.fillRect(this.pos0.x, this.pos0.y, this.width, this.height);
+      break;
+      case 1: ctx.fillRect(this.pos1.x, this.pos1.y, this.width, this.height);
+      break;
+    }
+    
+  }
+  update(){
+    this.draw();
   }
 }
 
@@ -73,6 +114,8 @@ function animate() {
   for(let i = 0; i < blocks.length; i++) {
     blocks[i].update();
   }
+  
+  player.update();
 
   requestAnimationFrame(animate);
 }
@@ -83,9 +126,11 @@ window.addEventListener('keydown', function(e) {
   switch(e.key){
     case 'ArrowLeft':
       removeBlock();
+      player.pos = 0;
       break;
-    case 'ArrowRight':
+      case 'ArrowRight':
       removeBlock();
+      player.pos = 1;
     break;
   }
 })
