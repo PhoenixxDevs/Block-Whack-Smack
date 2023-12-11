@@ -1,5 +1,8 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
+const scoreboard = document.getElementById('score');
+const scoreboardHi = document.getElementById('hi-score');
+const gameOverScreen = document.getElementById('game-over');
 
 let WIDTH, HEIGHT, chunk;
 let running = false;
@@ -7,6 +10,7 @@ let blocks = [];
 let blocksNum = 6;
 let player;
 let score = 0;
+let hiScore = 0;
 
 function init() {
   WIDTH = window.innerWidth;
@@ -28,9 +32,13 @@ function init() {
     case 2: default: player = new Player(0);
     break;
   }
-
-  console.log(player)
   
+  score = 0;
+
+  gameOverScreen.classList.toggle('hide');
+  scoreboard.classList.toggle('hide');
+  scoreboardHi.classList.toggle('hide');
+
   if(!running) {
     animate();
   }
@@ -121,12 +129,18 @@ function checkDeath(){
   }
   else {
     score++;
-    console.log(score)
+    scoreboard.innerText = `Score: ${score}`;
+    if(score > hiScore){ 
+      hiScore = score; 
+      `Hi-Score: ${score}`;
+    }
   }
 }
 
 function gameOver(){
-  console.log('game over bitch')
+  gameOverScreen.classList.toggle('hide');
+  scoreboard.classList.toggle('hide');
+  scoreboardHi.classList.toggle('hide');
 }
 
 

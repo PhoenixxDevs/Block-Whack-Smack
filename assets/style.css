@@ -13,3 +13,23 @@ canvas {
   top: 0;
   left: 0;
 }
+
+#start-screen {
+  
+}
+
+#game-over {
+
+}
+
+#score {
+
+}
+
+#hi-score {
+
+}
+
+.hide {
+  display: none;
+}
