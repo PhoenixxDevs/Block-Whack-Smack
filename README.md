@@ -4,7 +4,7 @@
 
 ## Description
 
-A fun game where you have to avoid being smacked on the head as you whack you whack blocks out of a never ending tower.
+A fun game where you have to avoid being smacked on the head as you whack blocks out of a never ending tower.
 
 ## Future Features
 
