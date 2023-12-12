@@ -5,17 +5,44 @@
 }
 
 body {
-  background-color: black;
+  background: black;
   overflow: hidden;
 }
 
 canvas {
+  z-index: -1;
+  position: absolute;
   top: 0;
   left: 0;
 }
 
-#start-screen {
-  
+.idle {
+  position: absolute;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  color: rgb(244, 239, 209);
+  background-image: -webkit-linear-gradient(134deg, #000 40%, #407);
+  border: 1px solid #eae6e6;
+}
+
+.idle h1 {
+  font-size: 34px;
+  text-align: center;
+  margin-top: 60px;
+}
+
+.idle h3 {
+  font-size: 28px;
+  text-align: center;
+  margin-top: 60px;
+}
+
+.idle p {
+  font-size: 20px;
+  padding: 20px;
+  text-align: center;
+  margin-top: 60px;
 }
 
 #game-over {
@@ -23,11 +50,13 @@ canvas {
 }
 
 #score {
-
+  float: left;
+  color: rgb(244, 239, 209);
 }
 
 #hi-score {
-
+  float: right;
+  color: rgb(244, 239, 209);
 }
 
 .hide {
