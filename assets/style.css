@@ -23,7 +23,6 @@ canvas {
   height: 100vh;
   color: rgb(244, 239, 209);
   background-image: -webkit-linear-gradient(134deg, #000 40%, #407);
-  border: 1px solid #eae6e6;
 }
 
 .idle h1 {
@@ -46,7 +45,29 @@ canvas {
 }
 
 #game-over {
+  height: 60dvh;
+  margin: 20dvh 0;
+  background-image: -webkit-linear-gradient(134deg, #093b27 20%, rgb(59, 6, 76));
+  color: rgb(244, 239, 209);
+}
 
+#game-over h1 {
+  font-size: 34px;
+  text-align: center;
+  padding-top: 50px;
+}
+
+#game-over h3 {
+  font-size: 28px;
+  text-align: center;
+  margin-top: 60px;
+}
+
+#game-over h5 {
+  font-size: 20px;
+  padding: 10px;
+  text-align: center;
+  margin-top: 20px;
 }
 
 #score {

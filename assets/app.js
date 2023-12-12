@@ -40,10 +40,14 @@ function init() {
   }
 
   score = 0;
-
-  gameOverScreen.classList.toggle("hide");
   scoreboard.classList.toggle("hide");
   scoreboardHi.classList.toggle("hide");
+  scoreboard.innerText = `Score: ${score}`;
+  
+  if (gameOver) {
+    gameOverScreen.classList.toggle("hide");
+    gameOver = false;
+  }
 
   if (!running) {
     animate();
@@ -151,7 +155,7 @@ function checkDeath() {
     scoreboard.innerText = `Score: ${score}`;
     if (score > hiScore) {
       hiScore = score;
-      `Hi-Score: ${score}`;
+      scoreboardHi.innerText = `Hi-Score: ${hiScore}`;
     }
   }
 }
@@ -160,6 +164,7 @@ function endGame() {
   gameOverScreen.classList.toggle("hide");
   scoreboard.classList.toggle("hide");
   scoreboardHi.classList.toggle("hide");
+  gameOver = true;
 }
 
 //GAMELOOP
@@ -182,17 +187,27 @@ window.addEventListener("keydown", function (e) {
   }
   switch (e.key) {
     case "ArrowLeft":
+      if (gameOver) {
+        return;
+      }
       player.pos = 0;
       checkDeath();
       break;
     case "ArrowRight":
+      if (gameOver) {
+        return;
+      }
       player.pos = 1;
       checkDeath();
       break;
     case "Enter":
-      if(!gameStart){
+      if (!gameStart) {
         init();
-        gameStartScreen.classList.toggle('hide');
+        gameStartScreen.classList.toggle("hide");
+        gameStart = true;
+      }
+      if (gameOver) {
+        init();
       }
       break;
   }
