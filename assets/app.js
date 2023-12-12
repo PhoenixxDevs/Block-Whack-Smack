@@ -4,6 +4,8 @@ const scoreboard = document.getElementById("score");
 const scoreboardHi = document.getElementById("hi-score");
 const gameOverScreen = document.getElementById("game-over");
 const gameStartScreen = document.getElementById("start-screen");
+const endScore = document.getElementById("score-end");
+const endScoreHi = document.getElementById("score-end-hi");
 
 let WIDTH, HEIGHT, chunk;
 let gameStart = false;
@@ -165,6 +167,8 @@ function endGame() {
   scoreboard.classList.toggle("hide");
   scoreboardHi.classList.toggle("hide");
   gameOver = true;
+  endScore.innerText = `Score: ${score}`;
+  endScoreHi.innerText = `Hi-Score: ${hiScore}`;
 }
 
 //GAMELOOP

@@ -28,7 +28,7 @@ canvas {
 .idle h1 {
   font-size: 34px;
   text-align: center;
-  margin-top: 60px;
+  margin-top: 20dvh;
 }
 
 .idle h3 {
@@ -49,25 +49,26 @@ canvas {
   margin: 20dvh 0;
   background-image: -webkit-linear-gradient(134deg, #093b27 20%, rgb(59, 6, 76));
   color: rgb(244, 239, 209);
+  border: 7px solid lightblue
 }
 
 #game-over h1 {
   font-size: 34px;
   text-align: center;
-  padding-top: 50px;
+  padding-top: 60px;
 }
 
 #game-over h3 {
   font-size: 28px;
   text-align: center;
-  margin-top: 60px;
+  margin-top: 40px;
 }
 
 #game-over h5 {
   font-size: 20px;
   padding: 10px;
   text-align: center;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 #score {
@@ -82,4 +83,9 @@ canvas {
 
 .hide {
   display: none;
+}
+
+strong {
+  font-size: 28px;
+  font-weight: 800;
 }
