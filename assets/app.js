@@ -25,8 +25,10 @@ function init() {
   canvas.width = WIDTH;
   canvas.height = HEIGHT;
 
-  //generate starting blocks
   blocks = [];
+  particles = [];
+
+  //generate starting blocks
   for (let i = 0; i < blocksNum; i++) {
     blocks.push(new Block(i));
   }
@@ -46,23 +48,6 @@ function init() {
   scoreboard.classList.toggle("hide");
   scoreboardHi.classList.toggle("hide");
   scoreboard.innerText = `Score: ${score}`;
-
-
-
-
-
-
-
-  for(let k = 0; k < 40; k++){
-    particles.push(new Particle('block', blocks[blocks.length - 2]))
-  }
-  console.log(particles)
-
-
-
-
-
-
   
   if (gameOver) {
     gameOverScreen.classList.toggle("hide");
@@ -73,6 +58,8 @@ function init() {
     animate();
   }
 }
+
+////////////////////////////// CLASSES
 
 ////////////////////////// PLAYER CLASS
 
@@ -164,9 +151,10 @@ class Block {
 ////////////////////////// PARTICLE CLASS
 
 class Particle {
-  constructor(type, blockDescriptor) {
+  constructor(type, blockDescriptor, direction) {
     this.type = type;
     this.blockDescriptor = blockDescriptor;
+    this.direction = direction;
     this.size;
     this.pos;
     this.vel;
@@ -183,12 +171,20 @@ class Particle {
     this.size = Math.floor(Math.random() * 3) + 2;
     this.pos = {
       x: Math.floor(Math.random() * this.blockDescriptor.width) + this.blockDescriptor.pos.x,
-      y: Math.floor(Math.random() * this.blockDescriptor.height) + this.blockDescriptor.pos.y
+      y: Math.floor(Math.random() * this.blockDescriptor.height) + this.blockDescriptor.pos.y * this.blockDescriptor.height
     };
     this.vel = {
-      x: Math.random() * 6 - 3,
+      x: Math.random() * 5 + 3,
       y: -Math.random() * 4
     };
+    if(this.direction === 'left'){
+      this.vel.x *= -1;
+      this.pos.x -= this.blockDescriptor.width / 2;
+    }
+    if(this.direction === 'left'){
+      this.pos.x += this.blockDescriptor.width / 2;
+    }
+      
     this.grav = true;
     this.gravity = 0.1;
     this.color = 'pink';
@@ -215,6 +211,14 @@ class Particle {
   }
 }
 
+function createParticles(type, amount, blockDescriptor, direction){
+  for(let i = 0; i < amount; i++){
+    type === 'block' ?
+    particles.push(new Particle(type, blockDescriptor, direction)) : 
+    particles.push(new Particle(type));
+  }
+}
+
 function removeBlock() {
   blocks.pop();
   for (let i = 0; i < blocks.length; i++) {
@@ -224,18 +228,27 @@ function removeBlock() {
 }
 
 function checkDeath() {
+  console.log(blocks[0])
   removeBlock();
-  if (player.pos === 0 && blocks[blocks.length - 1].type === 1) {
+  if (player.pos === 0){
+    createParticles('block', Math.floor(Math.random() * 5) + 5, blocks[blocks.length - 1], 'right');
+
+    if (blocks[blocks.length - 1].type === 1) {
+      endGame();
+    }
+  } else if (player.pos === 1) {
+    createParticles('block', Math.floor(Math.random() * 5) + 5, blocks[blocks.length - 1], 'left');
+      if (blocks[blocks.length - 1].type === 2) {
     endGame();
-  } else if (player.pos === 1 && blocks[blocks.length - 1].type === 2) {
-    endGame();
-  } else {
+      }
+    } else {
     score++;
     scoreboard.innerText = `Score: ${score}`;
     if (score > hiScore) {
       hiScore = score;
       scoreboardHi.innerText = `Hi-Score: ${hiScore}`;
     }
+    createParticles('block', Math.floor(Math.random() * 5) + 5, blocks[blocks.length - 1]);
   }
 }
 
