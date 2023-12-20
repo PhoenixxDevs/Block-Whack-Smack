@@ -7,13 +7,14 @@ const gameStartScreen = document.getElementById("start-screen");
 const endScore = document.getElementById("score-end");
 const endScoreHi = document.getElementById("score-end-hi");
 
-let WIDTH, HEIGHT, chunk;
+let WIDTH, HEIGHT
+let chunk, player;
+let blocks = [];
+let particles = [];
 let gameStart = false;
 let gameOver = false;
 let running = false;
-let blocks = [];
 let blocksNum = 6;
-let player;
 let score = 0;
 let hiScore = 0;
 
@@ -45,6 +46,23 @@ function init() {
   scoreboard.classList.toggle("hide");
   scoreboardHi.classList.toggle("hide");
   scoreboard.innerText = `Score: ${score}`;
+
+
+
+
+
+
+
+  for(let k = 0; k < 40; k++){
+    particles.push(new Particle('block', blocks[blocks.length - 2]))
+  }
+  console.log(particles)
+
+
+
+
+
+
   
   if (gameOver) {
     gameOverScreen.classList.toggle("hide");
@@ -55,6 +73,8 @@ function init() {
     animate();
   }
 }
+
+////////////////////////// PLAYER CLASS
 
 class Player {
   constructor(pos) {
@@ -87,6 +107,8 @@ class Player {
   }
 }
 
+/////////////////////////////// BLOCK CLASS
+
 class Block {
   constructor(num) {
     this.height = chunk;
@@ -95,7 +117,8 @@ class Block {
       x: WIDTH / 2 - this.width / 2,
       y: num,
     };
-    this.color = "#FFFFFF";
+    this.lightness = Math.floor(Math.random() * 100) + 155;
+    this.color = `rgb(${this.lightness}, ${this.lightness}, ${this.lightness})`;
     this.type = Math.floor(Math.random() * 3);
     this.branchOffset = chunk / 1.5;
     this.branch = this.branchOffset / 3;
@@ -134,6 +157,60 @@ class Block {
     );
   }
   update() {
+    this.draw();
+  }
+}
+
+////////////////////////// PARTICLE CLASS
+
+class Particle {
+  constructor(type, blockDescriptor) {
+    this.type = type;
+    this.blockDescriptor = blockDescriptor;
+    this.size;
+    this.pos;
+    this.vel;
+    this.grav = false;
+    this.gravity;
+    this.color;
+    switch(this.type){
+      case 'block':
+        this.typeBlock();
+      break;
+    }
+  }
+  typeBlock(){
+    this.size = Math.floor(Math.random() * 3) + 2;
+    this.pos = {
+      x: Math.floor(Math.random() * this.blockDescriptor.width) + this.blockDescriptor.pos.x,
+      y: Math.floor(Math.random() * this.blockDescriptor.height) + this.blockDescriptor.pos.y
+    };
+    this.vel = {
+      x: Math.random() * 6 - 3,
+      y: -Math.random() * 4
+    };
+    this.grav = true;
+    this.gravity = 0.1;
+    this.color = 'pink';
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.fillStyle = this.color;
+    ctx.arc(this.pos.x, this.pos.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  move(){
+    //apply gravity
+    if (this.grav){
+      this.vel.y += this.gravity;
+    }
+
+    this.pos.x += this.vel.x;
+    this.pos.y += this.vel.y;
+  }
+  update() {
+    this.move();
+
     this.draw();
   }
 }
@@ -178,6 +255,9 @@ function animate() {
   for (let i = 0; i < blocks.length; i++) {
     blocks[i].update();
   }
+  for (let j = 0; j < particles.length; j++) {
+    particles[j].update();
+  }
 
   player.update();
 
@@ -190,14 +270,14 @@ window.addEventListener("keydown", function (e) {
     return;
   }
   switch (e.key) {
-    case "ArrowLeft":
+    case "ArrowLeft": case "a": case "A":
       if (gameOver) {
         return;
       }
       player.pos = 0;
       checkDeath();
       break;
-    case "ArrowRight":
+    case "ArrowRight": case "d": case "D":
       if (gameOver) {
         return;
       }
