@@ -9,6 +9,7 @@ const endScoreHi = document.getElementById("score-end-hi");
 
 let WIDTH, HEIGHT
 let chunk, player;
+let particlesLength;
 let blocks = [];
 let particles = [];
 let gameStart = false;
@@ -56,6 +57,7 @@ function init() {
 
   if (!running) {
     animate();
+    running = true;
   }
 }
 
@@ -161,6 +163,7 @@ class Particle {
     this.grav = false;
     this.gravity;
     this.color;
+    this.remove = false;
     switch(this.type){
       case 'block':
         this.typeBlock();
@@ -174,7 +177,7 @@ class Particle {
       y: Math.floor(Math.random() * this.blockDescriptor.height) + this.blockDescriptor.pos.y * this.blockDescriptor.height
     };
     this.vel = {
-      x: Math.random() * 5 + 3,
+      x: Math.random() * 2 + 3,
       y: -Math.random() * 4
     };
     if(this.direction === 'left'){
@@ -187,7 +190,7 @@ class Particle {
       
     this.grav = true;
     this.gravity = 0.1;
-    this.color = 'pink';
+    this.color = 'cyan';
   }
   draw() {
     ctx.beginPath();
@@ -204,8 +207,21 @@ class Particle {
     this.pos.x += this.vel.x;
     this.pos.y += this.vel.y;
   }
+  removeOffscreen(){
+    if(this.pos.x < -this.size || this.pos.x > WIDTH + this.size){
+      this.remove = true;
+    }
+  }
+  bounce(){
+    if(this.pos.y > HEIGHT - this.size){
+      this.pos.y = HEIGHT - this.size;
+      this.vel.y *= -0.4;
+    }
+  }
   update() {
+    this.bounce();
     this.move();
+    this.removeOffscreen();
 
     this.draw();
   }
@@ -227,29 +243,31 @@ function removeBlock() {
   blocks.unshift(new Block(0));
 }
 
-function checkDeath() {
-  console.log(blocks[0])
-  removeBlock();
-  if (player.pos === 0){
-    createParticles('block', Math.floor(Math.random() * 5) + 5, blocks[blocks.length - 1], 'right');
-
-    if (blocks[blocks.length - 1].type === 1) {
-      endGame();
-    }
-  } else if (player.pos === 1) {
-    createParticles('block', Math.floor(Math.random() * 5) + 5, blocks[blocks.length - 1], 'left');
-      if (blocks[blocks.length - 1].type === 2) {
-    endGame();
-      }
-    } else {
-    score++;
+function handleScore(){
+  score++;
     scoreboard.innerText = `Score: ${score}`;
     if (score > hiScore) {
       hiScore = score;
       scoreboardHi.innerText = `Hi-Score: ${hiScore}`;
     }
-    createParticles('block', Math.floor(Math.random() * 5) + 5, blocks[blocks.length - 1]);
-  }
+}
+
+function checkDeath() {
+  console.log(blocks[0])
+  removeBlock();
+  if (player.pos === 0){
+    createParticles('block', Math.floor(Math.random() * 5) + 5, blocks[blocks.length - 1], 'right');
+    if (blocks[blocks.length - 1].type === 1) {
+      endGame();
+    }
+    else { handleScore(); }
+  } else if (player.pos === 1) {
+    createParticles('block', Math.floor(Math.random() * 5) + 5, blocks[blocks.length - 1], 'left');
+      if (blocks[blocks.length - 1].type === 2) {
+    endGame();
+      }
+      else { handleScore(); }
+    }
 }
 
 function endGame() {
@@ -268,7 +286,12 @@ function animate() {
   for (let i = 0; i < blocks.length; i++) {
     blocks[i].update();
   }
-  for (let j = 0; j < particles.length; j++) {
+  particlesLength = particles.length;
+  for (let j = 0; j < particlesLength; j++) {
+    if(particles[j].remove){
+      particles.splice(j, 1);
+      particlesLength = particles.length;
+    }
     particles[j].update();
   }
 
