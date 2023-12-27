@@ -96,7 +96,7 @@ strong {
   font-weight: 800;
 }
 
-@media screen and (max-width: 380px) {
+@media screen and (max-width: 620px) {
   #game-over h1 {
     font-size: 24px;
     padding-top: 30px;
