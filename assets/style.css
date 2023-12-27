@@ -7,6 +7,8 @@
 body {
   background: black;
   overflow: hidden;
+  font-family: "Rubik Doodle Shadow", "Helvetica Neue", "Helvetica";
+  word-spacing: 5px;
 }
 
 canvas {
@@ -71,14 +73,18 @@ canvas {
   margin-top: 30px;
 }
 
+.scoreboard {
+  margin: 30px;
+  font-size: 32px;
+  color: rgb(244, 239, 209);
+}
+
 #score {
   float: left;
-  color: rgb(244, 239, 209);
 }
 
 #hi-score {
   float: right;
-  color: rgb(244, 239, 209);
 }
 
 .hide {

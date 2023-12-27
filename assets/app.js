@@ -15,7 +15,7 @@ let particles = [];
 let gameStart = false;
 let gameOver = false;
 let running = false;
-let blocksNum = 6;
+let blocksNum = 5;
 let score = 0;
 let hiScore = 0;
 
@@ -162,11 +162,15 @@ class Particle {
     this.vel;
     this.grav = false;
     this.gravity;
+    this.bounceMultiplier
     this.color;
     this.remove = false;
     switch(this.type){
       case 'block':
         this.typeBlock();
+      break;
+      case 'death':
+        this.typeDeath();
       break;
     }
   }
@@ -178,7 +182,7 @@ class Particle {
     };
     this.vel = {
       x: Math.random() * 2 + 3,
-      y: -Math.random() * 4
+      y: -Math.random() * 9
     };
     if(this.direction === 'left'){
       this.vel.x *= -1;
@@ -189,8 +193,33 @@ class Particle {
     }
       
     this.grav = true;
-    this.gravity = 0.1;
-    this.color = 'cyan';
+    this.gravity = 0.2;
+    this.bounceMultiplier = -0.6;
+    this.color = `rgb(${Math.floor(Math.random() * 30) + 225}, ${Math.floor(Math.random() * 100) + 155}, ${Math.floor(Math.random() * 30) + 225})`;
+  }
+  typeDeath(){
+    let playerPos;
+    this.size = Math.floor(Math.random() * 6 + 4);
+    switch (player.pos) {
+      case 0:
+        playerPos = player.pos0;
+        break;
+      case 1:
+        playerPos = player.pos1;  
+      break;
+    }
+    this.pos = {
+      x: Math.floor(playerPos.x + (Math.random() * player.width)),
+      y: playerPos.y
+    };
+    this.vel = {
+      x: Math.random() * 4 - 2,
+      y: -Math.random() * 4 - 4
+    };
+    this.grav = true;
+    this.gravity = 0.2;
+    this.bounceMultiplier = -0.3;
+    this.color = "red";
   }
   draw() {
     ctx.beginPath();
@@ -215,7 +244,7 @@ class Particle {
   bounce(){
     if(this.pos.y > HEIGHT - this.size){
       this.pos.y = HEIGHT - this.size;
-      this.vel.y *= -0.4;
+      this.vel.y *= this.bounceMultiplier;
     }
   }
   update() {
@@ -253,18 +282,23 @@ function handleScore(){
 }
 
 function checkDeath() {
-  console.log(blocks[0])
   removeBlock();
   if (player.pos === 0){
     createParticles('block', Math.floor(Math.random() * 5) + 5, blocks[blocks.length - 1], 'right');
     if (blocks[blocks.length - 1].type === 1) {
-      endGame();
+      createParticles("death", Math.floor(Math.random() * 15 + 20));
+      console.log(particles)
+      gameOver = true;
+      setTimeout(endGame, 2000);
     }
     else { handleScore(); }
   } else if (player.pos === 1) {
     createParticles('block', Math.floor(Math.random() * 5) + 5, blocks[blocks.length - 1], 'left');
-      if (blocks[blocks.length - 1].type === 2) {
-    endGame();
+    if (blocks[blocks.length - 1].type === 2) {
+      createParticles("death", Math.floor(Math.random() * 20 + 30));
+      console.log(particles)
+        gameOver = true;
+        setTimeout(endGame, 2000);
       }
       else { handleScore(); }
     }
@@ -274,7 +308,7 @@ function endGame() {
   gameOverScreen.classList.toggle("hide");
   scoreboard.classList.toggle("hide");
   scoreboardHi.classList.toggle("hide");
-  gameOver = true;
+  // gameOver = true;
   endScore.innerText = `Score: ${score}`;
   endScoreHi.innerText = `Hi-Score: ${hiScore}`;
 }
@@ -282,20 +316,21 @@ function endGame() {
 //GAMELOOP
 function animate() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  
+  player.update();
 
   for (let i = 0; i < blocks.length; i++) {
     blocks[i].update();
   }
   particlesLength = particles.length;
   for (let j = 0; j < particlesLength; j++) {
+    particles[j].update();
     if(particles[j].remove){
       particles.splice(j, 1);
       particlesLength = particles.length;
     }
-    particles[j].update();
   }
 
-  player.update();
 
   requestAnimationFrame(animate);
 }
