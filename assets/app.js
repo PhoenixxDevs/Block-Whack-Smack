@@ -18,6 +18,7 @@ let blocks = [];
 let particles = [];
 let gameStart = false;
 let gameOver = false;
+let gamePrepped = false;
 let running = false;
 let blocksNum = 5;
 let score = 0;
@@ -290,16 +291,20 @@ function checkDeath() {
   if (player.pos === 0){
     createParticles('block', Math.floor(Math.random() * 5) + 5, blocks[blocks.length - 1], 'right');
     if (blocks[blocks.length - 1].type === 1) {
-      gameOver = true;
       createParticles("death", Math.floor(Math.random() * 15 + 20));
+      console.log(particles)
+      gameOver = true;
+      gamePrepped = false;
       setTimeout(endGame, 2000);
     }
     else { handleScore(); }
   } else if (player.pos === 1) {
     createParticles('block', Math.floor(Math.random() * 5) + 5, blocks[blocks.length - 1], 'left');
     if (blocks[blocks.length - 1].type === 2) {
-      gameOver = true;
       createParticles("death", Math.floor(Math.random() * 20 + 30));
+      console.log(particles)
+      gameOver = true;
+      gamePrepped = false;
         setTimeout(endGame, 2000);
       }
       else { handleScore(); }
@@ -312,6 +317,7 @@ function endGame() {
   scoreboardHi.classList.toggle("hide");
   endScore.innerText = `Score: ${score}`;
   endScoreHi.innerText = `Hi-Score: ${hiScore}`;
+  gamePrepped = true;
 }
 
 //GAMELOOP
@@ -331,23 +337,16 @@ function animate() {
       particlesLength = particles.length;
     }
   }
-
-
+  touch.x = null;
   requestAnimationFrame(animate);
 }
 
 window.addEventListener("touchstart", (e) => {
   touch.x = Math.floor(e.changedTouches[0].clientX);
-  if (touch.x < WIDTH / 2) {
-     if (gameOver) {
-        return;
-      } 
+  if (touch.x < WIDTH / 2 && !gameOver) {
       player.pos = 0;
       checkDeath();
-  } else if (touch.x >= WIDTH / 2) {
-     if (gameOver) {
-        return;
-      }
+  } else if (touch.x >= WIDTH / 2 && !gameOver) {
       player.pos = 1;
       checkDeath();
   }
@@ -357,7 +356,7 @@ window.addEventListener("touchstart", (e) => {
     gameStartScreen.classList.toggle("hide");
     gameStart = true;
   }
-  if (gameOver) {
+  if (gameOver && gamePrepped) {
     init();
   }
 
