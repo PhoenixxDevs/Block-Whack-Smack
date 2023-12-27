@@ -95,3 +95,45 @@ strong {
   font-size: 28px;
   font-weight: 800;
 }
+
+@media screen and (max-width: 380px) {
+  #game-over h1 {
+    font-size: 24px;
+    padding-top: 30px;
+  }
+  
+  #game-over h3 {
+    font-size: 20px;
+    margin-top: 10px;
+  }
+  
+  #game-over h5 {
+    font-size: 20px;
+    padding: 10px;
+    text-align: center;
+    margin-top: 6px;
+  }
+  .scoreboard {
+    margin: 10px;
+    font-size: 14px;
+    color: rgb(244, 239, 209);
+  }
+  .idle h1 {
+    font-size: 24px;
+    text-align: center;
+    margin-top: 10dvh;
+  }
+  
+  .idle h3 {
+    font-size: 22px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .idle p {
+    font-size: 16px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 10px;
+  }
+}

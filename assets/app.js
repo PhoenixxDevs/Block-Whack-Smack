@@ -7,6 +7,10 @@ const gameStartScreen = document.getElementById("start-screen");
 const endScore = document.getElementById("score-end");
 const endScoreHi = document.getElementById("score-end-hi");
 
+const touch = {
+  x: null
+};
+
 let WIDTH, HEIGHT
 let chunk, player;
 let particlesLength;
@@ -286,18 +290,16 @@ function checkDeath() {
   if (player.pos === 0){
     createParticles('block', Math.floor(Math.random() * 5) + 5, blocks[blocks.length - 1], 'right');
     if (blocks[blocks.length - 1].type === 1) {
-      createParticles("death", Math.floor(Math.random() * 15 + 20));
-      console.log(particles)
       gameOver = true;
+      createParticles("death", Math.floor(Math.random() * 15 + 20));
       setTimeout(endGame, 2000);
     }
     else { handleScore(); }
   } else if (player.pos === 1) {
     createParticles('block', Math.floor(Math.random() * 5) + 5, blocks[blocks.length - 1], 'left');
     if (blocks[blocks.length - 1].type === 2) {
+      gameOver = true;
       createParticles("death", Math.floor(Math.random() * 20 + 30));
-      console.log(particles)
-        gameOver = true;
         setTimeout(endGame, 2000);
       }
       else { handleScore(); }
@@ -308,7 +310,6 @@ function endGame() {
   gameOverScreen.classList.toggle("hide");
   scoreboard.classList.toggle("hide");
   scoreboardHi.classList.toggle("hide");
-  // gameOver = true;
   endScore.innerText = `Score: ${score}`;
   endScoreHi.innerText = `Hi-Score: ${hiScore}`;
 }
@@ -334,6 +335,33 @@ function animate() {
 
   requestAnimationFrame(animate);
 }
+
+window.addEventListener("touchstart", (e) => {
+  touch.x = Math.floor(e.changedTouches[0].clientX);
+  if (touch.x < WIDTH / 2) {
+     if (gameOver) {
+        return;
+      } 
+      player.pos = 0;
+      checkDeath();
+  } else if (touch.x >= WIDTH / 2) {
+     if (gameOver) {
+        return;
+      }
+      player.pos = 1;
+      checkDeath();
+  }
+  
+  if (!gameStart) {
+    init();
+    gameStartScreen.classList.toggle("hide");
+    gameStart = true;
+  }
+  if (gameOver) {
+    init();
+  }
+
+});
 
 // window.addEventListener("DOMContentLoaded", init);
 window.addEventListener("keydown", function (e) {
