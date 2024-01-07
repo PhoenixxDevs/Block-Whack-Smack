@@ -11,9 +11,19 @@ const touch = {
   x: null
 };
 
+const grdStop = [0,0.33,0.66,1];
+const grdColor = [
+  'plum', 'cornflowerblue', 'darkturquoise', 'lightblue'
+  // `rgb(${Math.floor(Math.random() * 80)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`,
+  // `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`,
+  // `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`,
+  // `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`
+];
+
 let WIDTH, HEIGHT
 let chunk, player;
 let particlesLength;
+let grd;
 let blocks = [];
 let particles = [];
 let gameStart = false;
@@ -24,6 +34,8 @@ let blocksNum = 5;
 let score = 0;
 let hiScore = 0;
 
+// Create gradient
+
 function init() {
   WIDTH = window.innerWidth;
   HEIGHT = window.innerHeight;
@@ -33,6 +45,8 @@ function init() {
 
   blocks = [];
   particles = [];
+
+  grd = ctx.createLinearGradient(0, 0, 0, HEIGHT);
 
   //generate starting blocks
   for (let i = 0; i < blocksNum; i++) {
@@ -86,6 +100,7 @@ class Player {
     this.color = "#FF44FF";
   }
   draw() {
+    grd = ctx.createLinearGradient(0, 0, 0, HEIGHT);
     ctx.fillStyle = this.color;
     switch (this.pos) {
       case 0:
@@ -111,15 +126,15 @@ class Block {
       x: WIDTH / 2 - this.width / 2,
       y: num,
     };
-    this.lightness = Math.floor(Math.random() * 100) + 155;
-    this.color = `rgb(${this.lightness}, ${this.lightness}, ${this.lightness})`;
+    this.lightness = Math.floor(Math.random() * 55) + 200;
+    this.color = `rgb(${this.lightness + this.lightness / 2}, ${this.lightness}, ${this.lightness + this.lightness / 2})`;
     this.type = Math.floor(Math.random() * 3);
     this.branchOffset = chunk / 1.5;
     this.branch = this.branchOffset / 3;
   }
   draw() {
     // branch
-    ctx.fillStyle = "#FF4635";
+    ctx.fillStyle = "indigo";
     switch (this.type) {
       case 1:
         ctx.fillRect(
@@ -320,9 +335,28 @@ function endGame() {
   gamePrepped = true;
 }
 
+function moveGradient(){
+  for(let i = 0; i < grdStop.length; i++) {
+    grdStop[i] += 0.01;
+    if(grdStop[i] > 1){
+      grdStop[i] = 0;
+    }
+  }
+}
+
 //GAMELOOP
 function animate() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+  moveGradient();
+  grd.addColorStop(grdStop[0], grdColor[0]);
+  grd.addColorStop(grdStop[1], grdColor[1]);
+  grd.addColorStop(grdStop[2], grdColor[2]);
+  grd.addColorStop(grdStop[3], grdColor[3]);
+
+// Fill with gradient
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
   
   player.update();
 
