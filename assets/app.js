@@ -102,16 +102,15 @@ class Player {
     if (this.posLegacy != this.pos) {
       this.clear();
       this.posLegacy = this.pos;
-    } else {
-      ctx.fillStyle = this.color;
-      switch (this.pos) {
-        case 0:
-          ctx.fillRect(this.pos0.x, this.pos0.y, this.width, this.height);
-          break;
-        case 1:
-          ctx.fillRect(this.pos1.x, this.pos1.y, this.width, this.height);
-          break;
-      }
+    }
+    ctx.fillStyle = this.color;
+    switch (this.pos) {
+      case 0:
+        ctx.fillRect(this.pos0.x, this.pos0.y, this.width, this.height);
+        break;
+      case 1:
+        ctx.fillRect(this.pos1.x, this.pos1.y, this.width, this.height);
+        break;
     }
   }
   clear() {
