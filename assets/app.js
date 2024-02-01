@@ -12,8 +12,25 @@ const endScore = document.getElementById("score-end");
 const endScoreHi = document.getElementById("score-end-hi");
 const html = document.querySelector("html");
 
+/////////////////////  IMAGES
 const playerSprite = new Image();
-playerSprite.src = "assets/img/players.jpg";
+const blockTexture = new Image();
+
+playerSprite.src = "assets/img/players.png";
+const playerSpriteDimensions = {
+  width: 100,
+  height: 140
+};
+const player0Sprite_states = {
+  idle0: {
+    x: 0, y: 0
+  },
+  idle1: {
+    x: 100, y: 0
+  }
+};
+
+blockTexture.src = "assets/img/metal.png";
 
 const touch = {
   x: null,
@@ -60,10 +77,10 @@ class Player {
     // ctx.fillStyle = this.color;
     switch (this.pos) {
       case 0:
-        ctx.drawImage(playerSprite, this.pos0.x, this.pos0.y, this.width, this.height);
+        ctx.drawImage(playerSprite, player0Sprite_states.idle0.x, player0Sprite_states.idle0.y, playerSpriteDimensions.width, playerSpriteDimensions.height, this.pos0.x, this.pos0.y, this.width, this.height);
         break;
         case 1:
-        ctx.drawImage(playerSprite, this.pos1.x, this.pos1.y, this.width, this.height);
+          ctx.drawImage(playerSprite, player0Sprite_states.idle1.x, player0Sprite_states.idle0.y, playerSpriteDimensions.width, playerSpriteDimensions.height, this.pos1.x, this.pos1.y, this.width, this.height);
         break;
     }
   }
@@ -163,13 +180,7 @@ class Particle {
     this.type = type;
     this.blockDescriptor = blockDescriptor;
     this.direction = direction;
-    this.size;
-    this.pos;
-    this.vel;
     this.grav = false;
-    this.gravity;
-    this.bounceMultiplier;
-    this.color;
     this.remove = false;
     switch (this.type) {
       case "block":
@@ -205,9 +216,14 @@ class Particle {
     this.grav = true;
     this.gravity = 0.2;
     this.bounceMultiplier = -0.6;
-    this.color = `rgb(${Math.floor(Math.random() * 100) + 155}, ${
-      Math.floor(Math.random() * 90) + 135
-    }, ${Math.floor(Math.random() * 30)})`;
+    this.colorPalette = [
+      "#FAE2C3",
+      "#FFF78A",
+      "#FFE382",
+      "#FFC47E",
+      "#FFBD94",
+    ];
+    this.color = this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
   }
   typeDeath() {
     let playerPos;
@@ -233,7 +249,15 @@ class Particle {
     this.gravity = 0.1;
     this.bounceMultiplier = -0.3
     ;
-    this.color = "red";
+    this.colorPalette = [
+      "#842727",
+      "#740707",
+      "#560e07",
+      "#490805",
+      "#400303",
+      "#a40707"
+    ];
+    this.color = this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
   }
   draw() {
     ctx2.beginPath();
