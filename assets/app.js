@@ -286,7 +286,7 @@ class Particle {
   draw() {
     ctx.beginPath();
     ctx.fillStyle = this.color;
-    ctx.arc(this.pos.x, this.pos.y, this.size, 0, Math.PI * 2);
+    ctx.arc(this.pos.x, this.pos.y, this.size, 0, Math.PI * 2, false);
     ctx.fill();
   }
   move() {
@@ -303,6 +303,14 @@ class Particle {
       this.remove = true;
     }
   }
+  clear() {
+    ctx.save(); // Save the current state of the canvas context
+    ctx.beginPath();
+    ctx.arc(this.pos.x, this.pos.y, this.size, 0, Math.PI * 2, true);
+    ctx.clip();
+    ctx.clearRect(0, 0, WIDTH, HEIGHT); // Clear the entire canvas within the clipping path
+    ctx.restore(); // Restore the previous state of the canvas context
+  }
   bounce() {
     if (this.pos.y > HEIGHT - this.size) {
       this.pos.y = HEIGHT - this.size;
@@ -310,6 +318,8 @@ class Particle {
     }
   }
   update() {
+    this.clear();
+
     this.bounce();
     this.move();
     this.removeOffscreen();
@@ -324,6 +334,7 @@ function createParticles(type, amount, blockDescriptor, direction) {
       ? particles.push(new Particle(type, blockDescriptor, direction))
       : particles.push(new Particle(type));
   }
+  console.log(particles)
 }
 
 function removeBlock() {
@@ -334,6 +345,7 @@ function removeBlock() {
     b.clear();
     b.pos.y++;
   }
+  player.update();
   blocks.unshift(new Block(0));
 }
 
