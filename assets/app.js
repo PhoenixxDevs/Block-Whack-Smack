@@ -28,11 +28,27 @@ const playerSpriteDimensions = {
 const player0Sprite_states = {
   idle0: {
     x: 0,
-    y: 0,
+    y: 0
   },
   idle1: {
     x: 100,
-    y: 0,
+    y: 0
+  },
+  attack0: {
+    x: 200,
+    y: 0
+  },
+  attack1: {
+    x: 300,
+    y: 0
+  },
+  death0: {
+    x: 400,
+    y: 0
+  },
+  death1: {
+    x: 500,
+    y: 0
   },
 };
 
@@ -168,6 +184,8 @@ let gamePrepped = false;
 let running = false;
 let blocksNum = 5;
 let score = 0;
+let delta = 0;
+let lastFrame = 0;
 
 /////////////////////////////// CLASSES
 
@@ -274,13 +292,6 @@ class Block {
           this.branchWidth,
           this.branchHeight
         );
-        console.log(this.branch);
-        // ctx.strokeRect(
-        //   this.pos.x - this.branchWidth,
-        //   this.pos.y * this.height + this.branchHeight,
-        //   this.branchWidth,
-        //   this.branchHeight
-        // );
         break;
       case 2:
         ctx.drawImage(
@@ -300,11 +311,13 @@ class Block {
     }
     // Main Trunk
     ctx.drawImage(
+      //texture placement
       blockTexture,
       this.blockTexture.x,
       this.blockTexture.y,
       this.blockTexture.width,
       this.blockTexture.height,
+      //where to draw
       this.pos.x,
       this.pos.y * this.height,
       this.width,
@@ -616,7 +629,11 @@ function start() {
 
 ///////////////////////////// GAMELOOP
 
-function animate() {
+function animate(timestamp) {
+  if(!timestamp) {timestamp = 0;}
+  delta = timestamp - lastFrame;
+  lastFrame = timestamp;
+  console.log(delta);
   particlesLength = particles.length;
   for (let j = 0; j < particlesLength; j++) {
     particles[j].update();
