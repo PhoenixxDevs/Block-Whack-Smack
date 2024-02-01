@@ -1,38 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Woodchop</title>
-  <link rel="stylesheet" href="assets/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik+Doodle+Shadow&display=swap" rel="stylesheet">
-  <script src="assets/app.js" defer></script>
-</head>
-<body>
-  <h3 id="score" class="hide scoreboard"></h3>
-  <h4 id="hi-score" class="hide scoreboard"></h4>
-  <div id="start-screen" class="idle">
-    <h1>Block Whack Smack</h1>
-    <h3>How to play</h3>
-    <p>Use the <strong>Left</strong> and <strong>Right</strong> arrow keys or <strong>Tap</strong> on the Left and Right sides of the screen to whack the blocks. Pressing Left will move your player to the left and vice versa. <br>
-    Be careful as you whack those pesky blocks though or you'll get smacked on the head! <br>
-    How many blocks can you whack before smack? <br>
-    </p>
-  <h3> Press ENTER or tap screen to Start </h3>
-  </div>
-  <div id="game-over" class="hide">
-    <div class="game-over-container">
-    <h1>GAME OVER</h1>
-    <h5><em>you got <strong>smacked</strong></em></h5>
-    <h3 id="score-end"></h3>
-    <h3 id="score-end-hi"></h3>
-    <h5>Press <strong>ENTER</strong> or tap screen to try again</h5>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Woodchop</title>
+    <link rel="stylesheet" href="assets/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik+Doodle+Shadow&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="load">
+      <div class="loader">
+      </div>
     </div>
-  </div>
-  <canvas id="canvas3" style="z-index: -7;"></canvas>
-  <canvas id="canvas"></canvas>
-  <canvas id="canvas2"></canvas>
-</body>
+    <h3 id="score" class="hide scoreboard"></h3>
+    <h4 id="hi-score" class="hide scoreboard"></h4>
+    <div id="start-screen" class="idle">
+      <h1>Block Whack Smack</h1>
+      <h3>How to play</h3>
+      <p>
+        Use the <strong>Left</strong> and <strong>Right</strong> arrow keys or
+        <strong>Tap</strong> on the Left and Right sides of the screen to whack
+        the blocks. Pressing Left will move your player to the left and vice
+        versa. <br />
+        Be careful as you whack those pesky blocks though or you'll get smacked
+        on the head! <br />
+        How many blocks can you whack before smack? <br />
+      </p>
+      <h3>Press ENTER or tap screen to Start</h3>
+    </div>
+    <div id="game-over" class="hide">
+      <div class="game-over-container">
+        <h1>GAME OVER</h1>
+        <h5>
+          <em>you got <strong>smacked</strong></em>
+        </h5>
+        <h3 id="score-end"></h3>
+        <h3 id="score-end-hi"></h3>
+        <h5>Press <strong>ENTER</strong> or tap screen to try again</h5>
+      </div>
+    </div>
+    <canvas id="canvas3" style="z-index: -7"></canvas>
+    <canvas id="canvas"></canvas>
+    <canvas id="canvas2"></canvas>
+    <script src="assets/app.js" defer></script>
+  </body>
 </html>
