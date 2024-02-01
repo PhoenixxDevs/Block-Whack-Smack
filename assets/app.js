@@ -64,9 +64,12 @@ function init() {
 
   if (!running) {
     animate();
-    player.draw();
     running = true;
   }
+  for (let i = 0; i < blocksNum; i++) {
+    blocks[i].update();
+  }
+  player.update();
 }
 function start() {
   if (!gameStart) {
@@ -135,7 +138,7 @@ class Block {
     this.height = chunk;
     this.width = Math.floor(this.height / 1.2);
     this.pos = {
-      x: WIDTH / 2 - this.width / 2,
+      x: Math.floor(WIDTH / 2 - this.width / 2),
       y: num,
     };
     this.lightness = Math.floor(Math.random() * 55) + 200;
@@ -143,8 +146,8 @@ class Block {
       this.lightness
     }, ${this.lightness + this.lightness / 2})`;
     this.type = Math.floor(Math.random() * 3);
-    this.branchOffset = chunk / 1.5;
-    this.branch = this.branchOffset / 3;
+    this.branchOffset = Math.floor(chunk / 1.5);
+    this.branch = Math.floor(this.branchOffset / 3);
   }
   draw() {
     // branch
@@ -178,6 +181,25 @@ class Block {
       this.width,
       this.height
     );
+  }
+  clear() {
+    //Clear Branches
+    if (this.type === 1) {
+      ctx.clearRect(
+        this.pos.x - this.branchOffset,
+        this.pos.y * this.height + this.branch,
+        this.branchOffset,
+        this.branch
+      );
+    } else if (this.type == 2) {
+      ctx.clearRect(
+        this.pos.x + this.width,
+        this.pos.y * this.height + this.branch,
+        this.branchOffset,
+        this.branch
+      );
+    }
+    else return
   }
   update() {
     this.draw();
@@ -305,9 +327,12 @@ function createParticles(type, amount, blockDescriptor, direction) {
 }
 
 function removeBlock() {
+  blocks[blocksNum - 1].clear();
   blocks.pop();
   for (let i = 0; i < blocks.length; i++) {
-    blocks[i].pos.y++;
+    let b = blocks[i];
+    b.clear();
+    b.pos.y++;
   }
   blocks.unshift(new Block(0));
 }
@@ -370,10 +395,6 @@ function endGame() {
 //GAMELOOP
 function animate() {
   // ctx.clearRect(0, 0, WIDTH, HEIGHT);
-
-  for (let i = 0; i < blocksNum; i++) {
-    blocks[i].update();
-  }
   particlesLength = particles.length;
   for (let j = 0; j < particlesLength; j++) {
     particles[j].update();
@@ -392,6 +413,10 @@ function playerMove(state) {
   !state ? (player.pos = 0) : (player.pos = 1);
   player.update();
   checkDeath();
+  for (let i = 0; i < blocksNum; i++) {
+    blocks[i].update();
+  }
+  console.log(blocks);
 }
 
 // window.addEventListener("DOMContentLoaded", init);

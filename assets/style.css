@@ -28,8 +28,7 @@ canvas {
   width: 100vw;
   height: 100vh;
   color: rgb(244, 239, 209);
-  background: black;
-  /* background-image: -webkit-linear-gradient(134deg, #000 40%, #407); */
+  background-image: -webkit-linear-gradient(134deg, #000 40%, #407);
 }
 
 .idle h1 {
