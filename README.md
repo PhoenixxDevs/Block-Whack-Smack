@@ -11,3 +11,8 @@ A fun game where you have to avoid being smacked on the head as you whack blocks
 - Different Modes (Timed, Life Bar and Arcade)
 - Sounds
 - Particles and Effects
+
+#Resources
+
+https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
+https://developer.mozilla.org/en-US/docs/Web/API/Storage

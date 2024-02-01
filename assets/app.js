@@ -17,7 +17,7 @@ const touch = {
 let WIDTH, HEIGHT;
 let chunk, player;
 let particlesLength;
-let grd;
+let grd, hiScore;
 let blocks = [];
 let particles = [];
 let gameStart = false;
@@ -26,7 +26,16 @@ let gamePrepped = false;
 let running = false;
 let blocksNum = 5;
 let score = 0;
-let hiScore = 0;
+
+function handleStorage(isGet) {
+  if (!localStorage) {
+    localStorage.setItem("hi-score", hiScore);
+  }
+  if (isGet) {
+    result = localStorage.getItem("hi-score");
+    return result;
+  } else localStorage.setItem("hi-score", hiScore);
+}
 
 function init() {
   WIDTH = html.clientWidth;
@@ -57,8 +66,10 @@ function init() {
   }
 
   score = 0;
+  localStorage ? (hiScore = handleStorage(1)) : (hiScore = 0);
   scoreboard.classList.toggle("hide");
   scoreboardHi.classList.toggle("hide");
+  scoreboardHi.innerText = `Hi-Score: ${hiScore}`;
   scoreboard.innerText = `Score: ${score}`;
 
   if (gameOver) {
@@ -202,8 +213,7 @@ class Block {
         this.branchOffset,
         this.branch
       );
-    }
-    else return
+    } else return;
   }
   update() {
     this.draw();
@@ -338,7 +348,6 @@ function createParticles(type, amount, blockDescriptor, direction) {
       ? particles.push(new Particle(type, blockDescriptor, direction))
       : particles.push(new Particle(type));
   }
-  console.log(particles)
 }
 
 function removeBlock() {
@@ -373,7 +382,6 @@ function checkDeath() {
     );
     if (blocks[blocks.length - 1].type === 1) {
       createParticles("death", Math.floor(Math.random() * 15 + 20));
-      console.log(particles);
       gameOver = true;
       gamePrepped = false;
       setTimeout(endGame, 2000);
@@ -389,7 +397,6 @@ function checkDeath() {
     );
     if (blocks[blocks.length - 1].type === 2) {
       createParticles("death", Math.floor(Math.random() * 20 + 30));
-      console.log(particles);
       gameOver = true;
       gamePrepped = false;
       setTimeout(endGame, 2000);
@@ -406,6 +413,7 @@ function endGame() {
   endScore.innerText = `Score: ${score}`;
   endScoreHi.innerText = `Hi-Score: ${hiScore}`;
   gamePrepped = true;
+  handleStorage(0);
 }
 
 //GAMELOOP
@@ -432,7 +440,6 @@ function playerMove(state) {
   for (let i = 0; i < blocksNum; i++) {
     blocks[i].update();
   }
-  console.log(blocks);
 }
 
 // window.addEventListener("DOMContentLoaded", init);
