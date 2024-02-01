@@ -309,6 +309,11 @@ class Block {
       ];
     this.branchWidth = Math.floor(chunk / 1.3);
     this.branchHeight = Math.floor(this.branchWidth / 3);
+    if(WIDTH < 460){ 
+      this.width * 0.8;
+      this.branchWidth * 0.8;
+      this.branchHeight * 0.8;
+    }
     this.blockTexture =
       blockTextures[Math.floor(Math.random() * blockTextures.length)];
   }
@@ -730,7 +735,6 @@ function animate(timestamp) {
     }
     else {
       player.stateCounter += delta;
-      console.log(player.stateCounter)
     }
   }
 
@@ -767,6 +771,7 @@ function playerMove(state) {
 }
 
 // window.addEventListener("DOMContentLoaded", init);
+window.addEventListener('resize', init);
 window.addEventListener("keydown", function (e) {
   if (e.repeat) {
     return;

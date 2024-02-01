@@ -6,7 +6,7 @@
 
 body {
   background: black;
-  overflow: hidden;
+  overflow: hidden !important;
   font-family: "Rubik Doodle Shadow", "Helvetica Neue", "Helvetica";
   word-spacing: 5px;
 }
@@ -19,7 +19,8 @@ canvas {
 }
 
 #canvas3 {
-  top: -30px;
+  width: 100vw;
+  height: 100dvh;
   background-image: url(/assets/img/nebula01.png);
   animation: moveBackground 25s ease-in-out infinite alternate-reverse;
 }
@@ -122,7 +123,7 @@ strong {
   }
   .scoreboard {
     margin: 10px;
-    font-size: 14px;
+    font-size: 20px;
     color: rgb(244, 239, 209);
   }
   .idle h1 {
@@ -155,27 +156,18 @@ strong {
 
 @keyframes moveBackground {
   0% {
-    top: -30px;
-    left: -10px;
-    transform: translateZ(0);
+    background-position: -30px -10px;
   }
   30% {
-    top: -20px;
-    left: 10px;
-    transform: rotateX(4deg);
+    background-position: -20px  10px;
   }
   50% {
-    top: 0;
-    left: 10px;
+    background-position: 0 10px;
   }
   80% {
-    top: -10px;
-    left: -10px;
-    transform: translateZ(-3%);
+    background-position: -10px -10px;
   }
   100% {
-    top: -30px;
-    left: -10px;
-    transform: rotateX(0);
+    background-position: -30px -10px;
   }
 }
