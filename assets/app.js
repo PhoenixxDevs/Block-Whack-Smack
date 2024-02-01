@@ -12,10 +12,8 @@ const endScore = document.getElementById("score-end");
 const endScoreHi = document.getElementById("score-end-hi");
 const html = document.querySelector("html");
 
-const nebula1 = new Image();
-nebula1.src = "assets/img/nebula01.png";
-const nebula2 = new Image();
-nebula2.src = "assets/img/nebula02.png";
+const playerSprite = new Image();
+playerSprite.src = "assets/img/players.jpg";
 
 const touch = {
   x: null,
@@ -34,78 +32,7 @@ let running = false;
 let blocksNum = 5;
 let score = 0;
 
-function handleStorage(isGet) {
-  if (!localStorage) {
-    localStorage.setItem("hi-score", hiScore);
-  }
-  if (isGet) {
-    result = localStorage.getItem("hi-score");
-    return result;
-  } else localStorage.setItem("hi-score", hiScore);
-}
-
-function init() {
-  WIDTH = html.clientWidth;
-  HEIGHT = html.clientHeight;
-  canvas.width = WIDTH;
-  canvas.height = HEIGHT;
-  canvas2.width = WIDTH;
-  canvas2.height = HEIGHT;
-  canvas3.width = WIDTH;
-  canvas3.height = HEIGHT;
-  chunk = HEIGHT / blocksNum;
-
-  blocks = [];
-  particles = [];
-
-  //generate starting blocks
-  for (let i = 0; i < blocksNum; i++) {
-    blocks.push(new Block(i));
-  }
-
-  // check where to spawn player and spawn
-  switch (blocks[blocks.length - 1].type) {
-    case 1:
-      player = new Player(1);
-      break;
-    case 2:
-    default:
-      player = new Player(0);
-      break;
-  }
-
-  score = 0;
-  localStorage ? (hiScore = handleStorage(1)) : (hiScore = 0);
-  scoreboard.classList.toggle("hide");
-  scoreboardHi.classList.toggle("hide");
-  scoreboardHi.innerText = `Hi-Score: ${hiScore}`;
-  scoreboard.innerText = `Score: ${score}`;
-
-  if (gameOver) {
-    gameOverScreen.classList.toggle("hide");
-    gameOver = false;
-  }
-
-  if (!running) {
-    animate();
-    running = true;
-  }
-  for (let i = 0; i < blocksNum; i++) {
-    blocks[i].update();
-  }
-  player.update();
-}
-function start() {
-  if (!gameStart) {
-    init();
-    gameStartScreen.classList.toggle("hide");
-    gameStart = true;
-  }
-  if (gameOver && gamePrepped) {
-    init();
-  }
-}
-////////////////////////////// CLASSES
+/////////////////////////////// CLASSES
 
 ////////////////////////// PLAYER CLASS
 
@@ -130,13 +57,13 @@ class Player {
       this.clear();
       this.posLegacy = this.pos;
     }
-    ctx.fillStyle = this.color;
+    // ctx.fillStyle = this.color;
     switch (this.pos) {
       case 0:
-        ctx.fillRect(this.pos0.x, this.pos0.y, this.width, this.height);
+        ctx.drawImage(playerSprite, this.pos0.x, this.pos0.y, this.width, this.height);
         break;
-      case 1:
-        ctx.fillRect(this.pos1.x, this.pos1.y, this.width, this.height);
+        case 1:
+        ctx.drawImage(playerSprite, this.pos1.x, this.pos1.y, this.width, this.height);
         break;
     }
   }
@@ -155,7 +82,7 @@ class Player {
   }
 }
 
-/////////////////////////////// BLOCK CLASS
+/////////////////////////// BLOCK CLASS
 
 class Block {
   constructor(num) {
@@ -229,7 +156,7 @@ class Block {
   }
 }
 
-////////////////////////// PARTICLE CLASS
+//////////////////////// PARTICLE CLASS
 
 class Particle {
   constructor(type, blockDescriptor, direction) {
@@ -329,7 +256,7 @@ class Particle {
     }
   }
   clear() {
-    if (this.type === "block" || this.vel.y < -1.5 && this.pos.y < HEIGHT - this.size * 8) {
+    if (this.type === "block" || this.vel.y < -1 && this.pos.y < HEIGHT - this.size * 8) {
       ctx2.save(); // Save the current state of the canvas context
       ctx2.beginPath();
       ctx2.arc(this.pos.x, this.pos.y, this.size + 0.6, 0, Math.PI * 2, true);
@@ -354,6 +281,8 @@ class Particle {
     this.draw();
   }
 }
+
+///////////////////// UTILITY FUNCTIONS
 
 function createParticles(type, amount, blockDescriptor, direction) {
   for (let i = 0; i < amount; i++) {
@@ -429,15 +358,83 @@ function endGame() {
   handleStorage(0);
 }
 
-//GAMELOOP
-let counter = 0.1;
-let offsetY = 0;
-counter += 0.00000001;
+function handleStorage(isGet) {
+  if (!localStorage) {
+    localStorage.setItem("hi-score", hiScore);
+  }
+  if (isGet) {
+    result = localStorage.getItem("hi-score");
+    return result;
+  } else localStorage.setItem("hi-score", hiScore);
+}
+
+/////////////////////////////// SET UP
+
+function init() {
+  WIDTH = html.clientWidth;
+  HEIGHT = html.clientHeight;
+  canvas.width = WIDTH;
+  canvas.height = HEIGHT;
+  canvas2.width = WIDTH;
+  canvas2.height = HEIGHT;
+  canvas3.width = WIDTH + 60;
+  canvas3.height = HEIGHT + 60;
+  chunk = HEIGHT / blocksNum;
+
+  blocks = [];
+  particles = [];
+
+  //generate starting blocks
+  for (let i = 0; i < blocksNum; i++) {
+    blocks.push(new Block(i));
+  }
+
+  // check where to spawn player and spawn
+  switch (blocks[blocks.length - 1].type) {
+    case 1:
+      player = new Player(1);
+      break;
+    case 2:
+    default:
+      player = new Player(0);
+      break;
+  }
+
+  score = 0;
+  localStorage ? (hiScore = handleStorage(1)) : (hiScore = 0);
+  scoreboard.classList.toggle("hide");
+  scoreboardHi.classList.toggle("hide");
+  scoreboardHi.innerText = `Hi-Score: ${hiScore}`;
+  scoreboard.innerText = `Score: ${score}`;
+
+  if (gameOver) {
+    gameOverScreen.classList.toggle("hide");
+    gameOver = false;
+  }
+
+  if (!running) {
+    animate();
+    running = true;
+  }
+  for (let i = 0; i < blocksNum; i++) {
+    blocks[i].update();
+  }
+  player.update();
+}
+function start() {
+  if (!gameStart) {
+    init();
+    gameStartScreen.classList.toggle("hide");
+    gameStart = true;
+  }
+  if (gameOver && gamePrepped) {
+    init();
+  }
+}
+
+///////////////////////////// GAMELOOP
+
 function animate() {
-  if(offsetY < -30 || offsetY > 0.2){counter *= -1;}
-  offsetY += counter;
-  ctx3.drawImage(nebula1, 0, offsetY, 1024, 1024);
-  ctx3.drawImage(nebula1, 1024, offsetY, 1024, 1024);
   particlesLength = particles.length;
   for (let j = 0; j < particlesLength; j++) {
     particles[j].update();
@@ -450,7 +447,7 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-//INPUT AND HANDLERS
+/////////////////// INPUT AND HANDLERS
 
 function playerMove(state) {
   !state ? (player.pos = 0) : (player.pos = 1);

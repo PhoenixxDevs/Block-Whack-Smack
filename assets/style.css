@@ -18,6 +18,12 @@ canvas {
   left: 0;
 }
 
+#canvas3 {
+  top: -30px;
+  background-image: url(/assets/img/nebula01.png);
+  animation: moveBackground 30s ease-in-out 60s infinite alternate-reverse;
+}
+
 .hide {
   display: none;
 }
@@ -144,5 +150,28 @@ strong {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
+  }
+}
+
+@keyframes moveBackground {
+  0% {
+    top: -30px;
+    left: -10px;
+  }
+  30% {
+    top: -20px;
+    left: 10px;
+  }
+  50% {
+    top: 0;
+    left: 10px;
+  }
+  80% {
+    top: -10px;
+    left: -10px;
+  }
+  100% {
+    top: -30px;
+    left: -10px;
   }
 }
