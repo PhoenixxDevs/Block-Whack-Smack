@@ -1,5 +1,8 @@
+// canvas for the block tree and player
 const canvas = document.getElementById("canvas");
+// canvas for particles
 const canvas2 = document.getElementById("canvas2");
+// canvas for extras and special effects
 const canvas3 = document.getElementById("canvas3");
 const ctx = canvas.getContext("2d");
 const ctx2 = canvas2.getContext("2d");
@@ -15,6 +18,7 @@ const html = document.querySelector("html");
 /////////////////////  IMAGES
 const playerSprite = new Image();
 const blockTexture = new Image();
+const branchTexture = new Image();
 
 playerSprite.src = "assets/img/players.png";
 const playerSpriteDimensions = {
@@ -31,6 +35,47 @@ const player0Sprite_states = {
 };
 
 blockTexture.src = "assets/img/metal.png";
+const blockTextures = [
+  {
+    x: 0, y: 0, width: 150, height: 225
+  },
+  {
+    x: 150, y: 0, width: 150, height: 225
+  },
+  {
+    x: 300, y: 0, width: 150, height: 225
+  },
+  {
+    x: 450, y: 0, width: 150, height: 225
+  },
+  {
+    x: 600, y: 0, width: 150, height: 225
+  },
+  {
+    x: 750, y: 0, width: 150, height: 225
+  },
+  {
+    x: 900, y: 0, width: 150, height: 225
+  },
+  {
+    x: 1050, y: 0, width: 150, height: 225
+  },
+];
+
+branchTexture.src = "assets/img/branch.png";
+branchTextureDimensions = {
+  width: 300, height: 76
+};
+
+function createBranch(branchLength){
+  let result = { 
+  x: Math.floor(Math.random() * 10) * branchLength,
+  y: 0,
+  width: 225,
+  height: 76
+  }
+  return result;
+}
 
 const touch = {
   x: null,
@@ -109,62 +154,59 @@ class Block {
       x: Math.floor(WIDTH / 2 - this.width / 2),
       y: num,
     };
-    this.lightness = Math.floor(Math.random() * 55) + 200;
-    this.color = `rgb(${this.lightness + this.lightness / 2}, ${
-      this.lightness
-    }, ${this.lightness + this.lightness / 2})`;
     this.type = Math.floor(Math.random() * 3);
-    this.branchOffset = Math.floor(chunk / 1.5);
-    this.branch = Math.floor(this.branchOffset / 3);
+    this.branch = createBranch(3);
+    this.branchOffsetX = Math.floor(chunk / 1.5);
+    this.branchOffsetY = Math.floor(this.branchOffsetX / 3);
+    this.blockTexture = blockTextures[Math.floor(Math.random() * blockTextures.length)];
   }
   draw() {
     // branch
     ctx.fillStyle = "indigo";
     switch (this.type) {
       case 1:
-        ctx.fillRect(
+        ctx.drawImage(
+          branchTexture, this.branch.x, this.branch.y, this.branch.width, this.branch.y,
           this.pos.x - this.branchOffset,
-          this.pos.y * this.height + this.branch,
-          this.branchOffset,
-          this.branch
+          this.pos.y * this.height + this.branchOffsetY,
+          this.branchOffsetX,
+          this.branchOffsetY
         );
+        // ctx.fillRect(
+        //   this.pos.x - this.branchOffset,
+        //   this.pos.y * this.height + this.branchOffsetY,
+        //   this.branchOffsetX,
+        //   this.branchOffsetY
+        // );
         break;
       case 2:
-        ctx.fillRect(
+        ctx.drawImage(
+          branchTexture, this.branch.x, this.branch.y, this.branch.width, this.branch.y,
           this.pos.x + this.width,
-          this.pos.y * this.height + this.branch,
-          this.branchOffset,
-          this.branch
+          this.pos.y * this.height + this.branchOffsetY,
+          this.branchOffsetX,
+          this.branchOffsetY
         );
         break;
     }
-
-    // main log
-    ctx.fillStyle = this.color;
-    ctx.strokeStyle = "#FF4622";
-    ctx.fillRect(this.pos.x, this.pos.y * this.height, this.width, this.height);
-    ctx.strokeRect(
-      this.pos.x,
-      this.pos.y * this.height,
-      this.width,
-      this.height
-    );
+    // Main Trunk
+    ctx.drawImage(blockTexture, this.blockTexture.x, this.blockTexture.y, this.blockTexture.width, this.blockTexture.height ,this.pos.x, this.pos.y * this.height, this.width, this.height);
   }
   clear() {
     //Clear Branches
     if (this.type === 1) {
       ctx.clearRect(
         this.pos.x - this.branchOffset,
-        this.pos.y * this.height + this.branch,
-        this.branchOffset,
-        this.branch
+        this.pos.y * this.height + this.branchOffsetY,
+        this.branchOffsetX,
+        this.branchOffsetY
       );
     } else if (this.type == 2) {
       ctx.clearRect(
         this.pos.x + this.width,
         this.pos.y * this.height + this.branch,
-        this.branchOffset,
-        this.branch
+        this.branchOffsetX,
+        this.branchOffsetY
       );
     } else return;
   }
