@@ -1,7 +1,9 @@
 const canvas = document.getElementById("canvas");
 const canvas2 = document.getElementById("canvas2");
+const canvas3 = document.getElementById("canvas3");
 const ctx = canvas.getContext("2d");
 const ctx2 = canvas2.getContext("2d");
+const ctx3 = canvas3.getContext("2d");
 const scoreboard = document.getElementById("score");
 const scoreboardHi = document.getElementById("hi-score");
 const gameOverScreen = document.getElementById("game-over");
@@ -9,6 +11,11 @@ const gameStartScreen = document.getElementById("start-screen");
 const endScore = document.getElementById("score-end");
 const endScoreHi = document.getElementById("score-end-hi");
 const html = document.querySelector("html");
+
+const nebula1 = new Image();
+nebula1.src = "assets/img/nebula01.png";
+const nebula2 = new Image();
+nebula2.src = "assets/img/nebula02.png";
 
 const touch = {
   x: null,
@@ -44,6 +51,8 @@ function init() {
   canvas.height = HEIGHT;
   canvas2.width = WIDTH;
   canvas2.height = HEIGHT;
+  canvas3.width = WIDTH;
+  canvas3.height = HEIGHT;
   chunk = HEIGHT / blocksNum;
 
   blocks = [];
@@ -269,13 +278,13 @@ class Particle {
     this.grav = true;
     this.gravity = 0.2;
     this.bounceMultiplier = -0.6;
-    this.color = `rgb(${Math.floor(Math.random() * 30) + 225}, ${
-      Math.floor(Math.random() * 100) + 155
-    }, ${Math.floor(Math.random() * 30) + 225})`;
+    this.color = `rgb(${Math.floor(Math.random() * 100) + 155}, ${
+      Math.floor(Math.random() * 90) + 135
+    }, ${Math.floor(Math.random() * 30)})`;
   }
   typeDeath() {
     let playerPos;
-    this.size = Math.floor(Math.random() * 6 + 4);
+    this.size = Math.floor(Math.random() * 10 + 5);
     switch (player.pos) {
       case 0:
         playerPos = player.pos0;
@@ -289,12 +298,14 @@ class Particle {
       y: playerPos.y,
     };
     this.vel = {
-      x: Math.random() * 4 - 2,
-      y: -Math.random() * 4 - 4,
+      x: Math.random() * 4 - 2
+      ,
+      y: -Math.random() * 3 - 2,
     };
     this.grav = true;
-    this.gravity = 0.2;
-    this.bounceMultiplier = -0.3;
+    this.gravity = 0.1;
+    this.bounceMultiplier = -0.3
+    ;
     this.color = "red";
   }
   draw() {
@@ -318,12 +329,14 @@ class Particle {
     }
   }
   clear() {
-    ctx2.save(); // Save the current state of the canvas context
-    ctx2.beginPath();
-    ctx2.arc(this.pos.x, this.pos.y, this.size + 0.6, 0, Math.PI * 2, true);
-    ctx2.clip();
-    ctx2.clearRect(0, 0, WIDTH, HEIGHT); // Clear the entire canvas within the clipping path
-    ctx2.restore(); // Restore the previous state of the canvas context
+    if (this.type === "block" || this.vel.y < -1.5 && this.pos.y < HEIGHT - this.size * 8) {
+      ctx2.save(); // Save the current state of the canvas context
+      ctx2.beginPath();
+      ctx2.arc(this.pos.x, this.pos.y, this.size + 0.6, 0, Math.PI * 2, true);
+      ctx2.clip();
+      ctx2.clearRect(0, 0, WIDTH, HEIGHT); // Clear the entire canvas within the clipping path
+      ctx2.restore(); // Restore the previous state of the canvas context
+    }
   }
   bounce() {
     if (this.pos.y > HEIGHT - this.size) {
@@ -380,7 +393,7 @@ function checkDeath() {
       blocks[blocks.length - 1],
       "right"
     );
-    if (blocks[blocks.length - 1].type === 1) {
+    if (blocks[blocksNum - 1].type === 1) {
       createParticles("death", Math.floor(Math.random() * 15 + 20));
       gameOver = true;
       gamePrepped = false;
@@ -395,7 +408,7 @@ function checkDeath() {
       blocks[blocks.length - 1],
       "left"
     );
-    if (blocks[blocks.length - 1].type === 2) {
+    if (blocks[blocksNum - 1].type === 2) {
       createParticles("death", Math.floor(Math.random() * 20 + 30));
       gameOver = true;
       gamePrepped = false;
@@ -417,8 +430,14 @@ function endGame() {
 }
 
 //GAMELOOP
+let counter = 0.1;
+let offsetY = 0;
+counter += 0.00000001;
 function animate() {
-  // ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  if(offsetY < -30 || offsetY > 0.2){counter *= -1;}
+  offsetY += counter;
+  ctx3.drawImage(nebula1, 0, offsetY, 1024, 1024);
+  ctx3.drawImage(nebula1, 1024, offsetY, 1024, 1024);
   particlesLength = particles.length;
   for (let j = 0; j < particlesLength; j++) {
     particles[j].update();

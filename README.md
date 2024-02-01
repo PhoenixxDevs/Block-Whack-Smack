@@ -16,3 +16,4 @@ A fun game where you have to avoid being smacked on the head as you whack blocks
 
 https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
 https://developer.mozilla.org/en-US/docs/Web/API/Storage
+https://kenney.nl/assets/planets
