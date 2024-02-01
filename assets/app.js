@@ -1,5 +1,7 @@
 const canvas = document.getElementById("canvas");
+const canvas2 = document.getElementById("canvas2");
 const ctx = canvas.getContext("2d");
+const ctx2 = canvas2.getContext("2d");
 const scoreboard = document.getElementById("score");
 const scoreboardHi = document.getElementById("hi-score");
 const gameOverScreen = document.getElementById("game-over");
@@ -31,6 +33,8 @@ function init() {
   HEIGHT = html.clientHeight;
   canvas.width = WIDTH;
   canvas.height = HEIGHT;
+  canvas2.width = WIDTH;
+  canvas2.height = HEIGHT;
   chunk = HEIGHT / blocksNum;
 
   blocks = [];
@@ -231,7 +235,7 @@ class Particle {
     }
   }
   typeBlock() {
-    this.size = Math.floor(Math.random() * 3) + 2;
+    this.size = Math.floor(Math.random() * 4) + 2;
     this.pos = {
       x:
         Math.floor(Math.random() * this.blockDescriptor.width) +
@@ -284,10 +288,10 @@ class Particle {
     this.color = "red";
   }
   draw() {
-    ctx.beginPath();
-    ctx.fillStyle = this.color;
-    ctx.arc(this.pos.x, this.pos.y, this.size, 0, Math.PI * 2, false);
-    ctx.fill();
+    ctx2.beginPath();
+    ctx2.fillStyle = this.color;
+    ctx2.arc(this.pos.x, this.pos.y, this.size, 0, Math.PI * 2, false);
+    ctx2.fill();
   }
   move() {
     //apply gravity
@@ -304,12 +308,12 @@ class Particle {
     }
   }
   clear() {
-    ctx.save(); // Save the current state of the canvas context
-    ctx.beginPath();
-    ctx.arc(this.pos.x, this.pos.y, this.size, 0, Math.PI * 2, true);
-    ctx.clip();
-    ctx.clearRect(0, 0, WIDTH, HEIGHT); // Clear the entire canvas within the clipping path
-    ctx.restore(); // Restore the previous state of the canvas context
+    ctx2.save(); // Save the current state of the canvas context
+    ctx2.beginPath();
+    ctx2.arc(this.pos.x, this.pos.y, this.size + 0.6, 0, Math.PI * 2, true);
+    ctx2.clip();
+    ctx2.clearRect(0, 0, WIDTH, HEIGHT); // Clear the entire canvas within the clipping path
+    ctx2.restore(); // Restore the previous state of the canvas context
   }
   bounce() {
     if (this.pos.y > HEIGHT - this.size) {
