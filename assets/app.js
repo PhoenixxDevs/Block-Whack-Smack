@@ -23,59 +23,134 @@ const branchTexture = new Image();
 playerSprite.src = "assets/img/players.png";
 const playerSpriteDimensions = {
   width: 100,
-  height: 140
+  height: 140,
 };
 const player0Sprite_states = {
   idle0: {
-    x: 0, y: 0
+    x: 0,
+    y: 0,
   },
   idle1: {
-    x: 100, y: 0
-  }
+    x: 100,
+    y: 0,
+  },
 };
 
 blockTexture.src = "assets/img/metal.png";
 const blockTextures = [
   {
-    x: 0, y: 0, width: 150, height: 225
+    x: 0,
+    y: 0,
+    width: 150,
+    height: 225,
   },
   {
-    x: 150, y: 0, width: 150, height: 225
+    x: 150,
+    y: 0,
+    width: 150,
+    height: 225,
   },
   {
-    x: 300, y: 0, width: 150, height: 225
+    x: 300,
+    y: 0,
+    width: 150,
+    height: 225,
   },
   {
-    x: 450, y: 0, width: 150, height: 225
+    x: 450,
+    y: 0,
+    width: 150,
+    height: 225,
   },
   {
-    x: 600, y: 0, width: 150, height: 225
+    x: 600,
+    y: 0,
+    width: 150,
+    height: 225,
   },
   {
-    x: 750, y: 0, width: 150, height: 225
+    x: 750,
+    y: 0,
+    width: 150,
+    height: 225,
   },
   {
-    x: 900, y: 0, width: 150, height: 225
+    x: 900,
+    y: 0,
+    width: 150,
+    height: 225,
   },
   {
-    x: 1050, y: 0, width: 150, height: 225
+    x: 1050,
+    y: 0,
+    width: 150,
+    height: 225,
   },
 ];
 
 branchTexture.src = "assets/img/branch.png";
-branchTextureDimensions = {
-  width: 300, height: 76
-};
-
-function createBranch(branchLength){
-  let result = { 
-  x: Math.floor(Math.random() * 10) * branchLength,
-  y: 0,
-  width: 225,
-  height: 76
+branchTextureDimensions = [
+  {
+    x: 0,
+    y: 0,
+    width: 225,
+    height: 76,
+  },
+  {
+    x: 75,
+    y: 0,
+    width: 225,
+    height: 76,
+  },
+  {
+    x: 150,
+    y: 0,
+    width: 225,
+    height: 76,
+  },
+  {
+    x: 225,
+    y: 0,
+    width: 225,
+    height: 76,
+  },
+  {
+    x: 300,
+    y: 0,
+    width: 225,
+    height: 76,
+  },
+  {
+    x: 375,
+    y: 0,
+    width: 225,
+    height: 76,
+  },
+  {
+    x: 450,
+    y: 0,
+    width: 225,
+    height: 76,
+  },
+  {
+    x: 525,
+    y: 0,
+    width: 225,
+    height: 76,
+  },
+  {
+    x: 600,
+    y: 0,
+    width: 225,
+    height: 76,
+  },
+  {
+    x: 675,
+    y: 0,
+    width: 225,
+    height: 76,
   }
-  return result;
-}
+];
 
 const touch = {
   x: null,
@@ -122,10 +197,30 @@ class Player {
     // ctx.fillStyle = this.color;
     switch (this.pos) {
       case 0:
-        ctx.drawImage(playerSprite, player0Sprite_states.idle0.x, player0Sprite_states.idle0.y, playerSpriteDimensions.width, playerSpriteDimensions.height, this.pos0.x, this.pos0.y, this.width, this.height);
+        ctx.drawImage(
+          playerSprite,
+          player0Sprite_states.idle0.x,
+          player0Sprite_states.idle0.y,
+          playerSpriteDimensions.width,
+          playerSpriteDimensions.height,
+          this.pos0.x,
+          this.pos0.y,
+          this.width,
+          this.height
+        );
         break;
-        case 1:
-          ctx.drawImage(playerSprite, player0Sprite_states.idle1.x, player0Sprite_states.idle0.y, playerSpriteDimensions.width, playerSpriteDimensions.height, this.pos1.x, this.pos1.y, this.width, this.height);
+      case 1:
+        ctx.drawImage(
+          playerSprite,
+          player0Sprite_states.idle1.x,
+          player0Sprite_states.idle0.y,
+          playerSpriteDimensions.width,
+          playerSpriteDimensions.height,
+          this.pos1.x,
+          this.pos1.y,
+          this.width,
+          this.height
+        );
         break;
     }
   }
@@ -155,10 +250,11 @@ class Block {
       y: num,
     };
     this.type = Math.floor(Math.random() * 3);
-    this.branch = createBranch(3);
-    this.branchOffsetX = Math.floor(chunk / 1.5);
-    this.branchOffsetY = Math.floor(this.branchOffsetX / 3);
-    this.blockTexture = blockTextures[Math.floor(Math.random() * blockTextures.length)];
+    this.branch = branchTextureDimensions[Math.floor(Math.random() * branchTextureDimensions.length)];
+    this.branchWidth = Math.floor(chunk / 1.3);
+    this.branchHeight = Math.floor(this.branchWidth / 3);
+    this.blockTexture =
+      blockTextures[Math.floor(Math.random() * blockTextures.length)];
   }
   draw() {
     // branch
@@ -166,47 +262,70 @@ class Block {
     switch (this.type) {
       case 1:
         ctx.drawImage(
-          branchTexture, this.branch.x, this.branch.y, this.branch.width, this.branch.y,
-          this.pos.x - this.branchOffset,
-          this.pos.y * this.height + this.branchOffsetY,
-          this.branchOffsetX,
-          this.branchOffsetY
+          //texture placement
+          branchTexture,
+          this.branch.x,
+          this.branch.y,
+          this.branch.width,
+          this.branch.height,
+          //where to draw
+          this.pos.x - this.branchWidth,
+          this.pos.y * this.height + this.branchHeight,
+          this.branchWidth,
+          this.branchHeight
         );
-        // ctx.fillRect(
-        //   this.pos.x - this.branchOffset,
-        //   this.pos.y * this.height + this.branchOffsetY,
-        //   this.branchOffsetX,
-        //   this.branchOffsetY
+        console.log(this.branch);
+        // ctx.strokeRect(
+        //   this.pos.x - this.branchWidth,
+        //   this.pos.y * this.height + this.branchHeight,
+        //   this.branchWidth,
+        //   this.branchHeight
         // );
         break;
       case 2:
         ctx.drawImage(
-          branchTexture, this.branch.x, this.branch.y, this.branch.width, this.branch.y,
+          //texture placement
+          branchTexture,
+          this.branch.x,
+          this.branch.y,
+          this.branch.width,
+          this.branch.height,
+          //where to draw
           this.pos.x + this.width,
-          this.pos.y * this.height + this.branchOffsetY,
-          this.branchOffsetX,
-          this.branchOffsetY
+          this.pos.y * this.height + this.branchHeight,
+          this.branchWidth,
+          this.branchHeight
         );
         break;
     }
     // Main Trunk
-    ctx.drawImage(blockTexture, this.blockTexture.x, this.blockTexture.y, this.blockTexture.width, this.blockTexture.height ,this.pos.x, this.pos.y * this.height, this.width, this.height);
+    ctx.drawImage(
+      blockTexture,
+      this.blockTexture.x,
+      this.blockTexture.y,
+      this.blockTexture.width,
+      this.blockTexture.height,
+      this.pos.x,
+      this.pos.y * this.height,
+      this.width,
+      this.height
+    );
   }
   clear() {
     //Clear Branches
     if (this.type === 1) {
       ctx.clearRect(
-        this.pos.x - this.branchOffset,
-        this.pos.y * this.height + this.branchOffsetY,
-        this.branchOffsetX,
-        this.branchOffsetY
+        this.pos.x - this.branchWidth,
+        this.pos.y * this.height + this.branchHeight,
+        this.branchWidth,
+        this.branchHeight
       );
     } else if (this.type == 2) {
       ctx.clearRect(
         this.pos.x + this.width,
-        this.pos.y * this.height + this.branch,
-        this.branchOffsetX,
-        this.branchOffsetY
+        this.pos.y * this.height + this.branchHeight,
+        this.branchWidth,
+        this.branchHeight
       );
     } else return;
   }
@@ -258,14 +377,9 @@ class Particle {
     this.grav = true;
     this.gravity = 0.2;
     this.bounceMultiplier = -0.6;
-    this.colorPalette = [
-      "#FAE2C3",
-      "#FFF78A",
-      "#FFE382",
-      "#FFC47E",
-      "#FFBD94",
-    ];
-    this.color = this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
+    this.colorPalette = ["#FAE2C3", "#FFF78A", "#FFE382", "#FFC47E", "#FFBD94"];
+    this.color =
+      this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
   }
   typeDeath() {
     let playerPos;
@@ -283,23 +397,22 @@ class Particle {
       y: playerPos.y,
     };
     this.vel = {
-      x: Math.random() * 4 - 2
-      ,
+      x: Math.random() * 4 - 2,
       y: -Math.random() * 3 - 2,
     };
     this.grav = true;
     this.gravity = 0.1;
-    this.bounceMultiplier = -0.3
-    ;
+    this.bounceMultiplier = -0.3;
     this.colorPalette = [
       "#842727",
       "#740707",
       "#560e07",
       "#490805",
       "#400303",
-      "#a40707"
+      "#a40707",
     ];
-    this.color = this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
+    this.color =
+      this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
   }
   draw() {
     ctx2.beginPath();
@@ -322,7 +435,10 @@ class Particle {
     }
   }
   clear() {
-    if (this.type === "block" || this.vel.y < -1 && this.pos.y < HEIGHT - this.size * 8) {
+    if (
+      this.type === "block" ||
+      (this.vel.y < -1 && this.pos.y < HEIGHT - this.size * 8)
+    ) {
       ctx2.save(); // Save the current state of the canvas context
       ctx2.beginPath();
       ctx2.arc(this.pos.x, this.pos.y, this.size + 0.6, 0, Math.PI * 2, true);
