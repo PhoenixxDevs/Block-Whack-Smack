@@ -171,9 +171,11 @@ const branchTextureDimensions = [
 
 spikeTexture.src = "assets/img/spikes.png";
 const spikeTextureDimensions = {
-  x: 0, y: 0, width: 128, height: 64
+  x: 0,
+  y: 0,
+  width: 128,
+  height: 64,
 };
-
 
 const touch = {
   x: null,
@@ -209,9 +211,10 @@ class Player {
     this.width = Math.floor(chunk * 0.5);
     this.height = Math.floor(chunk * 0.7);
     this.pos = pos;
-    !this.pos
-      ? (this.state = this.spriteStates.idle0)
-      : (this.state = this.spriteStates.idle1);
+    this.setState('idle');
+    this.stateTime = 300;
+    this.stateCounter = 0;
+    this.isCounting = false;
     this.spriteDimensions = playerSpriteDimensions;
     this.pos0 = {
       x: Math.floor(WIDTH / 2 - chunk),
@@ -224,17 +227,41 @@ class Player {
     this.posLegacy = pos;
     this.color = "#FF44FF";
   }
+  setState(spriteState) {
+    if (!this.pos) {
+      switch(spriteState) {
+        case 'attack':
+          this.state = this.spriteStates.attack0;
+        break;
+        case 'idle':
+          this.state = this.spriteStates.idle0;
+        break;
+        case 'death': 
+          this.state = this.spriteStates.death0;
+        break;
+      }
+    } else {
+      switch(spriteState) {
+        case 'attack':
+          this.state = this.spriteStates.attack1;
+        break;
+        case 'idle':
+          this.state = this.spriteStates.idle1;
+        break;
+        case 'death': 
+          this.state = this.spriteStates.death1;
+        break;
+      }
+    }
+  }
   draw() {
     let drawPos;
-    if (this.posLegacy != this.pos) {
       this.clear();
       this.posLegacy = this.pos;
-    }
     if (!this.pos) {
-      this.state = this.spriteStates.idle0;
       drawPos = this.pos0;
     } else {
-      this.state = this.spriteStates.idle1;
+
       drawPos = this.pos1;
     }
 
@@ -293,15 +320,19 @@ class Block {
         ctx.drawImage(
           //texture placement
           spikeTexture,
-          spikeTextureDimensions.x, spikeTextureDimensions.y,
-          spikeTextureDimensions.width, spikeTextureDimensions.height,
+          spikeTextureDimensions.x,
+          spikeTextureDimensions.y,
+          spikeTextureDimensions.width,
+          spikeTextureDimensions.height,
           //where to draw
           this.pos.x - this.branchWidth,
-          this.pos.y * this.height + this.branchHeight + spikeTextureDimensions.height / 2,
+          this.pos.y * this.height +
+            this.branchHeight +
+            spikeTextureDimensions.height / 2,
           this.branchWidth,
           this.branchHeight * 1.1
-          );
-          ctx.drawImage(
+        );
+        ctx.drawImage(
           //texture placement
           branchTexture,
           this.branch.x,
@@ -313,17 +344,21 @@ class Block {
           this.pos.y * this.height + this.branchHeight,
           this.branchWidth,
           this.branchHeight
-          );
+        );
         break;
       case 2:
         ctx.drawImage(
           //texture placement
           spikeTexture,
-          spikeTextureDimensions.x, spikeTextureDimensions.y,
-          spikeTextureDimensions.width, spikeTextureDimensions.height,
+          spikeTextureDimensions.x,
+          spikeTextureDimensions.y,
+          spikeTextureDimensions.width,
+          spikeTextureDimensions.height,
           //where to draw
           this.pos.x + this.width,
-          this.pos.y * this.height + this.branchHeight + spikeTextureDimensions.height / 2,
+          this.pos.y * this.height +
+            this.branchHeight +
+            spikeTextureDimensions.height / 2,
           this.branchWidth,
           this.branchHeight * 1.1
         );
@@ -500,8 +535,13 @@ class Particle {
     }
   }
   shrink() {
-    if(this.type != "death"){return;}
-    if(this.size < 0.2) {this.remove = true; return;}
+    if (this.type != "death") {
+      return;
+    }
+    if (this.size < 0.2) {
+      this.remove = true;
+      return;
+    }
     this.size *= 0.99;
   }
   update() {
@@ -549,6 +589,7 @@ function handleScore() {
 function checkDeath() {
   removeBlock();
   if (player.pos === 0) {
+    player.setState('attack');
     createParticles(
       "block",
       Math.floor(Math.random() * 5) + 5,
@@ -556,6 +597,8 @@ function checkDeath() {
       "right"
     );
     if (blocks[blocksNum - 1].type === 1) {
+      player.isCounting = false;
+      player.setState('death0');
       createParticles("death", Math.floor(Math.random() * 15 + 20));
       gameOver = true;
       gamePrepped = false;
@@ -564,6 +607,7 @@ function checkDeath() {
       handleScore();
     }
   } else if (player.pos === 1) {
+    player.setState('attack');
     createParticles(
       "block",
       Math.floor(Math.random() * 5) + 5,
@@ -571,6 +615,8 @@ function checkDeath() {
       "left"
     );
     if (blocks[blocksNum - 1].type === 2) {
+      player.isCounting = false;
+      player.setState('death1');
       createParticles("death", Math.floor(Math.random() * 20 + 30));
       gameOver = true;
       gamePrepped = false;
@@ -675,6 +721,19 @@ function animate(timestamp) {
   delta = timestamp - lastFrame;
   lastFrame = timestamp;
 
+  if (player.isCounting) {
+    if (player.stateCounter > player.stateTime) {
+      player.setState('idle');
+      player.stateCounter = 0;
+      player.isCounting = false;
+      player.update();
+    }
+    else {
+      player.stateCounter += delta;
+      console.log(player.stateCounter)
+    }
+  }
+
   particlesLength = particles.length;
   for (let j = 0; j < particlesLength; j++) {
     particles[j].update();
@@ -690,7 +749,16 @@ function animate(timestamp) {
 /////////////////// INPUT AND HANDLERS
 
 function playerMove(state) {
-  !state ? (player.pos = 0) : (player.pos = 1);
+  if(!state) {
+    player.pos = 0;
+    player.counter = 0;
+    player.isCounting = true;
+  }
+  else {
+    player.pos = 1;
+    player.counter = 0;
+    player.isCounting = true;
+  };
   player.update();
   checkDeath();
   for (let i = 0; i < blocksNum; i++) {
