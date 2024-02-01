@@ -19,6 +19,7 @@ const html = document.querySelector("html");
 const playerSprite = new Image();
 const blockTexture = new Image();
 const branchTexture = new Image();
+const spikeTexture = new Image();
 
 playerSprite.src = "assets/img/players.png";
 const playerSpriteDimensions = {
@@ -28,27 +29,27 @@ const playerSpriteDimensions = {
 const player0Sprite_states = {
   idle0: {
     x: 0,
-    y: 0
+    y: 0,
   },
   idle1: {
     x: 100,
-    y: 0
+    y: 0,
   },
   attack0: {
     x: 200,
-    y: 0
+    y: 0,
   },
   attack1: {
     x: 300,
-    y: 0
+    y: 0,
   },
   death0: {
     x: 400,
-    y: 0
+    y: 0,
   },
   death1: {
     x: 500,
-    y: 0
+    y: 0,
   },
 };
 
@@ -105,7 +106,7 @@ const blockTextures = [
 ];
 
 branchTexture.src = "assets/img/branch.png";
-branchTextureDimensions = [
+const branchTextureDimensions = [
   {
     x: 0,
     y: 0,
@@ -165,8 +166,14 @@ branchTextureDimensions = [
     y: 0,
     width: 225,
     height: 76,
-  }
+  },
 ];
+
+spikeTexture.src = "assets/img/spikes.png";
+const spikeTextureDimensions = {
+  x: 0, y: 0, width: 128, height: 64
+};
+
 
 const touch = {
   x: null,
@@ -192,10 +199,20 @@ let lastFrame = 0;
 ////////////////////////// PLAYER CLASS
 
 class Player {
-  constructor(pos) {
+  constructor(pos, playerNumber) {
+    this.playerNumber = playerNumber;
+    switch (this.playerNumber) {
+      case 0:
+        this.spriteStates = player0Sprite_states;
+        break;
+    }
     this.width = Math.floor(chunk * 0.5);
     this.height = Math.floor(chunk * 0.7);
     this.pos = pos;
+    !this.pos
+      ? (this.state = this.spriteStates.idle0)
+      : (this.state = this.spriteStates.idle1);
+    this.spriteDimensions = playerSpriteDimensions;
     this.pos0 = {
       x: Math.floor(WIDTH / 2 - chunk),
       y: Math.floor(HEIGHT - this.height),
@@ -208,39 +225,30 @@ class Player {
     this.color = "#FF44FF";
   }
   draw() {
+    let drawPos;
     if (this.posLegacy != this.pos) {
       this.clear();
       this.posLegacy = this.pos;
     }
-    // ctx.fillStyle = this.color;
-    switch (this.pos) {
-      case 0:
-        ctx.drawImage(
-          playerSprite,
-          player0Sprite_states.idle0.x,
-          player0Sprite_states.idle0.y,
-          playerSpriteDimensions.width,
-          playerSpriteDimensions.height,
-          this.pos0.x,
-          this.pos0.y,
-          this.width,
-          this.height
-        );
-        break;
-      case 1:
-        ctx.drawImage(
-          playerSprite,
-          player0Sprite_states.idle1.x,
-          player0Sprite_states.idle0.y,
-          playerSpriteDimensions.width,
-          playerSpriteDimensions.height,
-          this.pos1.x,
-          this.pos1.y,
-          this.width,
-          this.height
-        );
-        break;
+    if (!this.pos) {
+      this.state = this.spriteStates.idle0;
+      drawPos = this.pos0;
+    } else {
+      this.state = this.spriteStates.idle1;
+      drawPos = this.pos1;
     }
+
+    ctx.drawImage(
+      playerSprite,
+      this.state.x,
+      this.state.y,
+      this.spriteDimensions.width,
+      this.spriteDimensions.height,
+      drawPos.x,
+      drawPos.y,
+      this.width,
+      this.height
+    );
   }
   clear() {
     switch (this.posLegacy) {
@@ -268,7 +276,10 @@ class Block {
       y: num,
     };
     this.type = Math.floor(Math.random() * 3);
-    this.branch = branchTextureDimensions[Math.floor(Math.random() * branchTextureDimensions.length)];
+    this.branch =
+      branchTextureDimensions[
+        Math.floor(Math.random() * branchTextureDimensions.length)
+      ];
     this.branchWidth = Math.floor(chunk / 1.3);
     this.branchHeight = Math.floor(this.branchWidth / 3);
     this.blockTexture =
@@ -281,6 +292,17 @@ class Block {
       case 1:
         ctx.drawImage(
           //texture placement
+          spikeTexture,
+          spikeTextureDimensions.x, spikeTextureDimensions.y,
+          spikeTextureDimensions.width, spikeTextureDimensions.height,
+          //where to draw
+          this.pos.x - this.branchWidth,
+          this.pos.y * this.height + this.branchHeight + spikeTextureDimensions.height / 2,
+          this.branchWidth,
+          this.branchHeight * 1.1
+          );
+          ctx.drawImage(
+          //texture placement
           branchTexture,
           this.branch.x,
           this.branch.y,
@@ -291,9 +313,20 @@ class Block {
           this.pos.y * this.height + this.branchHeight,
           this.branchWidth,
           this.branchHeight
-        );
+          );
         break;
       case 2:
+        ctx.drawImage(
+          //texture placement
+          spikeTexture,
+          spikeTextureDimensions.x, spikeTextureDimensions.y,
+          spikeTextureDimensions.width, spikeTextureDimensions.height,
+          //where to draw
+          this.pos.x + this.width,
+          this.pos.y * this.height + this.branchHeight + spikeTextureDimensions.height / 2,
+          this.branchWidth,
+          this.branchHeight * 1.1
+        );
         ctx.drawImage(
           //texture placement
           branchTexture,
@@ -331,14 +364,14 @@ class Block {
         this.pos.x - this.branchWidth,
         this.pos.y * this.height + this.branchHeight,
         this.branchWidth,
-        this.branchHeight
+        this.branchHeight * 2
       );
     } else if (this.type == 2) {
       ctx.clearRect(
         this.pos.x + this.width,
         this.pos.y * this.height + this.branchHeight,
         this.branchWidth,
-        this.branchHeight
+        this.branchHeight * 2
       );
     } else return;
   }
@@ -396,7 +429,7 @@ class Particle {
   }
   typeDeath() {
     let playerPos;
-    this.size = Math.floor(Math.random() * 10 + 5);
+    this.size = Math.floor(Math.random() * 15 + 10);
     switch (player.pos) {
       case 0:
         playerPos = player.pos0;
@@ -466,12 +499,17 @@ class Particle {
       this.vel.y *= this.bounceMultiplier;
     }
   }
+  shrink() {
+    if(this.type != "death"){return;}
+    if(this.size < 0.2) {this.remove = true; return;}
+    this.size *= 0.99;
+  }
   update() {
     this.clear();
-
     this.bounce();
     this.move();
     this.removeOffscreen();
+    this.shrink();
 
     this.draw();
   }
@@ -587,11 +625,11 @@ function init() {
   // check where to spawn player and spawn
   switch (blocks[blocks.length - 1].type) {
     case 1:
-      player = new Player(1);
+      player = new Player(1, 0);
       break;
     case 2:
     default:
-      player = new Player(0);
+      player = new Player(0, 0);
       break;
   }
 
@@ -630,10 +668,13 @@ function start() {
 ///////////////////////////// GAMELOOP
 
 function animate(timestamp) {
-  if(!timestamp) {timestamp = 0;}
+  //calculate time since last frame
+  if (!timestamp) {
+    timestamp = 0;
+  }
   delta = timestamp - lastFrame;
   lastFrame = timestamp;
-  console.log(delta);
+
   particlesLength = particles.length;
   for (let j = 0; j < particlesLength; j++) {
     particles[j].update();
