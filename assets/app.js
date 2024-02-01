@@ -402,16 +402,16 @@ class Block {
     if (this.type === 1) {
       ctx.clearRect(
         this.pos.x - this.branchWidth,
-        this.pos.y * this.height + this.branchHeight,
+        this.pos.y * this.height + this.branchHeight - 2,
         this.branchWidth,
-        this.branchHeight * 2
+        this.branchHeight * 2 + 4
       );
     } else if (this.type == 2) {
       ctx.clearRect(
         this.pos.x + this.width,
-        this.pos.y * this.height + this.branchHeight,
+        this.pos.y * this.height + this.branchHeight - 2,
         this.branchWidth,
-        this.branchHeight * 2
+        this.branchHeight * 2 + 4
       );
     } else return;
   }

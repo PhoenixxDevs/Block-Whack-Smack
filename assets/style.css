@@ -21,7 +21,7 @@ canvas {
 #canvas3 {
   width: 100vw;
   height: 100dvh;
-  background-image: url(/assets/img/nebula01.png);
+  background-image: url(img/nebula01.png);
   animation: moveBackground 25s ease-in-out infinite alternate-reverse;
 }
 
