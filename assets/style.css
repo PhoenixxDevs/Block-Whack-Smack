@@ -18,13 +18,18 @@ canvas {
   left: 0;
 }
 
+.hide {
+  display: none;
+}
+
 .idle {
   position: absolute;
   z-index: 1;
   width: 100vw;
   height: 100vh;
   color: rgb(244, 239, 209);
-  background-image: -webkit-linear-gradient(134deg, #000 40%, #407);
+  background: black;
+  /* background-image: -webkit-linear-gradient(134deg, #000 40%, #407); */
 }
 
 .idle h1 {
@@ -86,10 +91,6 @@ canvas {
 
 #hi-score {
   float: right;
-}
-
-.hide {
-  display: none;
 }
 
 strong {

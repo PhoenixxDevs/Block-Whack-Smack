@@ -6,6 +6,7 @@ const gameOverScreen = document.getElementById("game-over");
 const gameStartScreen = document.getElementById("start-screen");
 const endScore = document.getElementById("score-end");
 const endScoreHi = document.getElementById("score-end-hi");
+const html = document.querySelector("html");
 
 const touch = {
   x: null,
@@ -26,11 +27,11 @@ let score = 0;
 let hiScore = 0;
 
 function init() {
-  WIDTH = window.innerWidth;
-  HEIGHT = window.innerHeight;
-  chunk = HEIGHT / blocksNum;
+  WIDTH = html.clientWidth;
+  HEIGHT = html.clientHeight;
   canvas.width = WIDTH;
   canvas.height = HEIGHT;
+  chunk = HEIGHT / blocksNum;
 
   blocks = [];
   particles = [];
@@ -67,7 +68,16 @@ function init() {
     running = true;
   }
 }
-
+function start() {
+  if (!gameStart) {
+    init();
+    gameStartScreen.classList.toggle("hide");
+    gameStart = true;
+  }
+  if (gameOver && gamePrepped) {
+    init();
+  }
+}
 ////////////////////////////// CLASSES
 
 ////////////////////////// PLAYER CLASS
@@ -109,7 +119,7 @@ class Player {
       case 0:
         ctx.clearRect(this.pos0.x, this.pos0.y, this.width, this.height);
         break;
-        case 1:
+      case 1:
         ctx.clearRect(this.pos1.x, this.pos1.y, this.width, this.height);
         break;
     }
@@ -362,9 +372,7 @@ function endGame() {
 function animate() {
   // ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-  player.update();
-
-  for (let i = 0; i < blocks.length; i++) {
+  for (let i = 0; i < blocksNum; i++) {
     blocks[i].update();
   }
   particlesLength = particles.length;
@@ -379,25 +387,13 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-window.addEventListener("touchstart", (e) => {
-  touch.x = Math.floor(e.changedTouches[0].clientX);
-  if (touch.x < WIDTH / 2 && !gameOver) {
-    player.pos = 0;
-    checkDeath();
-  } else if (touch.x >= WIDTH / 2 && !gameOver) {
-    player.pos = 1;
-    checkDeath();
-  }
+//INPUT AND HANDLERS
 
-  if (!gameStart) {
-    init();
-    gameStartScreen.classList.toggle("hide");
-    gameStart = true;
-  }
-  if (gameOver && gamePrepped) {
-    init();
-  }
-});
+function playerMove(state) {
+  !state ? (player.pos = 0) : (player.pos = 1);
+  player.update();
+  checkDeath();
+}
 
 // window.addEventListener("DOMContentLoaded", init);
 window.addEventListener("keydown", function (e) {
@@ -411,8 +407,7 @@ window.addEventListener("keydown", function (e) {
       if (gameOver) {
         return;
       }
-      player.pos = 0;
-      checkDeath();
+      playerMove(0, 0);
       break;
     case "ArrowRight":
     case "d":
@@ -420,18 +415,20 @@ window.addEventListener("keydown", function (e) {
       if (gameOver) {
         return;
       }
-      player.pos = 1;
-      checkDeath();
+      playerMove(1, 0);
       break;
     case "Enter":
-      if (!gameStart) {
-        init();
-        gameStartScreen.classList.toggle("hide");
-        gameStart = true;
-      }
-      if (gameOver) {
-        init();
-      }
+      start();
       break;
   }
+});
+
+window.addEventListener("touchstart", (e) => {
+  touch.x = Math.floor(e.changedTouches[0].clientX);
+  if (touch.x < WIDTH / 2 && !gameOver) {
+    playerMove(0);
+  } else if (touch.x >= WIDTH / 2 && !gameOver) {
+    playerMove(1);
+  }
+  start();
 });
