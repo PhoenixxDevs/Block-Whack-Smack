@@ -190,7 +190,6 @@ window.addEventListener("DOMContentLoaded", () => {
     y: [0, 100],
     width: 80,
     height: 100,
-    animationRate: 1000,
   };
 
   const touch = {
@@ -199,10 +198,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
   let WIDTH, HEIGHT;
   let chunk, player;
-  let particlesLength;
+  let arrayLength;
   let grd, hiScore;
   let blocks = [];
   let particles = [];
+  let effects = []; 
   let gameStart = false;
   let gameOver = false;
   let gamePrepped = false;
@@ -250,7 +250,6 @@ window.addEventListener("DOMContentLoaded", () => {
             this.state = this.spriteStates.attack0;
             this.stateCounter = 0;
             this.isCounting = true;
-            console.log(this.state);
             break;
           case "idle":
             this.state = this.spriteStates.idle0;
@@ -589,18 +588,22 @@ window.addEventListener("DOMContentLoaded", () => {
   ///////////////////////// EFFECTS CLASS
 
   class Effect {
-    constructor(config) {
-      this.type = config.type; // 'color' or 'blast'
-      this.reverse = config.reverse; // 0 to left, 1 to right
-      this.pos = config.pos;
-      this.width = config.width;
-      this.height = config.height;
+    constructor(type) {
+      this.type = type; // 'color' or 'blast'
+      this.reverse; // 0 to left, 1 to right
+      this.pos = {
+        x: WIDTH / 1.9,
+        y: player.pos0.y
+      };
+      this.width;
+      this.height;
       this.spriteWidth = dustConfig.width;
       this.spriteHeight = dustConfig.height;
       this.spritePosY = 0;
       this.frame = 0;
       this.frameStep = 1;
       this.frameLimiter = 0;
+      this.remove = false;
       this.init();
     }
     init() {
@@ -609,24 +612,35 @@ window.addEventListener("DOMContentLoaded", () => {
         case "color":
         default:
           this.spritePosY = dustConfig.y[0];
+          this.width = player.height * 3;
+          this.height = player.height * 3;
+          this.src = dustFX;
+          if(player.pos) {
+            this.src = dustFXRev;
+            this.spritePosY = 10;
+            this.frame = dustConfig.x.length - 1;
+            this.frameStep *= -1;
+            this.pos.x + this.width * 0.2;
+          }
           break;
-        case "blast":
-          this.spritePosY = dustConfig.y[1];
+          case "blast":
+            this.spritePosY = dustConfig.y[1];
+            this.width = player.height * 1.5;
+            this.height = player.height * 0.7;
           break;
       }
-      if (this.reverse) {
-        this.frame = dustConfig.length - 1;
-        this.frameStep *= -1;
+      if(!player.pos) {
+        this.pos.x = WIDTH / 2 - this.width;
       }
     }
     clear() {
-      ctx.clearRect(this.pos.x, this.pos.y, this.width, this.height);
+      ctx3.clearRect(this.pos.x, this.pos.y, this.width, this.height);
     }
     draw() {
       ctx3.drawImage(
-        dustFX,
+        this.src,
         //decides which part of sprite to draw
-        dustConfig.x[frame],
+        dustConfig.x[this.frame],
         this.spritePosY,
         this.spriteWidth,
         this.spriteHeight,
@@ -637,13 +651,10 @@ window.addEventListener("DOMContentLoaded", () => {
       );
     }
     update() {
-      if (this.frameLimiter > dustConfig.animationRate) {
+      if(this.frame < 0 || this.frame > dustConfig.x.length - 1){this.remove = true;}
         this.clear();
         this.draw();
-        this.frameLimiter = 0;
-      } else {
-        this.frameLimiter += delta;
-      }
+        this.frame += this.frameStep;
     }
   }
 
@@ -683,7 +694,7 @@ window.addEventListener("DOMContentLoaded", () => {
     if (player.pos === 0) {
       createParticles(
         "block",
-        Math.floor(Math.random() * 5) + 5,
+        Math.floor(Math.random() * 3) + 2,
         blocks[blocks.length - 1],
         "right"
       );
@@ -701,7 +712,7 @@ window.addEventListener("DOMContentLoaded", () => {
     } else if (player.pos === 1) {
       createParticles(
         "block",
-        Math.floor(Math.random() * 5) + 5,
+        Math.floor(Math.random() * 3) + 2,
         blocks[blocks.length - 1],
         "left"
       );
@@ -737,6 +748,16 @@ window.addEventListener("DOMContentLoaded", () => {
       result = localStorage.getItem("hi-score");
       return result;
     } else localStorage.setItem("hi-score", hiScore);
+  }
+  function updateArray(array) {
+    arrayLength = array.length;
+    for (let j = 0; j < arrayLength; j++) {
+      array[j].update();
+      if (array[j].remove) {
+        array.splice(j, 1);
+        arrayLength = array.length;
+      }
+    }
   }
 
   /////////////////////////////// SET UP
@@ -819,6 +840,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     if (player.isMoving) {
       playerMove();
+      
     }
 
     if (player.isCounting) {
@@ -832,41 +854,24 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    particlesLength = particles.length;
-    for (let j = 0; j < particlesLength; j++) {
-      particles[j].update();
-      if (particles[j].remove) {
-        particles.splice(j, 1);
-        particlesLength = particles.length;
-      }
-    }
+    updateArray(particles);
+    updateArray(effects);
+    console.log(effects)
+
     touch.x = null;
+    // console.log(effects[0])
     requestAnimationFrame(animate);
   }
 
   /////////////////// INPUT AND HANDLERS
 
   function playerMove(playerNumber) {
-    let dustFXPos;
     player.setState("attack");
     player.update();
-    player.pos ? (dustFXPos = player.pos0) : (dustFXPos = player.pos1);
-    ctx.drawImage(
-      dustFX,
-      0,
-      100,
-      1024,
-      100,
-      dustFXPos.x,
-      dustFXPos.y,
-      100,
-      100
-    );
     player.isMoving = false;
+    effects.push(new Effect('color'));
     checkDeath();
-    for (let i = 0; i < blocksNum; i++) {
-      blocks[i].update();
-    }
+    updateArray(blocks);
   }
 
   window.addEventListener("resize", init);
@@ -902,9 +907,11 @@ window.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("touchstart", (e) => {
     touch.x = Math.floor(e.changedTouches[0].clientX);
     if (touch.x < WIDTH / 2 && !gameOver) {
-      playerMove(0);
+      player.pos = 0;
+      player.isMoving = true;
     } else if (touch.x >= WIDTH / 2 && !gameOver) {
-      playerMove(1);
+      player.pos = 1;
+      player.isMoving = true;
     }
     start();
   });
