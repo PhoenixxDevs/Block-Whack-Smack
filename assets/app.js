@@ -23,6 +23,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const branchTexture = new Image();
   const spikeTexture = new Image();
   const dustFX = new Image();
+  const dustFXRev = new Image();
 
   playerSprite.src = "assets/img/players.png";
   const playerSpriteDimensions = {
@@ -181,6 +182,16 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   dustFX.src = "assets/img/dustfx.png";
+  dustFXRev.src = "assets/img/dustfx-rev.png";
+  const dustConfig = {
+    x: [
+      0, 80, 160, 240, 320, 400, 480, 560, 640, 720, 800, 880, 960, 1040, 1120,
+    ],
+    y: [0, 100],
+    width: 80,
+    height: 100,
+    animationRate: 1000,
+  };
 
   const touch = {
     x: null,
@@ -239,7 +250,7 @@ window.addEventListener("DOMContentLoaded", () => {
             this.state = this.spriteStates.attack0;
             this.stateCounter = 0;
             this.isCounting = true;
-            console.log(this.state)
+            console.log(this.state);
             break;
           case "idle":
             this.state = this.spriteStates.idle0;
@@ -578,11 +589,61 @@ window.addEventListener("DOMContentLoaded", () => {
   ///////////////////////// EFFECTS CLASS
 
   class Effect {
-    constructor(config){
+    constructor(config) {
+      this.type = config.type; // 'color' or 'blast'
+      this.reverse = config.reverse; // 0 to left, 1 to right
       this.pos = config.pos;
       this.width = config.width;
       this.height = config.height;
-
+      this.spriteWidth = dustConfig.width;
+      this.spriteHeight = dustConfig.height;
+      this.spritePosY = 0;
+      this.frame = 0;
+      this.frameStep = 1;
+      this.frameLimiter = 0;
+      this.init();
+    }
+    init() {
+      //switch for scalability
+      switch (this.type) {
+        case "color":
+        default:
+          this.spritePosY = dustConfig.y[0];
+          break;
+        case "blast":
+          this.spritePosY = dustConfig.y[1];
+          break;
+      }
+      if (this.reverse) {
+        this.frame = dustConfig.length - 1;
+        this.frameStep *= -1;
+      }
+    }
+    clear() {
+      ctx.clearRect(this.pos.x, this.pos.y, this.width, this.height);
+    }
+    draw() {
+      ctx3.drawImage(
+        dustFX,
+        //decides which part of sprite to draw
+        dustConfig.x[frame],
+        this.spritePosY,
+        this.spriteWidth,
+        this.spriteHeight,
+        this.pos.x,
+        this.pos.y,
+        this.width,
+        this.height
+      );
+    }
+    update() {
+      if (this.frameLimiter > dustConfig.animationRate) {
+        this.clear();
+        this.draw();
+        this.frameLimiter = 0;
+      } else {
+        this.frameLimiter += delta;
+      }
     }
   }
 
@@ -742,7 +803,9 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  setTimeout(function() {loader.style.display = "none";}, 500);
+  setTimeout(function () {
+    loader.style.display = "none";
+  }, 500);
 
   ///////////////////////////// GAMELOOP
 
@@ -754,7 +817,7 @@ window.addEventListener("DOMContentLoaded", () => {
     delta = timestamp - lastFrame;
     lastFrame = timestamp;
 
-    if(player.isMoving){
+    if (player.isMoving) {
       playerMove();
     }
 
@@ -785,10 +848,20 @@ window.addEventListener("DOMContentLoaded", () => {
 
   function playerMove(playerNumber) {
     let dustFXPos;
-    player.setState('attack');
+    player.setState("attack");
     player.update();
-    player.pos ? dustFXPos = player.pos0 : dustFXPos = player.pos1;
-    ctx.drawImage(dustFX, 0, 100, 1024, 100, dustFXPos.x, dustFXPos.y, 100, 100)
+    player.pos ? (dustFXPos = player.pos0) : (dustFXPos = player.pos1);
+    ctx.drawImage(
+      dustFX,
+      0,
+      100,
+      1024,
+      100,
+      dustFXPos.x,
+      dustFXPos.y,
+      100,
+      100
+    );
     player.isMoving = false;
     checkDeath();
     for (let i = 0; i < blocksNum; i++) {
