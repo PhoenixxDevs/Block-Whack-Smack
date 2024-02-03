@@ -22,6 +22,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const blockTexture = new Image();
   const branchTexture = new Image();
   const spikeTexture = new Image();
+  const dustFX = new Image();
 
   playerSprite.src = "assets/img/players.png";
   const playerSpriteDimensions = {
@@ -179,6 +180,8 @@ window.addEventListener("DOMContentLoaded", () => {
     height: 64,
   };
 
+  dustFX.src = "assets/img/dustfx.png";
+
   const touch = {
     x: null,
   };
@@ -234,6 +237,9 @@ window.addEventListener("DOMContentLoaded", () => {
         switch (spriteState) {
           case "attack":
             this.state = this.spriteStates.attack0;
+            this.stateCounter = 0;
+            this.isCounting = true;
+            console.log(this.state)
             break;
           case "idle":
             this.state = this.spriteStates.idle0;
@@ -246,6 +252,8 @@ window.addEventListener("DOMContentLoaded", () => {
         switch (spriteState) {
           case "attack":
             this.state = this.spriteStates.attack1;
+            this.stateCounter = 0;
+            this.isCounting = true;
             break;
           case "idle":
             this.state = this.spriteStates.idle1;
@@ -567,6 +575,17 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  ///////////////////////// EFFECTS CLASS
+
+  class Effect {
+    constructor(config){
+      this.pos = config.pos;
+      this.width = config.width;
+      this.height = config.height;
+
+    }
+  }
+
   ///////////////////// UTILITY FUNCTIONS
 
   function createParticles(type, amount, blockDescriptor, direction) {
@@ -601,7 +620,6 @@ window.addEventListener("DOMContentLoaded", () => {
   function checkDeath() {
     removeBlock();
     if (player.pos === 0) {
-      player.setState("attack");
       createParticles(
         "block",
         Math.floor(Math.random() * 5) + 5,
@@ -610,7 +628,8 @@ window.addEventListener("DOMContentLoaded", () => {
       );
       if (blocks[blocksNum - 1].type === 1) {
         player.isCounting = false;
-        player.setState("death0");
+        player.setState("death");
+        player.update();
         createParticles("death", Math.floor(Math.random() * 15 + 20));
         gameOver = true;
         gamePrepped = false;
@@ -619,7 +638,6 @@ window.addEventListener("DOMContentLoaded", () => {
         handleScore();
       }
     } else if (player.pos === 1) {
-      player.setState("attack");
       createParticles(
         "block",
         Math.floor(Math.random() * 5) + 5,
@@ -628,7 +646,8 @@ window.addEventListener("DOMContentLoaded", () => {
       );
       if (blocks[blocksNum - 1].type === 2) {
         player.isCounting = false;
-        player.setState("death1");
+        player.setState("death");
+        player.update();
         createParticles("death", Math.floor(Math.random() * 20 + 30));
         gameOver = true;
         gamePrepped = false;
@@ -723,7 +742,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  setTimeout(function() {loader.style.display = "none";}, 4500);
+  setTimeout(function() {loader.style.display = "none";}, 500);
 
   ///////////////////////////// GAMELOOP
 
@@ -734,6 +753,10 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     delta = timestamp - lastFrame;
     lastFrame = timestamp;
+
+    if(player.isMoving){
+      playerMove();
+    }
 
     if (player.isCounting) {
       if (player.stateCounter > player.stateTime) {
@@ -760,17 +783,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
   /////////////////// INPUT AND HANDLERS
 
-  function playerMove(state) {
-    if (!state) {
-      player.pos = 0;
-      player.counter = 0;
-      player.isCounting = true;
-    } else {
-      player.pos = 1;
-      player.counter = 0;
-      player.isCounting = true;
-    }
+  function playerMove(playerNumber) {
+    let dustFXPos;
+    player.setState('attack');
     player.update();
+    player.pos ? dustFXPos = player.pos0 : dustFXPos = player.pos1;
+    ctx.drawImage(dustFX, 0, 100, 1024, 100, dustFXPos.x, dustFXPos.y, 100, 100)
+    player.isMoving = false;
     checkDeath();
     for (let i = 0; i < blocksNum; i++) {
       blocks[i].update();
@@ -789,7 +808,8 @@ window.addEventListener("DOMContentLoaded", () => {
         if (gameOver) {
           return;
         }
-        playerMove(0, 0);
+        player.pos = 0;
+        player.isMoving = true;
         break;
       case "ArrowRight":
       case "d":
@@ -797,7 +817,8 @@ window.addEventListener("DOMContentLoaded", () => {
         if (gameOver) {
           return;
         }
-        playerMove(1, 0);
+        player.pos = 1;
+        player.isMoving = true;
         break;
       case "Enter":
         start();
