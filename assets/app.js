@@ -23,7 +23,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const branchTexture = new Image();
   const spikeTexture = new Image();
   const dustFX = new Image();
-  const dustFXRev = new Image();
 
   playerSprite.src = "assets/img/players.png";
   const playerSpriteDimensions = {
@@ -182,7 +181,6 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   dustFX.src = "assets/img/dustfx.png";
-  dustFXRev.src = "assets/img/dustfx-rev.png";
   const dustConfig = {
     x: [
       0, 80, 160, 240, 320, 400, 480, 560, 640, 720, 800, 880, 960, 1040, 1120,
@@ -226,6 +224,8 @@ window.addEventListener("DOMContentLoaded", () => {
       }
       this.width = Math.floor(chunk * 0.5);
       this.height = Math.floor(chunk * 0.7);
+      this.spriteWidth = playerSpriteDimensions.width;
+      this.spriteHeight = playerSpriteDimensions.height;
       this.pos = pos;
       this.setState("idle");
       this.stateTime = 300;
@@ -288,8 +288,8 @@ window.addEventListener("DOMContentLoaded", () => {
         playerSprite,
         this.state.x,
         this.state.y,
-        this.spriteDimensions.width,
-        this.spriteDimensions.height,
+        this.spriteWidth,
+        this.spriteHeight,
         drawPos.x,
         drawPos.y,
         this.width,
@@ -590,10 +590,10 @@ window.addEventListener("DOMContentLoaded", () => {
   class Effect {
     constructor(type) {
       this.type = type; // 'color' or 'blast'
-      this.reverse; // 0 to left, 1 to right
       this.pos = {
         x: WIDTH / 1.9,
-        y: player.pos0.y
+        y: player.pos0.y - player.pos0.y * 0.1
+
       };
       this.width;
       this.height;
@@ -602,7 +602,7 @@ window.addEventListener("DOMContentLoaded", () => {
       this.spritePosY = 0;
       this.frame = 0;
       this.frameStep = 1;
-      this.frameLimiter = 0;
+      this.animationDelay = 0;
       this.remove = false;
       this.init();
     }
@@ -612,15 +612,17 @@ window.addEventListener("DOMContentLoaded", () => {
         case "color":
         default:
           this.spritePosY = dustConfig.y[0];
-          this.width = player.height * 3;
-          this.height = player.height * 3;
+          this.width = WIDTH / 2;
+          this.height = player.height * 2.8;
           this.src = dustFX;
           if(player.pos) {
-            this.src = dustFXRev;
+            this.src = dustFX;
             this.spritePosY = 10;
             this.frame = dustConfig.x.length - 1;
             this.frameStep *= -1;
-            this.pos.x + this.width * 0.2;
+            this.pos.x += this.width * 0.04;
+            this.pos.y += this.height * 0.12;
+            ;
           }
           break;
           case "blast":
@@ -652,9 +654,14 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     update() {
       if(this.frame < 0 || this.frame > dustConfig.x.length - 1){this.remove = true;}
+      if(this.animationDelay > 50){
         this.clear();
         this.draw();
         this.frame += this.frameStep;
+      }
+      else {
+        this.animationDelay += delta;
+      }
     }
   }
 
@@ -856,7 +863,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
     updateArray(particles);
     updateArray(effects);
-    console.log(effects)
 
     touch.x = null;
     // console.log(effects[0])
