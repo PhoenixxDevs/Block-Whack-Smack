@@ -206,8 +206,10 @@ window.addEventListener("DOMContentLoaded", () => {
     new Audio("assets/sound/hit6.mp3"),
     new Audio("assets/sound/hit7.mp3"),
     new Audio("assets/sound/hit8.mp3"),
+    new Audio("assets/sound/death.mp3"),
   ];
   let notes = [];
+  let deathSound;
 
   let WIDTH, HEIGHT;
   let chunk, player;
@@ -690,7 +692,7 @@ window.addEventListener("DOMContentLoaded", () => {
     canvas3.width = WIDTH + 60;
     canvas3.height = HEIGHT + 60;
 
-    WIDTH < 750 ? blocksNum = 5 : blocksNum = 6;
+    WIDTH < 750 ? (blocksNum = 5) : (blocksNum = 6);
     chunk = HEIGHT / blocksNum;
   }
 
@@ -722,6 +724,18 @@ window.addEventListener("DOMContentLoaded", () => {
       scoreboardHi.innerText = `Hi-Score: ${hiScore}`;
     }
   }
+  function handleDeath() {
+    player.isCounting = false;
+        player.setState("death");
+        player.update();
+        deathSound = new Audio(hitSound[hitSound.length - 1].src);
+        deathSound.volume = 0.4;
+        deathSound.play();
+        createParticles("death", Math.floor(Math.random() * 15 + 20));
+        gameOver = true;
+        gamePrepped = false;
+        setTimeout(endGame, 2000);
+  }
 
   function checkDeath() {
     removeBlock();
@@ -733,17 +747,13 @@ window.addEventListener("DOMContentLoaded", () => {
         "right"
       );
       if (blocks[blocksNum - 1].type === 1) {
-        player.isCounting = false;
-        player.setState("death");
-        player.update();
-        createParticles("death", Math.floor(Math.random() * 15 + 20));
-        gameOver = true;
-        gamePrepped = false;
-        setTimeout(endGame, 2000);
+        handleDeath();
       } else {
-        let soundSelector = Math.floor(Math.random() * hitSound.length);
+        handleScore();
         notes.push(
-          new Audio(hitSound[Math.floor(Math.random() * hitSound.length)].src)
+          new Audio(
+            hitSound[Math.floor(Math.random() * (hitSound.length - 1))].src
+          )
         );
         notes[notes.length - 1].volume = 0.5;
         notes[notes.length - 1].play();
@@ -756,18 +766,13 @@ window.addEventListener("DOMContentLoaded", () => {
         "left"
       );
       if (blocks[blocksNum - 1].type === 2) {
-        player.isCounting = false;
-        player.setState("death");
-        player.update();
-        createParticles("death", Math.floor(Math.random() * 20 + 30));
-        gameOver = true;
-        gamePrepped = false;
-        setTimeout(endGame, 2000);
+        handleDeath();
       } else {
         handleScore();
-        let soundSelector = Math.floor(Math.random() * hitSound.length);
         notes.push(
-          new Audio(hitSound[Math.floor(Math.random() * hitSound.length)].src)
+          new Audio(
+            hitSound[Math.floor(Math.random() * (hitSound.length - 1))].src
+          )
         );
         notes[notes.length - 1].volume = 0.5;
         notes[notes.length - 1].play();
@@ -823,11 +828,11 @@ window.addEventListener("DOMContentLoaded", () => {
   /////////////////////////////// SET UP
 
   function init() {
-
     resize();
 
     blocks = [];
     particles = [];
+    notes = [];
 
     if (!song) {
       audioSetup();
