@@ -196,17 +196,18 @@ window.addEventListener("DOMContentLoaded", () => {
 
   /////////////////////  AUDIO
 
-  const song = new Audio('sound/whack-song.mp3');
+  const song = new Audio("assets/sound/whack-song.mp3");
   const hitSound = [
-    new Audio('sound/hit1.mp3'),
-    new Audio('sound/hit2.mp3'),
-    new Audio('sound/hit3.mp3'),
-    new Audio('sound/hit4.mp3'),
-    new Audio('sound/hit5.mp3'),
-    new Audio('sound/hit6.mp3'),
-    new Audio('sound/hit7.mp3'),
-    new Audio('sound/hit8.mp3'),
+    new Audio("assets/sound/hit1.mp3"),
+    new Audio("assets/sound/hit2.mp3"),
+    new Audio("assets/sound/hit3.mp3"),
+    new Audio("assets/sound/hit4.mp3"),
+    new Audio("assets/sound/hit5.mp3"),
+    new Audio("assets/sound/hit6.mp3"),
+    new Audio("assets/sound/hit7.mp3"),
+    new Audio("assets/sound/hit8.mp3"),
   ];
+  let notes = [];
 
   let WIDTH, HEIGHT;
   let chunk, player;
@@ -214,7 +215,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let grd, hiScore;
   let blocks = [];
   let particles = [];
-  let effects = []; 
+  let effects = [];
   let gameStart = false;
   let gameOver = false;
   let gamePrepped = false;
@@ -605,8 +606,7 @@ window.addEventListener("DOMContentLoaded", () => {
       this.type = type; // 'color' or 'blast'
       this.pos = {
         x: WIDTH / 1.5,
-        y: player.pos0.y - player.pos0.y * 0.08
-
+        y: player.pos0.y - player.pos0.y * 0.08,
       };
       this.width;
       this.height;
@@ -628,24 +628,23 @@ window.addEventListener("DOMContentLoaded", () => {
           this.width = WIDTH / 2;
           this.height = player.height * 2.8;
           this.src = dustFX;
-          if(player.pos) {
+          if (player.pos) {
             this.src = dustFX;
             this.spritePosY = 10;
             this.frame = dustConfig.x.length - 1;
             this.frameStep *= -1;
             this.pos.x += this.width * 0.04;
             this.pos.y += this.height * 0.12;
-            ;
           }
           break;
-          case "blast":
-            this.spritePosY = dustConfig.y[1];
-            this.width = player.height * 1.5;
-            this.height = player.height * 0.7;
+        case "blast":
+          this.spritePosY = dustConfig.y[1];
+          this.width = player.height * 1.5;
+          this.height = player.height * 0.7;
           break;
       }
-      if(!player.pos) {
-        this.pos.x = WIDTH / 2 - this.width - (player.width * 0.9);
+      if (!player.pos) {
+        this.pos.x = WIDTH / 2 - this.width - player.width * 0.9;
       }
     }
     clear() {
@@ -666,19 +665,32 @@ window.addEventListener("DOMContentLoaded", () => {
       );
     }
     update() {
-      if(this.frame < 0 || this.frame > dustConfig.x.length - 1){this.remove = true;}
-      if(this.animationDelay > 50){
+      if (this.frame < 0 || this.frame > dustConfig.x.length - 1) {
+        this.remove = true;
+      }
+      if (this.animationDelay > 50) {
         this.clear();
         this.draw();
         this.frame += this.frameStep;
-      }
-      else {
+      } else {
         this.animationDelay += delta;
       }
     }
   }
 
   ///////////////////// UTILITY FUNCTIONS
+
+  function resize(){
+    WIDTH = html.clientWidth;
+    HEIGHT = html.clientHeight;
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+    canvas2.width = WIDTH;
+    canvas2.height = HEIGHT;
+    canvas3.width = WIDTH + 60;
+    canvas3.height = HEIGHT + 60;
+    chunk = HEIGHT / blocksNum;
+  }
 
   function createParticles(type, amount, blockDescriptor, direction) {
     for (let i = 0; i < amount; i++) {
@@ -727,7 +739,9 @@ window.addEventListener("DOMContentLoaded", () => {
         gamePrepped = false;
         setTimeout(endGame, 2000);
       } else {
-        handleScore();
+        let soundSelector = Math.floor(Math.random() * hitSound.length);
+        notes.push(new Audio(hitSound[Math.floor(Math.random() * hitSound.length)].src));
+        notes[notes.length-1].play();
       }
     } else if (player.pos === 1) {
       createParticles(
@@ -746,6 +760,9 @@ window.addEventListener("DOMContentLoaded", () => {
         setTimeout(endGame, 2000);
       } else {
         handleScore();
+        let soundSelector = Math.floor(Math.random() * hitSound.length);
+        notes.push(new Audio(hitSound[Math.floor(Math.random() * hitSound.length)].src));
+        notes[notes.length-1].play();
       }
     }
   }
@@ -759,7 +776,6 @@ window.addEventListener("DOMContentLoaded", () => {
     gamePrepped = true;
     handleStorage(0);
   }
-
   function handleStorage(isGet) {
     if (!localStorage) {
       localStorage.setItem("hi-score", hiScore);
@@ -779,24 +795,36 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
+  function audioSetup() {
+    // load all audio
+    song.load();
+    song.volume = 1;
+    for (let i = 0; i < hitSound.length; i++) {
+      hitSound[i].load();
+    }
+  }
+  function noteRecycler() {
+    for(let i = 0; i < notes.length; i++) {
+      let n = notes[i];
+      if(n.currentTime > 5) {
+        notes.shift();
+      }
+    }
+  }
 
   /////////////////////////////// SET UP
 
   function init() {
-    WIDTH = html.clientWidth;
-    HEIGHT = html.clientHeight;
-    canvas.width = WIDTH;
-    canvas.height = HEIGHT;
-    canvas2.width = WIDTH;
-    canvas2.height = HEIGHT;
-    canvas3.width = WIDTH + 60;
-    canvas3.height = HEIGHT + 60;
-    chunk = HEIGHT / blocksNum;
+    resize();
 
     blocks = [];
     particles = [];
 
-    //generate starting blocks
+    if(!song){
+      audioSetup();
+    }
+
+    // generate starting blocks
     for (let i = 0; i < blocksNum; i++) {
       blocks.push(new Block(i));
     }
@@ -827,6 +855,11 @@ window.addEventListener("DOMContentLoaded", () => {
     if (!running) {
       animate();
       running = true;
+     if(!song.playing) {
+      song.play();
+      song.loop = true;
+      console.log(song.loop)
+    }
     }
     for (let i = 0; i < blocksNum; i++) {
       blocks[i].update();
@@ -858,9 +891,10 @@ window.addEventListener("DOMContentLoaded", () => {
     delta = timestamp - lastFrame;
     lastFrame = timestamp;
 
+    noteRecycler();
+
     if (player.isMoving) {
       playerMove();
-      
     }
 
     if (player.isCounting) {
@@ -876,10 +910,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
     updateArray(particles);
     updateArray(effects);
-
+    // console.log(song.currentTime)
 
     touch.x = null;
-    // console.log(effects[0])
+
     requestAnimationFrame(animate);
   }
 
@@ -889,7 +923,7 @@ window.addEventListener("DOMContentLoaded", () => {
     player.setState("attack");
     player.update();
     player.isMoving = false;
-    effects.push(new Effect('color'));
+    effects.push(new Effect("color"));
     checkDeath();
     updateArray(blocks);
   }
