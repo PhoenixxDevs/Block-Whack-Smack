@@ -682,7 +682,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   ///////////////////// UTILITY FUNCTIONS
 
-  function resize() {
+  function resize(initCalled) {
     WIDTH = html.clientWidth;
     HEIGHT = html.clientHeight;
     canvas.width = WIDTH;
@@ -695,7 +695,7 @@ window.addEventListener("DOMContentLoaded", () => {
     WIDTH < 750 ? (blocksNum = 5) : (blocksNum = 6);
     chunk = HEIGHT / blocksNum;
 
-    if(gameStart){init();}
+    if(!initCalled && gameStart){init();}
   }
 
   function createParticles(type, amount, blockDescriptor, direction) {
@@ -849,7 +849,7 @@ window.addEventListener("DOMContentLoaded", () => {
     particles = [];
     notes = [];
     
-    resize();
+    resize(1);
 
     if (!song) {
       audioSetup();
