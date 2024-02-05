@@ -194,6 +194,20 @@ window.addEventListener("DOMContentLoaded", () => {
     x: null,
   };
 
+  /////////////////////  AUDIO
+
+  const song = new Audio('sound/whack-song.mp3');
+  const hitSound = [
+    new Audio('sound/hit1.mp3'),
+    new Audio('sound/hit2.mp3'),
+    new Audio('sound/hit3.mp3'),
+    new Audio('sound/hit4.mp3'),
+    new Audio('sound/hit5.mp3'),
+    new Audio('sound/hit6.mp3'),
+    new Audio('sound/hit7.mp3'),
+    new Audio('sound/hit8.mp3'),
+  ];
+
   let WIDTH, HEIGHT;
   let chunk, player;
   let arrayLength;
@@ -205,7 +219,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let gameOver = false;
   let gamePrepped = false;
   let running = false;
-  let blocksNum = 5;
+  let blocksNum = 6;
   let score = 0;
   let delta = 0;
   let lastFrame = 0;
@@ -338,7 +352,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     draw() {
       // branch
-      ctx.fillStyle = "indigo";
       switch (this.type) {
         case 1:
           ctx.drawImage(
@@ -591,8 +604,8 @@ window.addEventListener("DOMContentLoaded", () => {
     constructor(type) {
       this.type = type; // 'color' or 'blast'
       this.pos = {
-        x: WIDTH / 1.9,
-        y: player.pos0.y - player.pos0.y * 0.1
+        x: WIDTH / 1.5,
+        y: player.pos0.y - player.pos0.y * 0.08
 
       };
       this.width;
@@ -632,7 +645,7 @@ window.addEventListener("DOMContentLoaded", () => {
           break;
       }
       if(!player.pos) {
-        this.pos.x = WIDTH / 2 - this.width;
+        this.pos.x = WIDTH / 2 - this.width - (player.width * 0.9);
       }
     }
     clear() {
@@ -863,6 +876,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     updateArray(particles);
     updateArray(effects);
+
 
     touch.x = null;
     // console.log(effects[0])
