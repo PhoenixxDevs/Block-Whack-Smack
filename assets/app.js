@@ -692,9 +692,11 @@ window.addEventListener("DOMContentLoaded", () => {
     canvas3.width = WIDTH + 60;
     canvas3.height = HEIGHT + 60;
 
+    // to make easier to see on mobile screens
     WIDTH < 750 ? (blocksNum = 5) : (blocksNum = 6);
     chunk = HEIGHT / blocksNum;
 
+    // initcalled to stop loop in init function
     if(!initCalled && gameStart){init();}
   }
 
