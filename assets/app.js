@@ -214,18 +214,18 @@ window.addEventListener("DOMContentLoaded", () => {
   let WIDTH, HEIGHT;
   let chunk, player;
   let arrayLength;
-  let grd, hiScore;
+  let hiScore;
   let blocks = [];
   let particles = [];
   let effects = [];
+  let score = 0;
+  let blocksNum = 6;
+  let delta = 0;
+  let lastFrame = 0;
   let gameStart = false;
   let gameOver = false;
   let gamePrepped = false;
   let running = false;
-  let blocksNum = 6;
-  let score = 0;
-  let delta = 0;
-  let lastFrame = 0;
 
   /////////////////////////////// CLASSES
 
@@ -694,6 +694,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
     WIDTH < 750 ? (blocksNum = 5) : (blocksNum = 6);
     chunk = HEIGHT / blocksNum;
+
+    if(gameStart){init();}
   }
 
   function createParticles(type, amount, blockDescriptor, direction) {
@@ -716,25 +718,45 @@ window.addEventListener("DOMContentLoaded", () => {
     blocks.unshift(new Block(0));
   }
 
-  function handleScore() {
-    score++;
-    scoreboard.innerText = `Score: ${score}`;
-    if (score > hiScore) {
-      hiScore = score;
+  function handleStorage(isGet) {
+    if (!localStorage) {
+      localStorage.setItem("hi-score", hiScore);
+    }
+    if (isGet) {
+      result = localStorage.getItem("hi-score");
+      return result;
+    } else localStorage.setItem("hi-score", hiScore);
+  }
+
+  function handleScore(reset) {
+    if (!reset) {
+      score++;
+      scoreboard.innerText = `Score: ${score}`;
+      if (score > hiScore) {
+        hiScore = score;
+        scoreboardHi.innerText = `Hi-Score: ${hiScore}`;
+      }
+    } else {
+      score = 0;
+      localStorage ? (hiScore = handleStorage(1)) : (hiScore = 0);
+      scoreboard.classList.toggle("hide");
+      scoreboardHi.classList.toggle("hide");
       scoreboardHi.innerText = `Hi-Score: ${hiScore}`;
+      scoreboard.innerText = `Score: ${score}`;
     }
   }
+
   function handleDeath() {
     player.isCounting = false;
-        player.setState("death");
-        player.update();
-        deathSound = new Audio(hitSound[hitSound.length - 1].src);
-        deathSound.volume = 0.4;
-        deathSound.play();
-        createParticles("death", Math.floor(Math.random() * 15 + 20));
-        gameOver = true;
-        gamePrepped = false;
-        setTimeout(endGame, 2000);
+    player.setState("death");
+    player.update();
+    deathSound = new Audio(hitSound[hitSound.length - 1].src);
+    deathSound.volume = 0.4;
+    deathSound.play();
+    createParticles("death", Math.floor(Math.random() * 15 + 20));
+    gameOver = true;
+    gamePrepped = false;
+    setTimeout(endGame, 2000);
   }
 
   function checkDeath() {
@@ -789,15 +811,7 @@ window.addEventListener("DOMContentLoaded", () => {
     gamePrepped = true;
     handleStorage(0);
   }
-  function handleStorage(isGet) {
-    if (!localStorage) {
-      localStorage.setItem("hi-score", hiScore);
-    }
-    if (isGet) {
-      result = localStorage.getItem("hi-score");
-      return result;
-    } else localStorage.setItem("hi-score", hiScore);
-  }
+
   function updateArray(array) {
     arrayLength = array.length;
     for (let j = 0; j < arrayLength; j++) {
@@ -808,6 +822,7 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
+
   function audioSetup() {
     // load all audio
     song.load();
@@ -816,6 +831,7 @@ window.addEventListener("DOMContentLoaded", () => {
       hitSound[i].load();
     }
   }
+
   function noteRecycler() {
     for (let i = 0; i < notes.length; i++) {
       let n = notes[i];
@@ -828,11 +844,12 @@ window.addEventListener("DOMContentLoaded", () => {
   /////////////////////////////// SET UP
 
   function init() {
-    resize();
-
+    
     blocks = [];
     particles = [];
     notes = [];
+    
+    resize();
 
     if (!song) {
       audioSetup();
@@ -854,30 +871,23 @@ window.addEventListener("DOMContentLoaded", () => {
         break;
     }
 
-    score = 0;
-    localStorage ? (hiScore = handleStorage(1)) : (hiScore = 0);
-    scoreboard.classList.toggle("hide");
-    scoreboardHi.classList.toggle("hide");
-    scoreboardHi.innerText = `Hi-Score: ${hiScore}`;
-    scoreboard.innerText = `Score: ${score}`;
+    // in here "truthy" resets score
+    handleScore(1);
 
     if (gameOver) {
       gameOverScreen.classList.toggle("hide");
       gameOver = false;
     }
-
     if (!running) {
       animate();
       running = true;
       if (!song.playing) {
         song.play();
         song.loop = true;
-        console.log(song.loop);
       }
     }
-    for (let i = 0; i < blocksNum; i++) {
-      blocks[i].update();
-    }
+
+    updateArray(blocks);
     player.update();
   }
   function start() {
@@ -893,7 +903,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   setTimeout(function () {
     loader.style.display = "none";
-  }, 500);
+  }, 3000);
 
   ///////////////////////////// GAMELOOP
 
@@ -933,7 +943,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   /////////////////// INPUT AND HANDLERS
 
-  function playerMove(playerNumber) {
+  function playerMove() {
     player.setState("attack");
     player.update();
     player.isMoving = false;
@@ -942,7 +952,7 @@ window.addEventListener("DOMContentLoaded", () => {
     updateArray(blocks);
   }
 
-  window.addEventListener("resize", init);
+  window.addEventListener("resize", resize);
   window.addEventListener("keydown", function (e) {
     if (e.repeat) {
       return;
@@ -971,7 +981,6 @@ window.addEventListener("DOMContentLoaded", () => {
         break;
     }
   });
-
   window.addEventListener("touchstart", (e) => {
     touch.x = Math.floor(e.changedTouches[0].clientX);
     if (touch.x < WIDTH / 2 && !gameOver) {
