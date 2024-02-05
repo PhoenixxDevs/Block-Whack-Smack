@@ -680,7 +680,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   ///////////////////// UTILITY FUNCTIONS
 
-  function resize(){
+  function resize() {
     WIDTH = html.clientWidth;
     HEIGHT = html.clientHeight;
     canvas.width = WIDTH;
@@ -689,6 +689,8 @@ window.addEventListener("DOMContentLoaded", () => {
     canvas2.height = HEIGHT;
     canvas3.width = WIDTH + 60;
     canvas3.height = HEIGHT + 60;
+
+    WIDTH < 750 ? blocksNum = 5 : blocksNum = 6;
     chunk = HEIGHT / blocksNum;
   }
 
@@ -740,8 +742,11 @@ window.addEventListener("DOMContentLoaded", () => {
         setTimeout(endGame, 2000);
       } else {
         let soundSelector = Math.floor(Math.random() * hitSound.length);
-        notes.push(new Audio(hitSound[Math.floor(Math.random() * hitSound.length)].src));
-        notes[notes.length-1].play();
+        notes.push(
+          new Audio(hitSound[Math.floor(Math.random() * hitSound.length)].src)
+        );
+        notes[notes.length - 1].volume = 0.5;
+        notes[notes.length - 1].play();
       }
     } else if (player.pos === 1) {
       createParticles(
@@ -761,8 +766,11 @@ window.addEventListener("DOMContentLoaded", () => {
       } else {
         handleScore();
         let soundSelector = Math.floor(Math.random() * hitSound.length);
-        notes.push(new Audio(hitSound[Math.floor(Math.random() * hitSound.length)].src));
-        notes[notes.length-1].play();
+        notes.push(
+          new Audio(hitSound[Math.floor(Math.random() * hitSound.length)].src)
+        );
+        notes[notes.length - 1].volume = 0.5;
+        notes[notes.length - 1].play();
       }
     }
   }
@@ -804,9 +812,9 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
   function noteRecycler() {
-    for(let i = 0; i < notes.length; i++) {
+    for (let i = 0; i < notes.length; i++) {
       let n = notes[i];
-      if(n.currentTime > 5) {
+      if (n.currentTime > 5) {
         notes.shift();
       }
     }
@@ -815,12 +823,13 @@ window.addEventListener("DOMContentLoaded", () => {
   /////////////////////////////// SET UP
 
   function init() {
+
     resize();
 
     blocks = [];
     particles = [];
 
-    if(!song){
+    if (!song) {
       audioSetup();
     }
 
@@ -855,11 +864,11 @@ window.addEventListener("DOMContentLoaded", () => {
     if (!running) {
       animate();
       running = true;
-     if(!song.playing) {
-      song.play();
-      song.loop = true;
-      console.log(song.loop)
-    }
+      if (!song.playing) {
+        song.play();
+        song.loop = true;
+        console.log(song.loop);
+      }
     }
     for (let i = 0; i < blocksNum; i++) {
       blocks[i].update();
