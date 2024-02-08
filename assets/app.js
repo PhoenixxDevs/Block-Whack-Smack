@@ -621,29 +621,35 @@ window.addEventListener("DOMContentLoaded", () => {
       this.spriteHeight = dustConfig.height;
       this.spritePosY = 0;
       this.frame = 0;
+      this.frames = [];
       this.frameStep = 1;
+      this.frameCount = 0;
+      this.framesMax = 3;
       this.animationDelay = 0;
       this.remove = false;
+      this.config;
       this.init();
     }
     init() {
+      this.frame = 0;
+      let config = {};
       //switch for scalability
       switch (this.type) {
         case "color":
         default:
           this.spritePosY = dustConfig.y[0];
-          this.width = WIDTH / 2;
-          this.height = player.height * 2.8;
+          this.width = Math.floor((WIDTH / 2) / dustConfig.x.length);
+          this.height = Math.floor(player.height);
           this.src = dustFX;
           if (player.pos) {
-            this.pos.y += this.height * 0.12;
+            // this.pos.y += this.height * 0.12;
             this.spritePosY = 10;
           }
           if (!player.pos) {
             this.src = dustFXRev;
             this.frame = dustConfig.x.length - 1;
-            this.frameStep *= 1;
-            this.pos.y -= player.height;
+            this.frameStep *= -1;
+            // this.pos.y -= player.height;
           }
           break;
         case "blast":
@@ -652,41 +658,68 @@ window.addEventListener("DOMContentLoaded", () => {
           this.height = player.height * 0.7;
           break;
       }
+      config = {
+        src: this.src,
+        pos: this.pos,
+        width: this.width,
+        height: this.height,
+        spriteY: this.spritePosY,
+        spriteX: dustConfig.x[this.frame] * this.spriteWidth,
+      };
+      for(let i = 0; i < dustConfig.x.length; i++) {
+        this.frames.push(config);
+        this.pos.x += this.width;
+        this.frame++;
+      }
+      this.frame = 0;
     }
-    clear() {
-      ctx3.clearRect(this.pos.x, this.pos.y, this.width, this.height);
+    clear(frame){
+      ctx.clearRect(frame.pos.x, frame.pos.y, frame.width, frame.height);
     }
-    draw() {
-      ctx3.drawImage(
-        this.src,
-        //decides which part of sprite to draw
-        dustConfig.x[this.frame],
-        this.spritePosY,
-        this.spriteWidth,
-        this.spriteHeight,
-        this.pos.x,
-        this.pos.y,
-        this.spriteWidth,
-        this.height
+    draw(frame) {
+      ctx.drawImage(
+        frame.src, frame.spriteX, frame.spriteY, dustConfig.width, dustConfig.height,
+        frame.pos.x, frame.pos.y, frame.width, frame.height
         );
-      }
-      update() {
-        if (this.frame < 0 || this.frame > dustConfig.x.length - 1) {
-          this.remove = true;
-        }
-        if (this.animationDelay > 0) {
-          this.clear();
-          if(player.pos){this.pos.x = this.pos.x + (this.spriteWidth * this.frame) / 6}
-          else {this.pos.x -= this.spriteWidth;
-            console.log(this.pos.x)
-          }
-        this.draw();
-        this.frame += this.frameStep;
-        this.animationDelay = 0;
-      } else {
-        this.animationDelay += delta;
-      }
     }
+    update() {
+      this.draw(this.frames[this.frame]);
+    }
+    // clear() {
+    //   ctx3.clearRect(this.pos.x, this.pos.y, this.width, this.height);
+    // }
+    // draw() {
+    //   ctx3.drawImage(
+    //     this.src,
+    //     //decides which part of sprite to draw
+    //     dustConfig.x[this.frame],
+    //     this.spritePosY,
+    //     this.spriteWidth,
+    //     this.spriteHeight,
+    //     //where to draw
+    //     this.pos.x,
+    //     this.pos.y,
+    //     this.spriteWidth,
+    //     this.height
+    //     );
+    //   }
+    //   update() {
+    //     if (this.frame < 0 || this.frame > dustConfig.x.length - 1) {
+    //       this.remove = true;
+    //     }
+    //     if (this.animationDelay > 0) {
+    //       this.clear();
+    //       if(player.pos){this.pos.x = this.pos.x + (this.spriteWidth * this.frame) / 6}
+    //       else {this.pos.x -= this.spriteWidth;
+    //         console.log(this.pos.x)
+    //       }
+    //     this.draw();
+    //     this.frame += this.frameStep;
+    //     this.animationDelay = 0;
+    //   } else {
+    //     this.animationDelay += delta;
+    //   }
+    // }
   }
 
   ///////////////////// UTILITY FUNCTIONS
