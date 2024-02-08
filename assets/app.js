@@ -23,6 +23,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const branchTexture = new Image();
   const spikeTexture = new Image();
   const dustFX = new Image();
+  const dustFXRev = new Image();
 
   playerSprite.src = "assets/img/players.png";
   const playerSpriteDimensions = {
@@ -181,6 +182,7 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   dustFX.src = "assets/img/dustfx.png";
+  dustFXRev.src = "assets/img/dustfx-rev.png";
   const dustConfig = {
     x: [
       0, 80, 160, 240, 320, 400, 480, 560, 640, 720, 800, 880, 960, 1040, 1120,
@@ -609,7 +611,8 @@ window.addEventListener("DOMContentLoaded", () => {
       this.type = type; // 'color' or 'blast'
       this.pos = {
         x: WIDTH / 2,
-        y: player.pos0.y * 0.92,
+        y: player.pos0.y * 0.96
+        ,
       };
       this.width;
       this.height;
@@ -632,15 +635,14 @@ window.addEventListener("DOMContentLoaded", () => {
           this.height = player.height * 2.8;
           this.src = dustFX;
           if (player.pos) {
-            this.pos.x += this.width * 0.1;
             this.pos.y += this.height * 0.12;
-            this.src = dustFX;
             this.spritePosY = 10;
-            this.frame = dustConfig.x.length - 1;
-            this.frameStep *= -1;
           }
           if (!player.pos) {
-            this.pos.x -= this.width;
+            this.src = dustFXRev;
+            this.frame = dustConfig.x.length - 1;
+            this.frameStep *= 1;
+            this.pos.y -= player.height;
           }
           break;
         case "blast":
@@ -663,18 +665,23 @@ window.addEventListener("DOMContentLoaded", () => {
         this.spriteHeight,
         this.pos.x,
         this.pos.y,
-        this.width,
+        this.spriteWidth,
         this.height
-      );
-    }
-    update() {
-      if (this.frame < 0 || this.frame > dustConfig.x.length - 1) {
-        this.remove = true;
+        );
       }
-      if (this.animationDelay > 50) {
-        this.clear();
+      update() {
+        if (this.frame < 0 || this.frame > dustConfig.x.length - 1) {
+          this.remove = true;
+        }
+        if (this.animationDelay > 0) {
+          this.clear();
+          if(player.pos){this.pos.x = this.pos.x + (this.spriteWidth * this.frame) / 6}
+          else {this.pos.x -= this.spriteWidth;
+            console.log(this.pos.x)
+          }
         this.draw();
         this.frame += this.frameStep;
+        this.animationDelay = 0;
       } else {
         this.animationDelay += delta;
       }
