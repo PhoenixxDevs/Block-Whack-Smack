@@ -222,6 +222,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let blocksNum = 6;
   let delta = 0;
   let lastFrame = 0;
+  let gameLoaded = false;
   let gameStart = false;
   let gameOver = false;
   let gamePrepped = false;
@@ -903,8 +904,11 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Placeholder loader function
   setTimeout(function () {
     loader.style.display = "none";
+    gameLoaded = true;
+    gamePrepped = true;
   }, 3000);
 
   ///////////////////////////// GAMELOOP
@@ -979,7 +983,9 @@ window.addEventListener("DOMContentLoaded", () => {
         player.isMoving = true;
         break;
       case "Enter":
-        start();
+        if(gameLoaded){
+          start();
+        }
         break;
     }
   });
@@ -992,6 +998,8 @@ window.addEventListener("DOMContentLoaded", () => {
       player.pos = 1;
       player.isMoving = true;
     }
-    start();
+  if(gameLoaded && gamePrepped){
+      start();
+    }
   });
 });
