@@ -607,8 +607,8 @@ window.addEventListener("DOMContentLoaded", () => {
     constructor(type) {
       this.type = type; // 'color' or 'blast'
       this.pos = {
-        x: WIDTH / 1.5,
-        y: player.pos0.y - player.pos0.y * 0.08,
+        x: WIDTH / 2,
+        y: player.pos0.y * 0.92,
       };
       this.width;
       this.height;
@@ -631,12 +631,15 @@ window.addEventListener("DOMContentLoaded", () => {
           this.height = player.height * 2.8;
           this.src = dustFX;
           if (player.pos) {
+            this.pos.x += this.width * 0.1;
+            this.pos.y += this.height * 0.12;
             this.src = dustFX;
             this.spritePosY = 10;
             this.frame = dustConfig.x.length - 1;
             this.frameStep *= -1;
-            this.pos.x += this.width * 0.04;
-            this.pos.y += this.height * 0.12;
+          }
+          if (!player.pos) {
+            this.pos.x -= this.width;
           }
           break;
         case "blast":
@@ -644,9 +647,6 @@ window.addEventListener("DOMContentLoaded", () => {
           this.width = player.height * 1.5;
           this.height = player.height * 0.7;
           break;
-      }
-      if (!player.pos) {
-        this.pos.x = WIDTH / 2 - this.width - player.width * 0.9;
       }
     }
     clear() {
