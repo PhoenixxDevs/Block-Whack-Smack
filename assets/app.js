@@ -963,7 +963,7 @@ window.addEventListener("DOMContentLoaded", () => {
       case "ArrowLeft":
       case "a":
       case "A":
-        if (gameOver) {
+        if (!gameStart || gameOver) {
           return;
         }
         player.pos = 0;
@@ -972,7 +972,7 @@ window.addEventListener("DOMContentLoaded", () => {
       case "ArrowRight":
       case "d":
       case "D":
-        if (gameOver) {
+        if (!gameStart || gameOver) {
           return;
         }
         player.pos = 1;

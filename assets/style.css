@@ -51,42 +51,52 @@ canvas {
   font-size: 32px;
 }
 
-#planet-title img {
-  left: -20%;
+#menu-planet {
+  left: -27%;
   position: relative;
   max-width: 70%;
   animation: 
   planet-spin 240s linear infinite;
+}
+.menu-player-container {
+  overflow: hidden;
+  display: block;
+  position: absolute;
+  top: 5%;
+  width: 100px;
+  height: 140px;
+  animation: menu-player 25s linear infinite;
+}
+
+#menu-player-left {
+  left: 5%;
+  background-image: url('img/players.png');
+  background-position: 0 0; 
+}
+
+#menu-player-right {
+  right: 5%;
+  background-image: url('img/players.png');
+  background-position: -100px -280px;
 }
 
 #title {
   padding: 25px 0;
   background-image: url(img/aluminum-plate-with-indentations.png);
   background-position: center;
-  background-size: 60%;
+  background-size: 100%;
   border-radius: 28px;
   margin: 0 auto;
   width: 65%;
   /* background-color: rgba(13, 126, 47, 0.28); */
-  border: 6px solid rgb(252, 249, 170);
+  border: 6px solid rgb(221, 218, 150);
   margin-bottom: 90px;
   word-spacing: 8px;
   letter-spacing: 8px;
   box-shadow: 0 0 58px #6bfff3;
+  text-shadow: 0 0 20px #d676e4, 2px 2px 3px #a85ab4,  -2px -2px 3px #a85ab4;
 }
 
-.idle h3 {
-  font-size: 28px;
-  text-align: center;
-  margin-top: 60px;
-}
-
-.idle p {
-  font-size: 20px;
-  padding: 20px;
-  text-align: center;
-  margin-top: 60px;
-}
 
 #game-over {
   height: 60dvh;
@@ -333,5 +343,24 @@ strong {
 @keyframes planet-spin {
   100% {
     transform: rotateZ(360deg);
+  }
+}
+
+@keyframes menu-player {
+  0% {
+    transform: rotate(-15deg) translateY(0);
+  }
+  25%{
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(15deg) translateY(8px);
+  }
+  75% {
+    transform: rotate(0) translateY(-4px);
+  }
+  100% {
+    transform: rotate(-15deg);
+    transform: rotate(-15deg) translateY(0);
   }
 }
