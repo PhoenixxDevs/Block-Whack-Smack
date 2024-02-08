@@ -22,7 +22,7 @@ canvas {
   width: 100vw;
   height: 100dvh;
   background-image: url(img/nebula01.png);
-  animation: moveBackground 25s ease-in-out infinite alternate-reverse;
+  animation: moveBackground 20s ease-in-out infinite alternate-reverse;
 }
 
 .hide {
@@ -34,7 +34,11 @@ canvas {
   z-index: 1;
   width: 100vw;
   height: 100vh;
-  color: rgb(244, 239, 209);
+  color: rgb(252, 250, 200);
+}
+.menu-animation {
+  animation: menu 1.5s ease-in 1;
+  animation-delay: 3s;
 }
 
 #planet-title {
@@ -45,19 +49,30 @@ canvas {
   transform: translate(-50%, -40%);
   text-align: center;
   font-size: 32px;
-  animation: menu 1.5s ease-in 1;
-  animation-delay: 3s;
 }
+
 #planet-title img {
+  left: -20%;
+  position: relative;
   max-width: 70%;
+  animation: 
+  planet-spin 240s linear infinite;
 }
+
 #title {
-  border-radius: 20px;
+  padding: 25px 0;
+  background-image: url(img/aluminum-plate-with-indentations.png);
+  background-position: center;
+  background-size: 60%;
+  border-radius: 28px;
   margin: 0 auto;
-  width: 70%;
+  width: 65%;
   /* background-color: rgba(13, 126, 47, 0.28); */
-  margin-bottom: 30px;
-  letter-spacing: 3px;
+  border: 6px solid rgb(252, 249, 170);
+  margin-bottom: 90px;
+  word-spacing: 8px;
+  letter-spacing: 8px;
+  box-shadow: 0 0 58px #6bfff3;
 }
 
 .idle h3 {
@@ -131,7 +146,7 @@ strong {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: black;
+  background-color: rgb(25, 0, 46);
 }
 
 /*    / LOADER CLASSES  /     */
@@ -298,18 +313,25 @@ strong {
 
 @keyframes menu {
   0% {
-    transform: translate(-50%, -40%) scale(0);
+    transform: scale(0);
     font-size: 0px;
+  }
+  30% {
+    font-size: 32px;
   }
   90% {
-    transform: translate(-50%, -37%) scale(1);
-    font-size: 0px;
+    transform: scale(1);
   }
   95% {
-    transform: translate(-50%, -37%) scale(0.95);
+    transform: scale(0.95);
   }
   100% {
-    transform: translate(-50%, -40%) scale(1);
-    font-size: 32px;
+    transform: scale(1);
+  }
+}
+
+@keyframes planet-spin {
+  100% {
+    transform: rotateZ(360deg);
   }
 }
