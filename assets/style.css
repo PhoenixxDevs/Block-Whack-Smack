@@ -1,3 +1,5 @@
+      /* -- GENERAL -- */
+
 * {
   padding: 0;
   margin: 0;
@@ -29,6 +31,9 @@ canvas {
   display: none;
 }
 
+
+      /* -- MAIN MENU -- */
+
 .idle {
   position: relative;
   z-index: 1;
@@ -48,13 +53,13 @@ canvas {
   left: 50%;
   transform: translate(-50%, -40%);
   text-align: center;
-  font-size: 32px;
 }
 
 #menu-planet {
   left: -27%;
   position: relative;
   max-width: 70%;
+  margin-top: 35px;
   animation: 
   planet-spin 240s linear infinite;
 }
@@ -81,22 +86,23 @@ canvas {
 }
 
 #title {
-  padding: 25px 0;
+  width: 65%;
+  margin: 0 auto;
+  margin-top: 50px;
+  padding: 25px 10px;
   background-image: url(img/aluminum-plate-with-indentations.png);
   background-position: center;
   background-size: 100%;
-  border-radius: 28px;
-  margin: 0 auto;
-  width: 65%;
-  /* background-color: rgba(13, 126, 47, 0.28); */
   border: 6px solid rgb(221, 218, 150);
-  margin-bottom: 90px;
+  font-size: 52px;
   word-spacing: 8px;
   letter-spacing: 8px;
+  border-radius: 28px;
   box-shadow: 0 0 58px #6bfff3;
   text-shadow: 0 0 20px #d676e4, 2px 2px 3px #a85ab4,  -2px -2px 3px #a85ab4;
 }
 
+      /* -- GAME OVER -- */
 
 #game-over {
   height: 60dvh;
@@ -136,6 +142,8 @@ canvas {
   text-shadow: 0 0 2px #000;
 }
 
+      /* -- SCOREBOARD --  */
+
 #score {
   float: left;
 }
@@ -149,6 +157,8 @@ strong {
   font-weight: 800;
 }
 
+      /* -- LOADING SCREEN -- */
+
 #load {
   z-index: 100;
   position: absolute;
@@ -159,7 +169,6 @@ strong {
   background-color: rgb(25, 0, 46);
 }
 
-/*    / LOADER CLASSES  /     */
 
 .loader {
   position: absolute;
@@ -195,7 +204,7 @@ strong {
   animation: l8-1 3s infinite linear;
 }
 
-/* ------ Media */
+      /* -- MEDIA QUERIES -- */
 
 @media screen and (max-width: 620px) {
   #game-over h1 {
@@ -250,7 +259,7 @@ strong {
   }
 }
 
-/*   LOADER ANIMATIONS   */
+      /* -- LOADER ANIMATIONS -- */
 
 @keyframes l8-0 {
   0%,
@@ -301,7 +310,7 @@ strong {
   }
 }
 
-/* MY ANIMATIONS */
+      /* -- MY ANIMATIONS -- */
 
 @keyframes moveBackground {
   0% {

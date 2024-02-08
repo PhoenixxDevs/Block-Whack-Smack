@@ -369,11 +369,9 @@ window.addEventListener("DOMContentLoaded", () => {
             spikeTextureDimensions.height,
             //where to draw
             this.pos.x - this.branchWidth,
-            this.pos.y * this.height +
-              this.branchHeight +
-              spikeTextureDimensions.height / 2,
+            this.pos.y * this.height + this.branchHeight * 0.8,
             this.branchWidth,
-            this.branchHeight * 1.1
+            this.branchHeight * 1.3
           );
           ctx.drawImage(
             //texture placement
@@ -384,11 +382,12 @@ window.addEventListener("DOMContentLoaded", () => {
             this.branch.height,
             //where to draw
             this.pos.x - this.branchWidth,
-            this.pos.y * this.height + this.branchHeight,
+            this.pos.y * this.height,
             this.branchWidth,
             this.branchHeight
           );
           break;
+
         case 2:
           ctx.drawImage(
             //texture placement
@@ -399,11 +398,9 @@ window.addEventListener("DOMContentLoaded", () => {
             spikeTextureDimensions.height,
             //where to draw
             this.pos.x + this.width,
-            this.pos.y * this.height +
-              this.branchHeight +
-              spikeTextureDimensions.height / 2,
+            this.pos.y * this.height + this.branchHeight * 0.8,
             this.branchWidth,
-            this.branchHeight * 1.1
+            this.branchHeight * 1.3
           );
           ctx.drawImage(
             //texture placement
@@ -414,7 +411,7 @@ window.addEventListener("DOMContentLoaded", () => {
             this.branch.height,
             //where to draw
             this.pos.x + this.width,
-            this.pos.y * this.height + this.branchHeight,
+            this.pos.y * this.height,
             this.branchWidth,
             this.branchHeight
           );
@@ -440,16 +437,16 @@ window.addEventListener("DOMContentLoaded", () => {
       if (this.type === 1) {
         ctx.clearRect(
           this.pos.x - this.branchWidth,
-          this.pos.y * this.height + this.branchHeight - 2,
+          this.pos.y * this.height - 2,
           this.branchWidth,
-          this.branchHeight * 2 + 4
+          this.branchHeight + spikeTextureDimensions.height + 2
         );
       } else if (this.type == 2) {
         ctx.clearRect(
           this.pos.x + this.width,
-          this.pos.y * this.height + this.branchHeight - 2,
+          this.pos.y * this.height - 2,
           this.branchWidth,
-          this.branchHeight * 2 + 4
+          this.branchHeight + spikeTextureDimensions.height + 2
         );
       } else return;
     }
@@ -477,7 +474,11 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
     typeBlock() {
-      this.size = Math.floor(Math.random() * 4) + 2;
+      this.size = Math.floor(Math.random() * 5
+      
+      
+      
+      ) + 4;
       this.pos = {
         x:
           Math.floor(Math.random() * this.blockDescriptor.width) +
@@ -571,7 +572,7 @@ window.addEventListener("DOMContentLoaded", () => {
       ) {
         ctx2.save(); // Save the current state of the canvas context
         ctx2.beginPath();
-        ctx2.arc(this.pos.x, this.pos.y, this.size + 0.6, 0, Math.PI * 2, true);
+        ctx2.arc(this.pos.x, this.pos.y, this.size + 1, 0, Math.PI * 2, true);
         ctx2.clip();
         ctx2.clearRect(0, 0, WIDTH, HEIGHT); // Clear the entire canvas within the clipping path
         ctx2.restore(); // Restore the previous state of the canvas context
@@ -916,7 +917,7 @@ window.addEventListener("DOMContentLoaded", () => {
     loader.style.display = "none";
     gameLoaded = true;
     gamePrepped = true;
-  }, 3000);
+  }, 30);
 
   ///////////////////////////// GAMELOOP
 
