@@ -667,11 +667,12 @@ window.addEventListener("DOMContentLoaded", () => {
         spriteX: dustConfig.x[this.frame] * this.spriteWidth,
       };
       for(let i = 0; i < dustConfig.x.length; i++) {
+        config.pos.x = this.frame * config.width;
         this.frames.push(config);
-        this.pos.x += this.width;
-        this.frame++;
+        this.frame += this.frameStep;
       }
       this.frame = 0;
+      console.log(this.frames)
     }
     clear(frame){
       ctx.clearRect(frame.pos.x, frame.pos.y, frame.width, frame.height);
@@ -683,7 +684,6 @@ window.addEventListener("DOMContentLoaded", () => {
         );
     }
     update() {
-      this.draw(this.frames[this.frame]);
     }
     // clear() {
     //   ctx3.clearRect(this.pos.x, this.pos.y, this.width, this.height);
@@ -950,7 +950,7 @@ window.addEventListener("DOMContentLoaded", () => {
     loader.style.display = "none";
     gameLoaded = true;
     gamePrepped = true;
-  }, 30);
+  }, 3000);
 
   ///////////////////////////// GAMELOOP
 
