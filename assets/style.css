@@ -7,10 +7,11 @@
 }
 
 body {
-  background: black;
   overflow: hidden !important;
   font-family: "Rubik Doodle Shadow", "Helvetica Neue", "Helvetica";
   word-spacing: 5px;
+  background-image: url(img/nebula01.png);
+  animation: moveBackground 20s ease-in-out infinite alternate-reverse;
 }
 
 canvas {
@@ -19,12 +20,9 @@ canvas {
   top: 0;
   left: 0;
 }
-
 #canvas3 {
   width: 100vw;
   height: 100dvh;
-  background-image: url(img/nebula01.png);
-  animation: moveBackground 20s ease-in-out infinite alternate-reverse;
 }
 
 .hide {
@@ -51,7 +49,7 @@ canvas {
   position: relative;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -40%);
+  transform: translate(-50%, -42%);
   text-align: center;
 }
 
@@ -88,7 +86,7 @@ canvas {
 #title {
   width: 65%;
   margin: 0 auto;
-  margin-top: 50px;
+  margin-bottom: 80px;
   padding: 25px 10px;
   background-image: url(img/aluminum-plate-with-indentations.png);
   background-position: center;
@@ -100,6 +98,80 @@ canvas {
   border-radius: 28px;
   box-shadow: 0 0 58px #6bfff3;
   text-shadow: 0 0 20px #d676e4, 2px 2px 3px #a85ab4,  -2px -2px 3px #a85ab4;
+}
+
+#start-menu {
+  position: absolute;
+  width: 40%;
+  height: 50%;
+  bottom: 15%;
+  right: 1%;
+}
+#start-menu ul {
+  text-align: left;
+  position: relative;
+  list-style-type: none;
+}
+
+#start-menu ul li{
+  margin-top: 26px;
+  margin-bottom: 56px;
+  margin-left: 60px;
+  font-size: 32px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+#start-menu ul li::before {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  content: '';
+  left: -80px;
+  bottom: -12px;
+}
+#start-menu ul li:nth-last-of-type(1)::before {
+  background: url("img/planets/planet08.png") no-repeat center center/cover;
+}
+#start-menu ul li:nth-last-of-type(2)::before {
+  background: url("img/planets/planet09.png") no-repeat center center/cover;
+}
+#start-menu ul li:nth-last-of-type(3)::before {
+  background: url("img/planets/planet05.png") no-repeat center center/cover;
+}
+#start-menu ul li:nth-last-of-type(4)::before {
+  background: url("img/planets/planet00.png") no-repeat center center/cover;
+}
+
+#start-menu ul li:hover {
+  scale: 1.2;
+}
+
+#start-menu ul li span {
+  width: 38px;
+  height: 42px;
+}
+
+.key-enter {
+  position: relative;
+  top: -5px;
+  width: 48px;
+  height: 120px;
+  position: absolute;
+  margin-left: 22px;
+  content: '';
+  background-image: url("img/key-tiles.png");
+  background-position: -68px 0;
+  background-size: 106px 43px;
+}
+
+.key-enter::after {
+  content: 'ENTER';
+  position: absolute;
+  font-size: 16px;
+  top: 48px;
+  left: -8px;
 }
 
       /* -- GAME OVER -- */
