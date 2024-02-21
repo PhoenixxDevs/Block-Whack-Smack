@@ -130,18 +130,23 @@ canvas {
   content: '';
   left: -80px;
   bottom: -12px;
+  padding-right: 80px;
 }
 #start-menu ul li:nth-last-of-type(1)::before {
-  background: url("img/planets/planet08.png") no-repeat center center/cover;
+  background: url("img/planets/planet08.png") no-repeat;
+  background-size: 60px 60px;
 }
 #start-menu ul li:nth-last-of-type(2)::before {
-  background: url("img/planets/planet09.png") no-repeat center center/cover;
+  background: url("img/planets/planet09.png") no-repeat;
+  background-size: 60px 60px;
 }
 #start-menu ul li:nth-last-of-type(3)::before {
-  background: url("img/planets/planet05.png") no-repeat center center/cover;
+  background: url("img/planets/planet05.png") no-repeat;
+  background-size: 60px 60px;
 }
 #start-menu ul li:nth-last-of-type(4)::before {
-  background: url("img/planets/planet00.png") no-repeat center center/cover;
+  background: url("img/planets/planet00.png") no-repeat;
+  background-size: 60px 60px;
 }
 
 #start-menu ul li:hover {

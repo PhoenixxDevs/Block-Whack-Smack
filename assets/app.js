@@ -24,6 +24,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const spikeTexture = new Image();
   const dustFX = new Image();
   const dustFXRev = new Image();
+  const blorg = new Image();
 
   playerSprite.src = "assets/img/players.png";
   const playerSpriteDimensions = {
@@ -181,9 +182,9 @@ window.addEventListener("DOMContentLoaded", () => {
     height: 64,
   };
 
-  dustFX.src = "assets/img/dustfx.png";
-  dustFXRev.src = "assets/img/dustfx-rev.png";
-  const dustConfig = {
+  dustFX = {
+    src: "assets/img/dustfx.png",
+    srcRev: "assets/img/dustfx-rev.png",
     x: [
       0, 80, 160, 240, 320, 400, 480, 560, 640, 720, 800, 880, 960, 1040, 1120,
     ],
@@ -192,11 +193,19 @@ window.addEventListener("DOMContentLoaded", () => {
     height: 100,
   };
 
+  blorg.src = "assets/img/blorg.png";
+  const blorgConfig = {
+    x: 0,
+    y: 0,
+    width: 300,
+    height: 300,
+  };
+
   const touch = {
     x: null,
   };
 
-  /////////////////////  AUDIO
+  //////////////////////////////  AUDIO
 
   const song = new Audio("assets/sound/whack-song.mp3");
   const hitSound = [
@@ -213,8 +222,10 @@ window.addEventListener("DOMContentLoaded", () => {
   let notes = [];
   let deathSound;
 
+  //////////////////////////////  GLOBALS
+
   let WIDTH, HEIGHT;
-  let chunk, player;
+  let chunk, player, mode;
   let arrayLength;
   let hiScore;
   let blocks = [];
@@ -228,6 +239,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let gameStart = false;
   let gameOver = false;
   let gamePrepped = false;
+  let gamePaused = false;
   let running = false;
 
   /////////////////////////////// CLASSES
@@ -262,6 +274,11 @@ window.addEventListener("DOMContentLoaded", () => {
       };
       this.posLegacy = pos;
       this.color = "#FF44FF";
+      this.losingHealth = false;
+      this.health = 100;
+      this.healthRate = 0.1;
+      this.healthAdd = 1.1;
+      this.healthBar = {};
     }
     setState(spriteState) {
       if (!this.pos) {
@@ -295,13 +312,12 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
     draw() {
-      let drawPos;
       this.clear();
       this.posLegacy = this.pos;
       if (!this.pos) {
-        drawPos = this.pos0;
+        this.drawPos = this.pos0;
       } else {
-        drawPos = this.pos1;
+        this.drawPos = this.pos1;
       }
 
       ctx.drawImage(
@@ -310,8 +326,8 @@ window.addEventListener("DOMContentLoaded", () => {
         this.state.y,
         this.spriteWidth,
         this.spriteHeight,
-        drawPos.x,
-        drawPos.y,
+        this.drawPos.x,
+        this.drawPos.y,
         this.width,
         this.height
       );
@@ -325,6 +341,53 @@ window.addEventListener("DOMContentLoaded", () => {
           ctx.clearRect(this.pos1.x, this.pos1.y, this.width, this.height);
           break;
       }
+    }
+    drawHealthBar() {
+      ctx3.fillStyle = this.healthBar.color;
+      ctx3.fillRect(
+        this.healthBar.x,
+        this.healthBar.y,
+        (this.healthBar.width * this.health) / 100,
+        this.healthBar.height
+      );
+      ctx3.strokeStyle = "pink";
+      ctx3.strokeRect(
+        this.healthBar.x,
+        this.healthBar.y,
+        this.healthBar.width,
+        this.healthBar.height
+      );
+    }
+    clearHealthBar() {
+      ctx3.clearRect(
+        this.healthBar.x - 1,
+        this.healthBar.y - 1,
+        this.healthBar.width + 2,
+        this.healthBar.height + 2
+      );
+    }
+    handleHealth() {
+      this.clearHealthBar();
+      if (this.health <= 0 && this.losingHealth) {
+        player.health = 0;
+        this.losingHealth = false;
+        handleDeath();
+      }
+      if (this.health > 100) {
+        this.health = 100;
+      }
+      this.health -= this.healthRate;
+      this.healthBar = {
+        x: Math.floor(this.drawPos.x - this.width / 2),
+        y: Math.floor(this.drawPos.y - this.height * 0.15),
+        width: Math.floor(this.width * 2),
+        height: Math.floor(this.height * 0.1),
+        color: `hsl(${this.health}, 100%, 50%)`,
+      };
+      if (this.pos) {
+        this.healthBar.x = Math.floor(this.drawPos.x + this.width / 2);
+      }
+      this.drawHealthBar();
     }
     update() {
       this.draw();
@@ -474,11 +537,7 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
     typeBlock() {
-      this.size = Math.floor(Math.random() * 5
-      
-      
-      
-      ) + 4;
+      this.size = Math.floor(Math.random() * 5) + 4;
       this.pos = {
         x:
           Math.floor(Math.random() * this.blockDescriptor.width) +
@@ -612,8 +671,7 @@ window.addEventListener("DOMContentLoaded", () => {
       this.type = type; // 'color' or 'blast'
       this.pos = {
         x: WIDTH / 2,
-        y: player.pos0.y * 0.96
-        ,
+        y: player.pos0.y * 0.96,
       };
       this.width;
       this.height;
@@ -638,7 +696,7 @@ window.addEventListener("DOMContentLoaded", () => {
         case "color":
         default:
           this.spritePosY = dustConfig.y[0];
-          this.width = Math.floor((WIDTH / 2) / dustConfig.x.length);
+          this.width = Math.floor(WIDTH / 2 / dustConfig.x.length);
           this.height = Math.floor(player.height);
           this.src = dustFX;
           if (player.pos) {
@@ -666,25 +724,30 @@ window.addEventListener("DOMContentLoaded", () => {
         spriteY: this.spritePosY,
         spriteX: dustConfig.x[this.frame] * this.spriteWidth,
       };
-      for(let i = 0; i < dustConfig.x.length; i++) {
+      for (let i = 0; i < dustConfig.x.length; i++) {
         config.pos.x = this.frame * config.width;
         this.frames.push(config);
         this.frame += this.frameStep;
       }
       this.frame = 0;
-      console.log(this.frames)
     }
-    clear(frame){
+    clear(frame) {
       ctx.clearRect(frame.pos.x, frame.pos.y, frame.width, frame.height);
     }
     draw(frame) {
       ctx.drawImage(
-        frame.src, frame.spriteX, frame.spriteY, dustConfig.width, dustConfig.height,
-        frame.pos.x, frame.pos.y, frame.width, frame.height
-        );
+        frame.src,
+        frame.spriteX,
+        frame.spriteY,
+        dustConfig.width,
+        dustConfig.height,
+        frame.pos.x,
+        frame.pos.y,
+        frame.width,
+        frame.height
+      );
     }
-    update() {
-    }
+    update() {}
     // clear() {
     //   ctx3.clearRect(this.pos.x, this.pos.y, this.width, this.height);
     // }
@@ -739,7 +802,9 @@ window.addEventListener("DOMContentLoaded", () => {
     chunk = HEIGHT / blocksNum;
 
     // initcalled to stop loop in init function
-    if(!initCalled && gameStart){init();}
+    if (!initCalled && gameStart) {
+      init();
+    }
   }
 
   function createParticles(type, amount, blockDescriptor, direction) {
@@ -791,11 +856,12 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function handleDeath() {
+    player.losingHealth = false;
     player.isCounting = false;
     player.setState("death");
     player.update();
     deathSound = new Audio(hitSound[hitSound.length - 1].src);
-    deathSound.volume = 0.4;
+    deathSound.volume = 0.3;
     deathSound.play();
     createParticles("death", Math.floor(Math.random() * 15 + 20));
     gameOver = true;
@@ -888,11 +954,10 @@ window.addEventListener("DOMContentLoaded", () => {
   /////////////////////////////// SET UP
 
   function init() {
-    
     blocks = [];
     particles = [];
     notes = [];
-    
+
     resize(1);
 
     if (!song) {
@@ -915,7 +980,7 @@ window.addEventListener("DOMContentLoaded", () => {
         break;
     }
 
-    // in here "truthy" resets score
+    // here "truthy" resets score
     handleScore(1);
 
     if (gameOver) {
@@ -950,41 +1015,46 @@ window.addEventListener("DOMContentLoaded", () => {
     loader.style.display = "none";
     gameLoaded = true;
     gamePrepped = true;
-  }, 3000);
+  }, 0);
 
   ///////////////////////////// GAMELOOP
 
   function animate(timestamp) {
-    //calculate time since last frame
-    if (!timestamp) {
-      timestamp = 0;
-    }
-    delta = timestamp - lastFrame;
-    lastFrame = timestamp;
-
-    noteRecycler();
-
-    if (player.isMoving) {
-      playerMove();
-    }
-
-    if (player.isCounting) {
-      if (player.stateCounter > player.stateTime) {
-        player.setState("idle");
-        player.stateCounter = 0;
-        player.isCounting = false;
-        player.update();
-      } else {
-        player.stateCounter += delta;
+    if (!gamePaused) {
+      //calculate time since last frame
+      if (!timestamp) {
+        timestamp = 0;
       }
+      delta = timestamp - lastFrame;
+      lastFrame = timestamp;
+
+      noteRecycler();
+
+      // Player
+      if (player.isMoving) {
+        playerMove();
+      }
+
+      if (player.isCounting) {
+        if (player.stateCounter > player.stateTime) {
+          player.setState("idle");
+          player.stateCounter = 0;
+          player.isCounting = false;
+          player.update();
+        } else {
+          player.stateCounter += delta;
+        }
+      }
+      if (player.losingHealth) {
+        player.handleHealth();
+      }
+
+      // Arrays
+      updateArray(particles);
+      updateArray(effects);
+
+      touch.x = null;
     }
-
-    updateArray(particles);
-    updateArray(effects);
-    // console.log(song.currentTime)
-
-    touch.x = null;
-
     requestAnimationFrame(animate);
   }
 
@@ -1005,26 +1075,40 @@ window.addEventListener("DOMContentLoaded", () => {
       return;
     }
     switch (e.key) {
-      case "ArrowLeft":
-      case "a":
-      case "A":
+      case "Escape":
         if (!gameStart || gameOver) {
           return;
         }
+        !gamePaused ? (gamePaused = true) : (gamePaused = false);
+        break;
+      case "ArrowLeft":
+      case "a":
+      case "A":
+        if (!gameStart || gameOver || gamePaused) {
+          return;
+        }
+        if (!player.losingHealth) {
+          player.losingHealth = true;
+        }
         player.pos = 0;
         player.isMoving = true;
+        player.health += player.healthAdd;
         break;
       case "ArrowRight":
       case "d":
       case "D":
-        if (!gameStart || gameOver) {
+        if (!gameStart || gameOver || gamePaused) {
           return;
+        }
+        if (!player.losingHealth) {
+          player.losingHealth = true;
         }
         player.pos = 1;
         player.isMoving = true;
+        player.health += player.healthAdd;
         break;
       case "Enter":
-        if(gameLoaded){
+        if (gameLoaded) {
           start();
         }
         break;
@@ -1039,7 +1123,7 @@ window.addEventListener("DOMContentLoaded", () => {
       player.pos = 1;
       player.isMoving = true;
     }
-  if(gameLoaded && gamePrepped){
+    if (gameLoaded && gamePrepped) {
       start();
     }
   });
