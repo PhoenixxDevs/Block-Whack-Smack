@@ -57,132 +57,103 @@ window.addEventListener("DOMContentLoaded", () => {
       y: 0,
     },
   };
-
-  blockTexture.src = "assets/img/metal.png";
-  const blockTextures = [
-    {
-      x: 0,
-      y: 0,
-      width: 150,
-      height: 225,
-    },
-    {
-      x: 150,
-      y: 0,
-      width: 150,
-      height: 225,
-    },
-    {
-      x: 300,
-      y: 0,
-      width: 150,
-      height: 225,
-    },
-    {
-      x: 450,
-      y: 0,
-      width: 150,
-      height: 225,
-    },
-    {
-      x: 600,
-      y: 0,
-      width: 150,
-      height: 225,
-    },
-    {
-      x: 750,
-      y: 0,
-      width: 150,
-      height: 225,
-    },
-    {
-      x: 900,
-      y: 0,
-      width: 150,
-      height: 225,
-    },
-    {
-      x: 1050,
-      y: 0,
-      width: 150,
-      height: 225,
-    },
-  ];
-
-  branchTexture.src = "assets/img/branch.png";
-  const branchTextureDimensions = [
-    {
-      x: 0,
-      y: 0,
-      width: 225,
-      height: 76,
-    },
-    {
-      x: 75,
-      y: 0,
-      width: 225,
-      height: 76,
-    },
-    {
-      x: 150,
-      y: 0,
-      width: 225,
-      height: 76,
-    },
-    {
-      x: 225,
-      y: 0,
-      width: 225,
-      height: 76,
-    },
-    {
-      x: 300,
-      y: 0,
-      width: 225,
-      height: 76,
-    },
-    {
-      x: 375,
-      y: 0,
-      width: 225,
-      height: 76,
-    },
-    {
-      x: 450,
-      y: 0,
-      width: 225,
-      height: 76,
-    },
-    {
-      x: 525,
-      y: 0,
-      width: 225,
-      height: 76,
-    },
-    {
-      x: 600,
-      y: 0,
-      width: 225,
-      height: 76,
-    },
-    {
-      x: 675,
-      y: 0,
-      width: 225,
-      height: 76,
-    },
-  ];
-
-  spikeTexture.src = "assets/img/spikes.png";
-  const spikeTextureDimensions = {
+  const blockTextureConfig = {
+    src: "assets/img/metal.png",
+    width: 150,
+    height: 225,
+    pos: [
+      {
+        x: 0,
+        y: 0,
+      },
+      {
+        x: 150,
+        y: 0,
+      },
+      {
+        x: 300,
+        y: 0,
+      },
+      {
+        x: 450,
+        y: 0,
+      },
+      {
+        x: 600,
+        y: 0,
+      },
+      {
+        x: 750,
+        y: 0,
+      },
+      {
+        x: 900,
+        y: 0,
+      },
+      {
+        x: 1050,
+        y: 0,
+      },
+    ],
+  };
+  blockTexture.src = blockTextureConfig.src;
+  const branchTextureConfig = {
+    src: "assets/img/branch.png",
+    width: 225,
+    height: 76,
+    pos: [
+      {
+        x: 0,
+        y: 0,
+      },
+      {
+        x: 75,
+        y: 0,
+      },
+      {
+        x: 150,
+        y: 0,
+      },
+      {
+        x: 225,
+        y: 0,
+      },
+      {
+        x: 300,
+        y: 0,
+      },
+      {
+        x: 375,
+        y: 0,
+      },
+      {
+        x: 450,
+        y: 0,
+      },
+      {
+        x: 525,
+        y: 0,
+      },
+      {
+        x: 600,
+        y: 0,
+      },
+      {
+        x: 675,
+        y: 0,
+      },
+    ],
+  };
+  branchTexture.src = branchTextureConfig.src;
+  const spikeTextureConfig = {
+    src: "assets/img/spikes.png",
     x: 0,
     y: 0,
     width: 128,
     height: 64,
   };
-
-  dustFX = {
+  spikeTexture.src = spikeTextureConfig.src;
+  const dustFXConfig = {
     src: "assets/img/dustfx.png",
     srcRev: "assets/img/dustfx-rev.png",
     x: [
@@ -192,18 +163,16 @@ window.addEventListener("DOMContentLoaded", () => {
     width: 80,
     height: 100,
   };
-
-  blorg.src = "assets/img/blorg.png";
+  dustFX.src = dustFXConfig.src;
+  dustFXRev.src = dustFXConfig.srcRev;
   const blorgConfig = {
+    src: "assets/img/blorg.png",
     x: 0,
     y: 0,
     width: 300,
     height: 300,
   };
-
-  const touch = {
-    x: null,
-  };
+  blorg.src = blorgConfig.src;
 
   //////////////////////////////  AUDIO
 
@@ -224,6 +193,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
   //////////////////////////////  GLOBALS
 
+  const touch = {
+    x: null,
+  };
   let WIDTH, HEIGHT;
   let chunk, player, mode;
   let arrayLength;
@@ -406,44 +378,51 @@ window.addEventListener("DOMContentLoaded", () => {
       };
       this.type = Math.floor(Math.random() * 3);
       this.branch =
-        branchTextureDimensions[
-          Math.floor(Math.random() * branchTextureDimensions.length)
+        branchTextureConfig.pos[
+          Math.floor(Math.random() * branchTextureConfig.pos.length)
         ];
-      this.branchWidth = Math.floor(chunk / 1.3);
-      this.branchHeight = Math.floor(this.branchWidth / 3);
-      if (WIDTH < 460) {
-        this.width * 0.8;
-        this.branchWidth * 0.8;
-        this.branchHeight * 0.8;
-      }
+        this.branchWidth = Math.floor(chunk / 1.3);
+        this.branchHeight = Math.floor(this.branchWidth / 3);
+        if (WIDTH < 460) {
+          this.width * 0.8;
+          this.branchWidth * 0.8;
+          this.branchHeight * 0.8;
+        }
+        this.branchTextureWidth = branchTextureConfig.width;
+        this.branchTextureHeight = branchTextureConfig.height;
       this.blockTexture =
-        blockTextures[Math.floor(Math.random() * blockTextures.length)];
+        blockTextureConfig.pos[
+          Math.floor(Math.random() * blockTextureConfig.pos.length)
+        ];
+      this.blockWidth = blockTextureConfig.width;
+      this.blockHeight = blockTextureConfig.height;
     }
     draw() {
       // branch
       switch (this.type) {
         case 1:
+          // Left branch
           ctx.drawImage(
-            //texture placement
+            // texture placement
             spikeTexture,
-            spikeTextureDimensions.x,
-            spikeTextureDimensions.y,
-            spikeTextureDimensions.width,
-            spikeTextureDimensions.height,
-            //where to draw
+            spikeTextureConfig.x,
+            spikeTextureConfig.y,
+            spikeTextureConfig.width,
+            spikeTextureConfig.height,
+            // where to draw
             this.pos.x - this.branchWidth,
             this.pos.y * this.height + this.branchHeight * 0.8,
             this.branchWidth,
             this.branchHeight * 1.3
           );
           ctx.drawImage(
-            //texture placement
+            // texture placement
             branchTexture,
             this.branch.x,
             this.branch.y,
-            this.branch.width,
-            this.branch.height,
-            //where to draw
+            this.branchTextureWidth,
+            this.branchTextureHeight,
+            // where to draw
             this.pos.x - this.branchWidth,
             this.pos.y * this.height,
             this.branchWidth,
@@ -452,13 +431,14 @@ window.addEventListener("DOMContentLoaded", () => {
           break;
 
         case 2:
+          // Right branch
           ctx.drawImage(
             //texture placement
             spikeTexture,
-            spikeTextureDimensions.x,
-            spikeTextureDimensions.y,
-            spikeTextureDimensions.width,
-            spikeTextureDimensions.height,
+            spikeTextureConfig.x,
+            spikeTextureConfig.y,
+            spikeTextureConfig.width,
+            spikeTextureConfig.height,
             //where to draw
             this.pos.x + this.width,
             this.pos.y * this.height + this.branchHeight * 0.8,
@@ -470,8 +450,8 @@ window.addEventListener("DOMContentLoaded", () => {
             branchTexture,
             this.branch.x,
             this.branch.y,
-            this.branch.width,
-            this.branch.height,
+            this.branchTextureWidth,
+            this.branchTextureHeight,
             //where to draw
             this.pos.x + this.width,
             this.pos.y * this.height,
@@ -486,8 +466,8 @@ window.addEventListener("DOMContentLoaded", () => {
         blockTexture,
         this.blockTexture.x,
         this.blockTexture.y,
-        this.blockTexture.width,
-        this.blockTexture.height,
+        this.blockWidth,
+        this.blockHeight,
         //where to draw
         this.pos.x,
         this.pos.y * this.height,
@@ -502,14 +482,14 @@ window.addEventListener("DOMContentLoaded", () => {
           this.pos.x - this.branchWidth,
           this.pos.y * this.height - 2,
           this.branchWidth,
-          this.branchHeight + spikeTextureDimensions.height + 2
+          this.branchHeight + spikeTextureConfig.height + 2
         );
       } else if (this.type == 2) {
         ctx.clearRect(
           this.pos.x + this.width,
           this.pos.y * this.height - 2,
           this.branchWidth,
-          this.branchHeight + spikeTextureDimensions.height + 2
+          this.branchHeight + spikeTextureConfig.height + 2
         );
       } else return;
     }
@@ -675,8 +655,8 @@ window.addEventListener("DOMContentLoaded", () => {
       };
       this.width;
       this.height;
-      this.spriteWidth = dustConfig.width;
-      this.spriteHeight = dustConfig.height;
+      this.spriteWidth = dustFXConfig.width;
+      this.spriteHeight = dustFXConfig.height;
       this.spritePosY = 0;
       this.frame = 0;
       this.frames = [];
@@ -695,8 +675,8 @@ window.addEventListener("DOMContentLoaded", () => {
       switch (this.type) {
         case "color":
         default:
-          this.spritePosY = dustConfig.y[0];
-          this.width = Math.floor(WIDTH / 2 / dustConfig.x.length);
+          this.spritePosY = dustFXConfig.y[0];
+          this.width = Math.floor(WIDTH / 2 / dustFXConfig.x.length);
           this.height = Math.floor(player.height);
           this.src = dustFX;
           if (player.pos) {
@@ -705,13 +685,13 @@ window.addEventListener("DOMContentLoaded", () => {
           }
           if (!player.pos) {
             this.src = dustFXRev;
-            this.frame = dustConfig.x.length - 1;
+            this.frame = dustFXConfig.x.length - 1;
             this.frameStep *= -1;
             // this.pos.y -= player.height;
           }
           break;
         case "blast":
-          this.spritePosY = dustConfig.y[1];
+          this.spritePosY = dustFXConfig.y[1];
           this.width = player.height * 1.5;
           this.height = player.height * 0.7;
           break;
@@ -722,9 +702,9 @@ window.addEventListener("DOMContentLoaded", () => {
         width: this.width,
         height: this.height,
         spriteY: this.spritePosY,
-        spriteX: dustConfig.x[this.frame] * this.spriteWidth,
+        spriteX: dustFXConfig.x[this.frame] * this.spriteWidth,
       };
-      for (let i = 0; i < dustConfig.x.length; i++) {
+      for (let i = 0; i < dustFXConfig.x.length; i++) {
         config.pos.x = this.frame * config.width;
         this.frames.push(config);
         this.frame += this.frameStep;
@@ -739,8 +719,8 @@ window.addEventListener("DOMContentLoaded", () => {
         frame.src,
         frame.spriteX,
         frame.spriteY,
-        dustConfig.width,
-        dustConfig.height,
+        dustFXConfig.width,
+        dustFXConfig.height,
         frame.pos.x,
         frame.pos.y,
         frame.width,
