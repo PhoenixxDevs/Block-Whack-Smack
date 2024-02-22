@@ -204,6 +204,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let particles = [];
   let effects = [];
   let score = 0;
+  let blorgs = 0;
   let blocksNum = 6;
   let delta = 0;
   let lastFrame = 0;
@@ -284,6 +285,7 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
     draw() {
+
       this.clear();
       this.posLegacy = this.pos;
       if (!this.pos) {
@@ -377,25 +379,52 @@ window.addEventListener("DOMContentLoaded", () => {
         y: num,
       };
       this.type = Math.floor(Math.random() * 3);
-      this.branch =
-        branchTextureConfig.pos[
-          Math.floor(Math.random() * branchTextureConfig.pos.length)
-        ];
-        this.branchWidth = Math.floor(chunk / 1.3);
-        this.branchHeight = Math.floor(this.branchWidth / 3);
-        if (WIDTH < 460) {
-          this.width * 0.8;
-          this.branchWidth * 0.8;
-          this.branchHeight * 0.8;
-        }
-        this.branchTextureWidth = branchTextureConfig.width;
-        this.branchTextureHeight = branchTextureConfig.height;
+
+      // block
       this.blockTexture =
         blockTextureConfig.pos[
           Math.floor(Math.random() * blockTextureConfig.pos.length)
         ];
       this.blockWidth = blockTextureConfig.width;
       this.blockHeight = blockTextureConfig.height;
+
+      // branch
+      this.branch =
+        branchTextureConfig.pos[
+          Math.floor(Math.random() * branchTextureConfig.pos.length)
+        ];
+      this.branchWidth = Math.floor(chunk / 1.3);
+      this.branchHeight = Math.floor(this.branchWidth / 3);
+      if (WIDTH < 460) {
+        this.width * 0.8;
+        this.branchWidth * 0.8;
+        this.branchHeight * 0.8;
+      }
+      this.branchTextureWidth = branchTextureConfig.width;
+      this.branchTextureHeight = branchTextureConfig.height;
+
+      // blorg
+      this.blorg = {
+        chance: Math.round(Math.random()),
+        left: {},
+        right: { x: this.pos.x + this.width + this.branchWidth / 2, y: this.pos.y },
+        pos: {},
+        size: chunk * 0.4,
+        texture: blorgConfig,
+      };
+      this.blorg.left = { x: this.pos.x - this.branchWidth / 2 - this.blorg.size / 2, y: this.pos.y };
+      this.blorg.right = { x: this.pos.x + this.width + this.branchWidth / 2 - this.blorg.size / 2, y: this.pos.y };
+      if (this.blorg.chance) {
+        if (this.type === 1) {
+          this.blorg.pos = this.blorg.right;
+        } else if (this.type === 2) {
+          this.blorg.pos = this.blorg.left;
+        } else {
+          Math.round(Math.random())
+            ? (this.blorg.pos = this.blorg.left)
+            : (this.blorg.pos = this.blorg.right);
+        }
+      }
     }
     draw() {
       // branch
@@ -493,8 +522,34 @@ window.addEventListener("DOMContentLoaded", () => {
         );
       } else return;
     }
+    drawBlorg() {
+      if (this.blorg.chance) {
+        ctx.drawImage(
+          blorg,
+          blorgConfig.x,
+          blorgConfig.y,
+          blorgConfig.width,
+          blorgConfig.height,
+          // where to draw
+          this.blorg.pos.x,
+          this.pos.y * this.height + this.blorg.size * 1.3,
+          this.blorg.size,
+          this.blorg.size
+        );
+        player.draw();
+      }
+    }
+    clearBlorg() {
+      ctx.clearRect(
+        this.blorg.pos.x,
+        this.pos.y * this.height + this.blorg.size * 1.3 - 1,
+        this.blorg.size + 1,
+        this.blorg.size + 1
+      );
+    }
     update() {
       this.draw();
+      this.drawBlorg();
     }
   }
 
@@ -797,9 +852,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
   function removeBlock() {
     blocks[blocksNum - 1].clear();
+    blocks[blocksNum - 1].clearBlorg();
+
     blocks.pop();
     for (let i = 0; i < blocks.length; i++) {
       let b = blocks[i];
+        b.clearBlorg();
+        player.draw();
       b.clear();
       b.pos.y++;
     }
@@ -869,6 +928,10 @@ window.addEventListener("DOMContentLoaded", () => {
         );
         notes[notes.length - 1].volume = 0.5;
         notes[notes.length - 1].play();
+        if(blocks[blocksNum - 1].blorg.chance){
+          blorgs++;
+          console.log(blorgs);
+        }
       }
     } else if (player.pos === 1) {
       createParticles(
@@ -888,6 +951,10 @@ window.addEventListener("DOMContentLoaded", () => {
         );
         notes[notes.length - 1].volume = 0.5;
         notes[notes.length - 1].play();
+        if(blocks[blocksNum - 1].blorg.chance){
+          blorgs++;
+          console.log(blorgs);
+        }
       }
     }
   }
