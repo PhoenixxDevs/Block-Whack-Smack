@@ -161,7 +161,7 @@ window.addEventListener("DOMContentLoaded", () => {
     ],
     y: [0, 100],
     width: 80,
-    height: 100,
+    height: 70,
   };
   dustFX.src = dustFXConfig.src;
   dustFXRev.src = dustFXConfig.srcRev;
@@ -706,7 +706,7 @@ window.addEventListener("DOMContentLoaded", () => {
       this.type = type; // 'color' or 'blast'
       this.pos = {
         x: WIDTH / 2,
-        y: Math.floor(player.pos0.y * 0.96),
+        y: Math.floor(player.pos0.y * 0.99),
       };
       this.width;
       this.height;
@@ -714,10 +714,8 @@ window.addEventListener("DOMContentLoaded", () => {
       this.spriteHeight = dustFXConfig.height;
       this.spritePosY = 0;
       this.frame = 0;
+      this.frameOffset = 0;
       this.frames = [];
-      this.framesToDraw = [];
-      this.framesToClear = [];
-      this.framesActive = 0;
       this.frameStep = 1;
       this.framesMax = 3;
       this.frameConfig = {};
@@ -727,25 +725,24 @@ window.addEventListener("DOMContentLoaded", () => {
       this.init();
     }
     init() {
-      this.frame = 0;
+      this.frameOffset = Math.floor(Math.random() * 5);
+      this.frame = this.frameOffset;
       //switch for scalability
       switch (this.type) {
         case "color":
         default:
-          this.spritePosY = dustFXConfig.y[0];
-          this.width = Math.floor(WIDTH / 2 / dustFXConfig.x.length);
+          this.width = Math.floor(WIDTH / 2 / dustFXConfig.x.length) * 1.8;
           this.height = Math.floor(player.height);
           this.src = dustFX;
-          if (player.pos) {
-            // this.pos.y += this.height * 0.12;
-            this.spritePosY = 10;
+          for(let i = this.frame; i < dustFXConfig.x.length - this.frameOffset; i++) {
+            this.frameConfig = {
+              spriteX: dustFXConfig.x[this.frame],
+              spriteY: dustFXConfig.y[0],
+              pos: {x: ((this.frame * this.width) - (this.frameOffset * this.width))  + (WIDTH / 2), y: this.pos.y},
+            };
+            this.frames.push(this.frameConfig);
+            this.frame += this.frameStep;
           }
-          // if (!player.pos) {
-          //   this.src = dustFXRev;
-          //   this.frame = dustFXConfig.x.length - 1;
-          //   this.frameStep *= -1;
-          //   // this.pos.y -= player.height;
-          // }
           break;
         case "blast":
           this.spritePosY = dustFXConfig.y[1];
@@ -753,37 +750,21 @@ window.addEventListener("DOMContentLoaded", () => {
           this.height = player.height * 0.7;
           break;
       }
-      this.frameConfig = {
-        src: this.src,
-        pos: this.pos,
-        width: this.width,
-        height: this.height,
-        spriteY: this.spritePosY,
-        spriteX: dustFXConfig.x[this.frame],
-      };
-      for (let i = 0; i < dustFXConfig.x.length; i++) {
-        this.frameConfig.pos.x = this.frame * this.frameConfig.width;
-        console.log(this.frameConfig.pos.x);
-        this.frames.push(this.frameConfig);
-        console.log(this.frames);
-        this.frame += this.frameStep;
-      }
-      this.frame = 0;
     }
     clear(frame) {
       ctx.clearRect(frame.pos.x, frame.pos.y, frame.width, frame.height);
     }
     draw(frame) {
       ctx.drawImage(
-        frame.src,
+        this.src,
         frame.spriteX,
         frame.spriteY,
         this.spriteWidth,
         this.spriteHeight,
         frame.pos.x,
         frame.pos.y,
-        frame.width,
-        frame.height
+        this.width,
+        this.height
       );
     }
     update() {
@@ -794,41 +775,6 @@ window.addEventListener("DOMContentLoaded", () => {
         // console.log(this.frames);
           this.frame++;
     }
-    // clear() {
-    //   ctx3.clearRect(this.pos.x, this.pos.y, this.width, this.height);
-    // }
-    // draw() {
-    //   ctx3.drawImage(
-    //     this.src,
-    //     //decides which part of sprite to draw
-    //     dustConfig.x[this.frame],
-    //     this.spritePosY,
-    //     this.spriteWidth,
-    //     this.spriteHeight,
-    //     //where to draw
-    //     this.pos.x,
-    //     this.pos.y,
-    //     this.spriteWidth,
-    //     this.height
-    //     );
-    //   }
-    //   update() {
-    //     if (this.frame < 0 || this.frame > dustConfig.x.length - 1) {
-    //       this.remove = true;
-    //     }
-    //     if (this.animationDelay > 0) {
-    //       this.clear();
-    //       if(player.pos){this.pos.x = this.pos.x + (this.spriteWidth * this.frame) / 6}
-    //       else {this.pos.x -= this.spriteWidth;
-    //         console.log(this.pos.x)
-    //       }
-    //     this.draw();
-    //     this.frame += this.frameStep;
-    //     this.animationDelay = 0;
-    //   } else {
-    //     this.animationDelay += delta;
-    //   }
-    // }
   }
 
   ///////////////////// UTILITY FUNCTIONS
