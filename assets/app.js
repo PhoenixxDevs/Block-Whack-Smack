@@ -249,7 +249,7 @@ window.addEventListener("DOMContentLoaded", () => {
       this.color = "#FF44FF";
       this.losingHealth = false;
       this.health = 100;
-      this.healthRate = 0.1;
+      this.healthRate = 0.08;
       this.healthAdd = 1.1;
       this.healthBar = {};
     }
@@ -706,7 +706,7 @@ window.addEventListener("DOMContentLoaded", () => {
       this.type = type; // 'color' or 'blast'
       this.pos = {
         x: WIDTH / 2,
-        y: player.pos0.y * 0.96,
+        y: Math.floor(player.pos0.y * 0.96),
       };
       this.width;
       this.height;
@@ -715,9 +715,12 @@ window.addEventListener("DOMContentLoaded", () => {
       this.spritePosY = 0;
       this.frame = 0;
       this.frames = [];
+      this.framesToDraw = [];
+      this.framesToClear = [];
+      this.framesActive = 0;
       this.frameStep = 1;
-      this.frameCount = 0;
       this.framesMax = 3;
+      this.frameConfig = {};
       this.animationDelay = 0;
       this.remove = false;
       this.config;
@@ -725,7 +728,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     init() {
       this.frame = 0;
-      let config = {};
       //switch for scalability
       switch (this.type) {
         case "color":
@@ -738,12 +740,12 @@ window.addEventListener("DOMContentLoaded", () => {
             // this.pos.y += this.height * 0.12;
             this.spritePosY = 10;
           }
-          if (!player.pos) {
-            this.src = dustFXRev;
-            this.frame = dustFXConfig.x.length - 1;
-            this.frameStep *= -1;
-            // this.pos.y -= player.height;
-          }
+          // if (!player.pos) {
+          //   this.src = dustFXRev;
+          //   this.frame = dustFXConfig.x.length - 1;
+          //   this.frameStep *= -1;
+          //   // this.pos.y -= player.height;
+          // }
           break;
         case "blast":
           this.spritePosY = dustFXConfig.y[1];
@@ -751,17 +753,19 @@ window.addEventListener("DOMContentLoaded", () => {
           this.height = player.height * 0.7;
           break;
       }
-      config = {
+      this.frameConfig = {
         src: this.src,
         pos: this.pos,
         width: this.width,
         height: this.height,
         spriteY: this.spritePosY,
-        spriteX: dustFXConfig.x[this.frame] * this.spriteWidth,
+        spriteX: dustFXConfig.x[this.frame],
       };
       for (let i = 0; i < dustFXConfig.x.length; i++) {
-        config.pos.x = this.frame * config.width;
-        this.frames.push(config);
+        this.frameConfig.pos.x = this.frame * this.frameConfig.width;
+        console.log(this.frameConfig.pos.x);
+        this.frames.push(this.frameConfig);
+        console.log(this.frames);
         this.frame += this.frameStep;
       }
       this.frame = 0;
@@ -774,15 +778,22 @@ window.addEventListener("DOMContentLoaded", () => {
         frame.src,
         frame.spriteX,
         frame.spriteY,
-        dustFXConfig.width,
-        dustFXConfig.height,
+        this.spriteWidth,
+        this.spriteHeight,
         frame.pos.x,
         frame.pos.y,
         frame.width,
         frame.height
       );
     }
-    update() {}
+    update() {
+          for(let i = 0; i < this.frames.length; i++) {
+            this.draw(this.frames[i]);
+          }
+
+        // console.log(this.frames);
+          this.frame++;
+    }
     // clear() {
     //   ctx3.clearRect(this.pos.x, this.pos.y, this.width, this.height);
     // }
@@ -930,7 +941,6 @@ window.addEventListener("DOMContentLoaded", () => {
         notes[notes.length - 1].play();
         if(blocks[blocksNum - 1].blorg.chance){
           blorgs++;
-          console.log(blorgs);
         }
       }
     } else if (player.pos === 1) {
