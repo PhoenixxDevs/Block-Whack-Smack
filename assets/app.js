@@ -285,7 +285,6 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
     draw() {
-
       this.clear();
       this.posLegacy = this.pos;
       if (!this.pos) {
@@ -407,13 +406,22 @@ window.addEventListener("DOMContentLoaded", () => {
       this.blorg = {
         chance: Math.round(Math.random()),
         left: {},
-        right: { x: this.pos.x + this.width + this.branchWidth / 2, y: this.pos.y },
+        right: {
+          x: this.pos.x + this.width + this.branchWidth / 2,
+          y: this.pos.y,
+        },
         pos: {},
         size: chunk * 0.4,
         texture: blorgConfig,
       };
-      this.blorg.left = { x: this.pos.x - this.branchWidth / 2 - this.blorg.size / 2, y: this.pos.y };
-      this.blorg.right = { x: this.pos.x + this.width + this.branchWidth / 2 - this.blorg.size / 2, y: this.pos.y };
+      this.blorg.left = {
+        x: this.pos.x - this.branchWidth / 2 - this.blorg.size / 2,
+        y: this.pos.y,
+      };
+      this.blorg.right = {
+        x: this.pos.x + this.width + this.branchWidth / 2 - this.blorg.size / 2,
+        y: this.pos.y,
+      };
       if (this.blorg.chance) {
         if (this.type === 1) {
           this.blorg.pos = this.blorg.right;
@@ -717,10 +725,12 @@ window.addEventListener("DOMContentLoaded", () => {
       this.frameOffset = 0;
       this.frames = [];
       this.frameStep = 1;
-      this.framesMax = 3;
+      this.framesMax = 1;
       this.frameConfig = {};
-      this.animationDelay = 0;
-      this.remove = false;
+      this.framesToClear = [];
+      this.framesLocation = 0;
+      this.delayCounter = 0;
+      this.animationDelay = 20;
       this.config;
       this.init();
     }
@@ -731,17 +741,54 @@ window.addEventListener("DOMContentLoaded", () => {
       switch (this.type) {
         case "color":
         default:
-          this.width = Math.floor(WIDTH / 2 / dustFXConfig.x.length) * 1.8;
-          this.height = Math.floor(player.height);
-          this.src = dustFX;
-          for(let i = this.frame; i < dustFXConfig.x.length - this.frameOffset; i++) {
-            this.frameConfig = {
-              spriteX: dustFXConfig.x[this.frame],
-              spriteY: dustFXConfig.y[0],
-              pos: {x: ((this.frame * this.width) - (this.frameOffset * this.width))  + (WIDTH / 2), y: this.pos.y},
-            };
-            this.frames.push(this.frameConfig);
-            this.frame += this.frameStep;
+          this.width = Math.floor(WIDTH / 2 / dustFXConfig.x.length) * 2.2;
+          this.height = Math.floor(Math.random() * 30 + player.height);
+
+          if (player.pos) {
+            this.src = dustFX;
+            for (
+              let i = this.frame;
+              i < dustFXConfig.x.length - this.frameOffset;
+              i++
+            ) {
+              this.frameConfig = {
+                spriteX: dustFXConfig.x[this.frame],
+                spriteY: dustFXConfig.y[0],
+                pos: {
+                  x:
+                    this.frame * this.width -
+                    this.frameOffset * this.width +
+                    WIDTH / 2,
+                  y: this.pos.y,
+                },
+                remove: false,
+              };
+              this.frames.push(this.frameConfig);
+              this.frame += this.frameStep;
+            }
+          } else {
+            this.src = dustFXRev;
+            for (
+              let i = this.frame;
+              i < dustFXConfig.x.length - this.frameOffset;
+              i++
+            ) {
+              this.frameConfig = {
+                spriteX: dustFXConfig.x[dustFXConfig.x.length - this.frame],
+                spriteY: dustFXConfig.y[0] + 10
+                ,
+                pos: {
+                  x:
+                    WIDTH / 2 -
+                    this.frame * this.width +
+                    this.frameOffset * this.width,
+                  y: this.pos.y,
+                },
+                remove: false,
+              };
+              this.frames.push(this.frameConfig);
+              this.frame += this.frameStep;
+            }
           }
           break;
         case "blast":
@@ -750,12 +797,17 @@ window.addEventListener("DOMContentLoaded", () => {
           this.height = player.height * 0.7;
           break;
       }
+      this.frame = 0;
+      // for(let i = 0; i < this.framesMax; i++) {
+      //   this.framesToDraw.push(this.frames[this.framesLocation]);
+      //   this.framesLocation++;
+      // }
     }
     clear(frame) {
-      ctx.clearRect(frame.pos.x, frame.pos.y, frame.width, frame.height);
+      ctx3.clearRect(frame.pos.x, frame.pos.y, this.width, this.height);
     }
     draw(frame) {
-      ctx.drawImage(
+      ctx3.drawImage(
         this.src,
         frame.spriteX,
         frame.spriteY,
@@ -768,12 +820,38 @@ window.addEventListener("DOMContentLoaded", () => {
       );
     }
     update() {
-          for(let i = 0; i < this.frames.length; i++) {
-            this.draw(this.frames[i]);
+      // check if time to draw, max, add one, clear, draw, remove
+      if (this.counter < this.animationDelay) {
+        this.counter += delta;
+        for (let i = 0; i < this.framesToClear.length; i++) {
+          if (this.framesToClear[i].remove) {
+            this.framesToClear.splice(i, 1);
           }
+        }
+      } else {
+        if (this.frames[0]) {
+          this.framesToClear.push(this.frames.shift());
+        }
+        if (
+          this.framesToClear.length > this.framesMax ||
+          (this.frames.length <= this.framesMax &&
+            this.framesToClear.length > 0)
+        ) {
+          this.clear(this.framesToClear[0]);
+          this.framesToClear[0].remove = true;
+        }
+        if (this.frames.length >= 1) {
+          this.draw(this.frames[0]);
+        }
+        this.counter = 0;
+      }
 
-        // console.log(this.frames);
-          this.frame++;
+      // if(this.frame < this.framesMax + 1){
+      //   this.framesToDraw.push(this.frames[this.framesLocation]);
+      //   this.framesLocation++;
+      // }
+
+      // console.log(this.frames);
     }
   }
 
@@ -814,8 +892,8 @@ window.addEventListener("DOMContentLoaded", () => {
     blocks.pop();
     for (let i = 0; i < blocks.length; i++) {
       let b = blocks[i];
-        b.clearBlorg();
-        player.draw();
+      b.clearBlorg();
+      player.draw();
       b.clear();
       b.pos.y++;
     }
@@ -885,7 +963,7 @@ window.addEventListener("DOMContentLoaded", () => {
         );
         notes[notes.length - 1].volume = 0.5;
         notes[notes.length - 1].play();
-        if(blocks[blocksNum - 1].blorg.chance){
+        if (blocks[blocksNum - 1].blorg.chance) {
           blorgs++;
         }
       }
@@ -907,7 +985,7 @@ window.addEventListener("DOMContentLoaded", () => {
         );
         notes[notes.length - 1].volume = 0.5;
         notes[notes.length - 1].play();
-        if(blocks[blocksNum - 1].blorg.chance){
+        if (blocks[blocksNum - 1].blorg.chance) {
           blorgs++;
           console.log(blorgs);
         }
