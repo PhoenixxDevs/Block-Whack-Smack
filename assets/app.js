@@ -17,6 +17,24 @@ window.addEventListener("DOMContentLoaded", () => {
   const html = document.querySelector("html");
   const loader = document.querySelector("#load");
 
+  const modes = {
+    arcade: {
+      config: {
+        playerLosesLife: true
+      },
+    },
+    speed: {
+      config: {
+        playerLosesLife: false,
+      },
+    },
+    endless: {
+      config: {
+        playerLosesLife: false,
+      },
+    },
+  };
+
   /////////////////////  IMAGES
   const playerSprite = new Image();
   const blockTexture = new Image();
@@ -220,7 +238,7 @@ window.addEventListener("DOMContentLoaded", () => {
   ////////////////////////// PLAYER CLASS
 
   class Player {
-    constructor(pos, playerNumber) {
+    constructor(pos, playerNumber, takesDamage) {
       this.playerNumber = playerNumber;
       switch (this.playerNumber) {
         case 0:
@@ -580,7 +598,7 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
     typeBlock() {
-      this.size = Math.floor(Math.random() * 5) + 4;
+      this.size = Math.floor(Math.random() * 2) + 2;
       this.pos = {
         x:
           Math.floor(Math.random() * this.blockDescriptor.width) +
@@ -607,9 +625,9 @@ window.addEventListener("DOMContentLoaded", () => {
       this.colorPalette = [
         "#FAE2C3",
         "#FFF78A",
-        "#FFE382",
-        "#FFC47E",
-        "#FFBD94",
+        "#FFE",
+        "#FF4E",
+        "#FFBD",
       ];
       this.color =
         this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
@@ -714,7 +732,7 @@ window.addEventListener("DOMContentLoaded", () => {
       this.type = type; // 'color' or 'blast'
       this.pos = {
         x: WIDTH / 2,
-        y: Math.floor(player.pos0.y * 0.99),
+        y: Math.floor(player.pos0.y * 1.02),
       };
       this.width;
       this.height;
@@ -758,7 +776,8 @@ window.addEventListener("DOMContentLoaded", () => {
                   x:
                     this.frame * this.width -
                     this.frameOffset * this.width +
-                    WIDTH / 2,
+                    WIDTH / 2 +
+                    player.width,
                   y: this.pos.y,
                 },
                 remove: false,
@@ -775,13 +794,13 @@ window.addEventListener("DOMContentLoaded", () => {
             ) {
               this.frameConfig = {
                 spriteX: dustFXConfig.x[dustFXConfig.x.length - this.frame],
-                spriteY: dustFXConfig.y[0] + 10
-                ,
+                spriteY: dustFXConfig.y[0] + 10,
                 pos: {
                   x:
                     WIDTH / 2 -
                     this.frame * this.width +
-                    this.frameOffset * this.width,
+                    this.frameOffset * this.width -
+                    player.width,
                   y: this.pos.y,
                 },
                 remove: false,
