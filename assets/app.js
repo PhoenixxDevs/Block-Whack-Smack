@@ -21,36 +21,36 @@ window.addEventListener("DOMContentLoaded", () => {
     arcade: {
       config: {
         playerLosesLife: true,
-        blorgChance: 1
+        blorgChance: 0.6,
       },
     },
     speed: {
       config: {
         playerLosesLife: false,
-        blorgChance: 1
+        blorgChance: 0.8,
       },
     },
     endless: {
       config: {
         playerLosesLife: false,
-        blorgChance: 1
+        blorgChance: 0.2,
       },
     },
-    select(mode){
+    select(mode) {
       let result;
-      switch(mode){
-        case 'arcade': 
+      switch (mode) {
+        case "arcade":
           result = this.arcade.config;
-        break;
-        case 'speed': 
+          break;
+        case "speed":
           result = this.speed.config;
-        break;
-        case 'endless': 
+          break;
+        case "endless":
           result = this.endless.config;
-        break;
+          break;
       }
       return result;
-    }
+    },
   };
 
   /////////////////////  IMAGES
@@ -250,6 +250,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let gamePrepped = false;
   let gamePaused = false;
   let running = false;
+  let gameConfig = modes.select("endless");
 
   /////////////////////////////// CLASSES
 
@@ -398,6 +399,24 @@ window.addEventListener("DOMContentLoaded", () => {
       }
       this.drawHealthBar();
     }
+    playerMove() {
+      this.setState("attack");
+      this.update();
+      this.isMoving = false;
+      effects.push(new Effect("color"));
+      checkDeath();
+      updateArray(blocks);
+    }
+    stateHandler() {
+      if (this.stateCounter > this.stateTime) {
+        this.setState("idle");
+        this.stateCounter = 0;
+        this.isCounting = false;
+        this.update();
+      } else {
+        this.stateCounter += delta;
+      }
+    }
     update() {
       this.draw();
     }
@@ -440,7 +459,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
       // blorg
       this.blorg = {
-        chance: Math.round(Math.random()),
+        chance: chanceBool(gameConfig.blorgChance),
         left: {},
         right: {
           x: this.pos.x + this.width + this.branchWidth / 2,
@@ -640,13 +659,7 @@ window.addEventListener("DOMContentLoaded", () => {
       this.grav = true;
       this.gravity = 0.2;
       this.bounceMultiplier = -0.6;
-      this.colorPalette = [
-        "#FAE2C3",
-        "#FFF78A",
-        "#FFE",
-        "#FF4E",
-        "#FFBD",
-      ];
+      this.colorPalette = ["#FAE2C3", "#FFF78A", "#FFE", "#FF4E", "#FFBD"];
       this.color =
         this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
     }
@@ -1069,6 +1082,13 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  //EXAMPLE float = 0.7 = 70% chance;
+  function chanceBool(float) {
+    let result;
+    Math.random() < float ? (result = true) : (result = false);
+    return result;
+  }
+
   /////////////////////////////// SET UP
 
   function init() {
@@ -1150,20 +1170,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
       // Player
       if (player.isMoving) {
-        playerMove();
+        player.playerMove();
       }
 
       if (player.isCounting) {
-        if (player.stateCounter > player.stateTime) {
-          player.setState("idle");
-          player.stateCounter = 0;
-          player.isCounting = false;
-          player.update();
-        } else {
-          player.stateCounter += delta;
-        }
+        player.stateHandler();
       }
-      if (player.losingHealth) {
+      if (gameConfig.playerLosesLife && player.losingHealth) {
         player.handleHealth();
       }
 
@@ -1177,15 +1190,6 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   /////////////////// INPUT AND HANDLERS
-
-  function playerMove() {
-    player.setState("attack");
-    player.update();
-    player.isMoving = false;
-    effects.push(new Effect("color"));
-    checkDeath();
-    updateArray(blocks);
-  }
 
   window.addEventListener("resize", resize);
   window.addEventListener("keydown", function (e) {
