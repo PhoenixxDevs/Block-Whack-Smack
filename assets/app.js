@@ -20,19 +20,37 @@ window.addEventListener("DOMContentLoaded", () => {
   const modes = {
     arcade: {
       config: {
-        playerLosesLife: true
+        playerLosesLife: true,
+        blorgChance: 1
       },
     },
     speed: {
       config: {
         playerLosesLife: false,
+        blorgChance: 1
       },
     },
     endless: {
       config: {
         playerLosesLife: false,
+        blorgChance: 1
       },
     },
+    select(mode){
+      let result;
+      switch(mode){
+        case 'arcade': 
+          result = this.arcade.config;
+        break;
+        case 'speed': 
+          result = this.speed.config;
+        break;
+        case 'endless': 
+          result = this.endless.config;
+        break;
+      }
+      return result;
+    }
   };
 
   /////////////////////  IMAGES
