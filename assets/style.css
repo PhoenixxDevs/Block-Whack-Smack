@@ -10,8 +10,16 @@ body {
   overflow: hidden !important;
   font-family: "Rubik Doodle Shadow", "Helvetica Neue", "Helvetica";
   word-spacing: 5px;
+}
+
+#background-page {
+  position: absolute;
+  z-index: -1000;
+  top: -100%; left: -100%;
+  width: 300%;
+  height: 300%;
   background-image: url(img/nebula01.png);
-  animation: moveBackground 20s ease-in-out infinite alternate-reverse;
+  animation: moveBackground 100s ease-in-out infinite alternate-reverse;
 }
 
 canvas {
@@ -229,6 +237,16 @@ canvas {
   float: right;
 }
 
+#endless-time{
+  position: absolute;
+  bottom: 10px;
+  left: 5px;
+  margin: 30px;
+  font-size: 32px;
+  color: rgb(244, 239, 209);
+  text-shadow: 0 0 2px #000;
+}
+
 strong {
   font-size: 28px;
   font-weight: 800;
@@ -392,18 +410,21 @@ strong {
 @keyframes moveBackground {
   0% {
     background-position: -30px -10px;
+    transform: rotateZ(0deg);
   }
   30% {
     background-position: -20px 10px;
   }
   50% {
     background-position: 0 10px;
+    transform: rotateZ(-100deg);
   }
   80% {
     background-position: -10px -10px;
   }
   100% {
     background-position: -30px -10px;
+    transform: rotateZ(0deg);
   }
 }
 
