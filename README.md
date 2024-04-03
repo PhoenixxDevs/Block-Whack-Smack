@@ -21,3 +21,4 @@ https://kenney.nl/assets/
 https://css-loaders.com/arcade/
 https://www.freepik.com/free-photo/aluminum-plate-with-indentations_932662.htm#query=grip%20texture&position=12&from_view=keyword&track=ais&uuid=254d1bd8-8d7a-4304-b258-e5134c7569ef
 https://www.geeksforgeeks.org/how-to-place-background-image-using-before-pseudo-selectors-in-css/
+chat gpt "bestTime = bestTime ? parseFloat(bestTime) : 100;"

@@ -13,11 +13,14 @@
     />
   </head>
   <body>
+    <div id="background-page"></div>
     <div id="load">
       <div class="loader"></div>
     </div>
     <h3 id="score" class="hide scoreboard"></h3>
     <h4 id="hi-score" class="hide scoreboard"></h4>
+    <h3 id="endless-time"></h3>
+    
     <div id="start-screen" class="idle">
       <div id="planet-title">
         <div class="menu-player-container" id="menu-player-left"></div>
@@ -33,10 +36,10 @@
         </div>
         <div id="start-menu">
           <ul>
-            <li>Start Game<span class="key-enter"></span></li>
-            <li>Mode Select</li>
-            <li>How To Play</li>
-            <li>Blorg Shop</li>
+            <li id="button-start">Start Game<span class="key-enter"></span></li>
+            <li id="button-mode-select">Mode Select</li>
+            <li id="button-how-to">How To Play</li>
+            <li id="button-shop">Blorg Shop</li>
           </ul>
         </div>
       </div>
@@ -57,6 +60,12 @@
     <canvas id="canvas3" style="z-index: -7"></canvas>
     <canvas id="canvas"></canvas>
     <canvas id="canvas2"></canvas>
-    <script src="assets/app.js" defer></script>
+    <div id="modal" class="hide"></div>
+    <div id="mode-select">
+      
+    </div>
+    <script src="assets/js/app.js" ></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/class.js" defer></script>
   </body>
 </html>

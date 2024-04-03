@@ -16,6 +16,12 @@ const endScoreHi = document.getElementById("score-end-hi");
 const html = document.querySelector("html");
 const loader = document.querySelector("#load");
 const counterOnscreen = document.querySelector("#endless-time");
+const mainMenu = {
+  start: document.getElementById("button-start"),
+  mode: document.getElementById("button-mode-select"),
+  help: document.getElementById("button-how-to"),
+  shop: document.getElementById("button-shop")
+}
 
 const modes = {
   arcade: {
@@ -371,7 +377,6 @@ addEventListener("DOMContentLoaded", () => {
       // Arrays
       updateArray(particles);
       updateArray(effects);
-      console.log(player);
 
       touch.x = null;
     }
@@ -387,6 +392,7 @@ addEventListener("DOMContentLoaded", () => {
     }
     switch (e.key) {
       case "Escape":
+        e.preventDefault();
         if (!gameStart || gameOver) {
           return;
         }
@@ -446,4 +452,5 @@ addEventListener("DOMContentLoaded", () => {
       start();
     }
   });
+  mainMenu.start.addEventListener('click', start);
 });
