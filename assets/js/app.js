@@ -267,7 +267,9 @@ let bestTime = localStorage.getItem("best-time");
 bestTime = bestTime ? parseFloat(bestTime) : 100;
 
 /////////////////////////////// SET UP
+
 addEventListener("DOMContentLoaded", () => {
+
   function init() {
     blocks = [];
     particles = [];
@@ -287,11 +289,11 @@ addEventListener("DOMContentLoaded", () => {
     // check where to spawn player and spawn
     switch (blocks[blocks.length - 1].type) {
       case 1:
-        player = new Player(1, 0);
+        player = new Player(1, 0, gameConfig.playerLosesLife);
         break;
       case 2:
       default:
-        player = new Player(0, 0);
+        player = new Player(0, 0, gameConfig.playerLosesLife);
         break;
     }
 
@@ -338,7 +340,7 @@ addEventListener("DOMContentLoaded", () => {
     loader.style.display = "none";
     gameLoaded = true;
     gamePrepped = true;
-  }, 2000);
+  }, 10);
 
   ///////////////////////////// GAMELOOP
   let screenTime = 0;

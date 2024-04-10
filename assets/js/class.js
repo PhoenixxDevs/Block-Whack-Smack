@@ -30,7 +30,7 @@
       };
       this.posLegacy = pos;
       this.color = "#FF44FF";
-      this.losingHealth = false;
+      takesDamage ? this.losingHealth = true : this.losingHealth = false;
       this.health = 100;
       this.healthRate = 0.08;
       this.healthAdd = 1.1;

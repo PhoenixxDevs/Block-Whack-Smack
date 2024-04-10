@@ -20,7 +20,7 @@
     <h3 id="score" class="hide scoreboard"></h3>
     <h4 id="hi-score" class="hide scoreboard"></h4>
     <h3 id="endless-time"></h3>
-    
+
     <div id="start-screen" class="idle">
       <div id="planet-title">
         <div class="menu-player-container" id="menu-player-left"></div>
@@ -34,17 +34,30 @@
             alt="Graphic of a green and purple planet."
           />
         </div>
-        <div id="start-menu">
+        <div id="start-menu" class="menu-animation">
           <ul>
             <li id="button-start">Start Game<span class="key-enter"></span></li>
-            <li id="button-mode-select">Mode Select</li>
+            <li id="button-mode-select">
+              Mode Select
+            </li>
             <li id="button-how-to">How To Play</li>
             <li id="button-shop">Blorg Shop</li>
           </ul>
         </div>
       </div>
     </div>
-    
+
+    <div id="mode-select" class="modal-passive">
+      <h3>Choose Your Mode</h3>
+      <form>
+        <radio class="mode-option mode-active">ARCADE <i class="fa-solid fa-question"></i
+          ><br /></radio>
+        <radio class="mode-option">SPEED <i class="fa-solid fa-question"></i
+          ><br /></radio>
+        <radio class="mode-option">ENDLESS <i class="fa-solid fa-question"></i
+          ><br /></radio>
+      </form>
+    </div>
 
     <div id="game-over" class="hide">
       <div class="game-over-container">
@@ -61,11 +74,12 @@
     <canvas id="canvas"></canvas>
     <canvas id="canvas2"></canvas>
     <div id="modal" class="hide"></div>
-    <div id="mode-select">
-      
-    </div>
-    <script src="assets/js/app.js" ></script>
+    <script src="assets/js/app.js"></script>
     <script src="assets/js/utils.js"></script>
     <script src="assets/js/class.js" defer></script>
+    <script
+      src="https://kit.fontawesome.com/1e38aabce3.js"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

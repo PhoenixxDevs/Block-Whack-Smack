@@ -87,7 +87,7 @@ function handleScore(reset, mode) {
     score++;
     scoreboard.innerText = `Score: ${score}`;
     console.log(timeTracker, bestTime);
-    if (score === 10) {
+    if (score === 100) {
       speedTimeStart = false;
       gameOver = true;
       gamePrepped = false;
