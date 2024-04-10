@@ -67,14 +67,17 @@
         }
       }
     }
-    draw() {
-      this.clear();
+    handlePos(){
       this.posLegacy = this.pos;
       if (!this.pos) {
         this.drawPos = this.pos0;
       } else {
         this.drawPos = this.pos1;
       }
+    }
+    draw() {
+      this.clear();
+      this.handlePos();
 
       ctx.drawImage(
         playerSprite,
@@ -133,6 +136,7 @@
         this.health = 100;
       }
       this.health -= this.healthRate;
+      this.handlePos();
       this.healthBar = {
         x: Math.floor(this.drawPos.x - this.width / 2),
         y: Math.floor(this.drawPos.y - this.height * 0.15),

@@ -19,8 +19,14 @@ const counterOnscreen = document.querySelector("#endless-time");
 const mainMenu = {
   start: document.getElementById("button-start"),
   mode: document.getElementById("button-mode-select"),
+  modeSelect: document.getElementById("mode-select"),
   help: document.getElementById("button-how-to"),
   shop: document.getElementById("button-shop")
+}
+const modeOptions = {
+  arcade: document.querySelector('span[value="arcade"]'),
+  speed: document.querySelector('span[value="speed"]'),
+  endless: document.querySelector('span[value="endless"]')
 }
 
 const modes = {
@@ -260,7 +266,7 @@ let gameOver = false;
 let gamePrepped = false;
 let gamePaused = false;
 let running = false;
-let gameConfig = modes.select("speed");
+let gameConfig;
 let speedTimeStart = 0;
 let speedTime = 0;
 let bestTime = localStorage.getItem("best-time");
@@ -270,7 +276,16 @@ bestTime = bestTime ? parseFloat(bestTime) : 100;
 
 addEventListener("DOMContentLoaded", () => {
 
-  function init() {
+  function handleModeSelect(mode){
+    modeOptions.arcade.classList.remove("mode-active");
+    modeOptions.speed.classList.remove("mode-active");
+    modeOptions.endless.classList.remove("mode-active");
+    mode.classList.add('mode-active');
+    gameConfig = modes.select(mode.innerText.toLowerCase());
+    prep();
+  }
+
+  function prep(){
     blocks = [];
     particles = [];
     notes = [];
@@ -281,6 +296,11 @@ addEventListener("DOMContentLoaded", () => {
       audioSetup();
     }
 
+    // arcade as default config
+    if(gameConfig === undefined){
+      gameConfig = modes.select('arcade');
+    }
+    
     // generate starting blocks
     for (let i = 0; i < blocksNum; i++) {
       blocks.push(new Block(i));
@@ -295,8 +315,12 @@ addEventListener("DOMContentLoaded", () => {
       default:
         player = new Player(0, 0, gameConfig.playerLosesLife);
         break;
-    }
+    }    
+  }
 
+  function init() {
+    prep();
+    
     // here "truthy" resets score
     handleScore(1);
 
@@ -343,7 +367,6 @@ addEventListener("DOMContentLoaded", () => {
   }, 10);
 
   ///////////////////////////// GAMELOOP
-  let screenTime = 0;
   function animate(timestamp) {
     if (!gamePaused) {
       //calculate time since last frame
@@ -455,4 +478,16 @@ addEventListener("DOMContentLoaded", () => {
     }
   });
   mainMenu.start.addEventListener('click', start);
+  mainMenu.mode.addEventListener('click', function() {
+    mainMenu.modeSelect.classList.toggle('modal-passive');
+  });
+  modeOptions.arcade.addEventListener('click', function(){
+    handleModeSelect(modeOptions.arcade)
+  });
+  modeOptions.speed.addEventListener('click', function(){
+    handleModeSelect(modeOptions.speed)
+  });
+  modeOptions.endless.addEventListener('click', function(){
+    handleModeSelect(modeOptions.endless)
+  });
 });

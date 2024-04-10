@@ -166,10 +166,10 @@ canvas {
   height: 42px;
 }
 
-#mode-select {
+.mode-select {
   position: absolute;
   left: 20%;
-  bottom: 20%;
+  bottom: 10%;
   width: 30%;
   z-index: 10;
   padding: 34px;
@@ -178,8 +178,9 @@ canvas {
   border-radius: 22px;
   color: rgb(252, 250, 200);
   background: rgba(126, 35, 103, 0.738);
+  transition: all .8s ease-in-out;
 }
-#mode-select h3 {
+.mode-select h3 {
   font-size: 34px;
   margin-bottom: 34px;
   text-align: center;
@@ -197,18 +198,36 @@ canvas {
   font-size: 28px;
   border-radius: 10px;
   color: rgb(110, 49, 129);
+  text-shadow: 
+  2px 3px 3px rgba(255, 244, 92, 0.68),
+  -2px 3px 3px rgba(255, 244, 92, 0.68),
+  2px -3px 3px rgba(255, 244, 92, 0.68),
+  -2px -3px 3px rgba(255, 244, 92, 0.68);
   background-color: rgba(112, 228, 226, 0.941);
 }
-#mode-select form radio i {
+.mode-form i {
   position: absolute;
   left: 80%;
   padding: 5px 8px;
   border: 2px solid rgb(252, 250, 200);
   border-radius: 50%;
 }
+.mode-form {
+  position: relative;
+}
+.mode-select form input {
+  position: absolute;
+  left: 20%;
+  display: block;
+}
 
 .mode-option {
   margin-top: 28px;
+}
+
+.modal-passive {
+  opacity: 0;
+  left: -50%;
 }
 
 .key-enter {
@@ -233,13 +252,6 @@ canvas {
   font-size: 22px;
   border-radius: 10px;
   background:rgba(221, 218, 150, 0.231);
-}
-
-.modal-passive {
-  width: 0%;
-  height: 0%;
-  opacity: 0;
-  transition: all .7s ease-in-out;
 }
 
 /* -- GAME OVER -- */

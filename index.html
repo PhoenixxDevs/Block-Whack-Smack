@@ -37,9 +37,7 @@
         <div id="start-menu" class="menu-animation">
           <ul>
             <li id="button-start">Start Game<span class="key-enter"></span></li>
-            <li id="button-mode-select">
-              Mode Select
-            </li>
+            <li id="button-mode-select">Mode Select</li>
             <li id="button-how-to">How To Play</li>
             <li id="button-shop">Blorg Shop</li>
           </ul>
@@ -47,18 +45,34 @@
       </div>
     </div>
 
-    <div id="mode-select" class="modal-passive">
+    <div id="mode-select" class="mode-select modal-passive">
       <h3>Choose Your Mode</h3>
-      <form>
-        <radio class="mode-option mode-active">ARCADE <i class="fa-solid fa-question"></i
-          ><br /></radio>
-        <radio class="mode-option">SPEED <i class="fa-solid fa-question"></i
-          ><br /></radio>
-        <radio class="mode-option">ENDLESS <i class="fa-solid fa-question"></i
-          ><br /></radio>
-      </form>
-    </div>
+      <div class="mode-form">
+        <span class="mode-option mode-active" value="arcade"
+          >ARCADE
+          <div class="tooltip"><i class="fa-solid fa-question"></i>
+            <div class="tooltip-text">
+              In Arcade Mode you will lose life over time at a continuous rate. Each time you whack a block you will gain a small amount back. The drop rate for Blorgs is set to medium.
+            </div>
+          </div>
+          </span
+        ><br />
+        <span class="mode-option" value="speed"
+          >SPEED<i class="fa-solid fa-question tooltip">
+            <span class="tooltip-text">
 
+            </span>
+          </i> </span
+        ><br />
+        <span class="mode-option" value="endless"
+          >ENDLESS<i class="fa-solid fa-question tooltip">
+            <span class="tooltip-text">
+
+            </span>
+          </i> </span
+        ><br />
+      </div>
+    </div>
     <div id="game-over" class="hide">
       <div class="game-over-container">
         <h1>GAME OVER</h1>
