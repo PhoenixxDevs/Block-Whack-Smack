@@ -230,3 +230,19 @@ function chanceBool(float) {
   Math.random() < float ? (result = true) : (result = false);
   return result;
 }
+
+function movePlayer(position){
+  if (!gameStart || gameOver || gamePaused) {
+    return;
+  }
+  if (!player.losingHealth) {
+    player.losingHealth = true;
+  }
+  if (gameConfig.mode === "speed" && !speedTimeStart) {
+    speedTimeStart = true;
+    speedTime = new Date().getTime();
+  }
+  player.pos = position;
+  player.isMoving = true;
+  player.health += player.healthAdd;
+}

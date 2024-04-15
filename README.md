@@ -14,11 +14,12 @@ A fun game where you have to avoid being smacked on the head as you whack blocks
 
 #Resources
 
-https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip
-https://developer.mozilla.org/en-US/docs/Web/API/Storage
+https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clip - efficient particle clear
+https://developer.mozilla.org/en-US/docs/Web/API/Storage 
 https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement
-https://kenney.nl/assets/
-https://css-loaders.com/arcade/
+https://kenney.nl/assets/ - game assets
+https://css-loaders.com/arcade/ - loading menu
 https://www.freepik.com/free-photo/aluminum-plate-with-indentations_932662.htm#query=grip%20texture&position=12&from_view=keyword&track=ais&uuid=254d1bd8-8d7a-4304-b258-e5134c7569ef
 https://www.geeksforgeeks.org/how-to-place-background-image-using-before-pseudo-selectors-in-css/
 chat gpt "bestTime = bestTime ? parseFloat(bestTime) : 100;"
+https://stackoverflow.com/questions/2011142/how-to-change-the-style-of-the-title-attribute-inside-an-anchor-tag - tooltip

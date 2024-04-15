@@ -7,27 +7,30 @@
 }
 
 body {
-  overflow: hidden !important;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   font-family: "Rubik Doodle Shadow", "Helvetica Neue", "Helvetica";
   word-spacing: 5px;
 }
 
 #background-page {
   position: absolute;
-  z-index: -1000;
   top: -100%;
   left: -100%;
   width: 300%;
   height: 300%;
+  z-index: -1000;
   background-image: url(img/nebula01.png);
   animation: moveBackground 100s ease-in-out infinite alternate-reverse;
 }
 
 canvas {
-  z-index: -1;
   position: absolute;
   top: 0;
   left: 0;
+  z-index: -1;
 }
 #canvas3 {
   width: 100vw;
@@ -42,9 +45,9 @@ canvas {
 
 .idle {
   position: relative;
-  z-index: 1;
   width: 100vw;
   height: 100vh;
+  z-index: 1;
   color: rgb(252, 250, 200);
 }
 .menu-animation {
@@ -53,29 +56,29 @@ canvas {
 }
 
 #planet-title {
-  display: block;
   position: relative;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -42%);
+  display: block;
   text-align: center;
 }
 
 #menu-planet {
-  z-index: -10;
-  left: -27%;
   position: relative;
+  left: -27%;
   max-width: 70%;
   margin-top: 35px;
+  z-index: -10;
   animation: planet-spin 240s linear infinite;
 }
 .menu-player-container {
-  overflow: hidden;
-  display: block;
   position: absolute;
   top: 5%;
   width: 100px;
   height: 140px;
+  display: block;
+  overflow: hidden;
   animation: menu-player 25s linear infinite;
 }
 
@@ -110,14 +113,14 @@ canvas {
 
 #start-menu {
   position: absolute;
-  width: 40%;
-  height: 50%;
   bottom: 15%;
   right: 1%;
+  width: 40%;
+  height: 50%;
 }
 #start-menu ul {
-  text-align: left;
   position: relative;
+  text-align: left;
   list-style-type: none;
 }
 
@@ -132,13 +135,13 @@ canvas {
 }
 
 #start-menu ul li::before {
-  width: 60px;
-  height: 60px;
   position: absolute;
-  content: "";
   left: -80px;
   bottom: -12px;
+  width: 60px;
+  height: 60px;
   padding-right: 80px;
+  content: "";
 }
 #start-menu ul li:nth-last-of-type(1)::before {
   background: url("img/planets/planet08.png") no-repeat;
@@ -172,12 +175,13 @@ canvas {
   bottom: 10%;
   width: 30%;
   z-index: 10;
+  user-select: none;
   padding: 34px;
   font-size: 24px;
   line-height: 40px;
   border-radius: 22px;
   color: rgb(252, 250, 200);
-  background: rgba(126, 35, 103, 0.738);
+  background-color: rgba(126, 35, 103, 0.738);
   transition: all .8s ease-in-out;
 }
 .mode-select h3 {
@@ -187,23 +191,10 @@ canvas {
 }
 .mode-option {
   position: relative;
-  display: block;
+  margin-top: 28px;
   width: 100%;
+  display: block;
   cursor: pointer;
-}
-.mode-active {
-  padding: 4px;
-  padding-left: 20px;
-  padding-right: -10px;
-  font-size: 28px;
-  border-radius: 10px;
-  color: rgb(110, 49, 129);
-  text-shadow: 
-  2px 3px 3px rgba(255, 244, 92, 0.68),
-  -2px 3px 3px rgba(255, 244, 92, 0.68),
-  2px -3px 3px rgba(255, 244, 92, 0.68),
-  -2px -3px 3px rgba(255, 244, 92, 0.68);
-  background-color: rgba(112, 228, 226, 0.941);
 }
 .mode-form i {
   position: absolute;
@@ -221,21 +212,70 @@ canvas {
   display: block;
 }
 
-.mode-option {
-  margin-top: 28px;
+.mode-option:hover {
+  background-color: rgba(70, 12, 56, 0.738);
+  padding-left: 10px;
+  border-radius: 10px;
+}
+
+.mode-option i[tool]:hover::after {
+  position: absolute;
+  width: 350px;
+  left: 100px;
+  bottom: -40px;
+  padding: 10px;
+  content: attr(tool);
+  font-size: 16px;
+  line-height: 30px;
+  border-radius: 10px;
+  color:rgb(3, 40, 127);
+  background-color: rgba(253, 250, 86, 0.707);
+  text-shadow: 
+  2px 3px 3px rgba(255, 244, 92, 0.68),
+  -2px 3px 3px rgba(255, 244, 92, 0.68),
+  2px -3px 3px rgba(255, 244, 92, 0.68),
+  -2px -3px 3px rgba(255, 244, 92, 0.68);
 }
 
 .modal-passive {
-  opacity: 0;
   left: -50%;
+  opacity: 0;
+}
+
+.mode-active {
+  padding: 4px;
+  padding-left: 20px;
+  padding-right: -10px;
+  font-size: 28px;
+  border-radius: 10px;
+  color: rgb(110, 49, 129);
+  text-shadow: 
+  2px 3px 3px rgba(255, 244, 92, 0.68),
+  -2px 3px 3px rgba(255, 244, 92, 0.68),
+  2px -3px 3px rgba(255, 244, 92, 0.68),
+  -2px -3px 3px rgba(255, 244, 92, 0.68);
+  background-color: rgba(112, 228, 226, 0.941);
+}
+.mode-active:hover {
+  padding: 4px;
+  padding-left: 20px;
+  padding-right: -10px;
+  font-size: 28px;
+  border-radius: 10px;
+  color: rgb(110, 49, 129);
+  text-shadow: 
+  2px 3px 3px rgba(255, 244, 92, 0.68),
+  -2px 3px 3px rgba(255, 244, 92, 0.68),
+  2px -3px 3px rgba(255, 244, 92, 0.68),
+  -2px -3px 3px rgba(255, 244, 92, 0.68);
+  background-color: rgba(112, 228, 226, 0.941);
 }
 
 .key-enter {
-  position: relative;
+  position: absolute;
   top: -5px;
   width: 48px;
   height: 120px;
-  position: absolute;
   margin-left: 22px;
   content: "";
   background-image: url("img/key-tiles.png");
@@ -244,10 +284,10 @@ canvas {
 }
 
 .key-enter::after {
-  content: "ENTER";
   position: absolute;
   top: 54px;
   left: -24px;
+  content: "ENTER";
   padding: 8px;
   font-size: 22px;
   border-radius: 10px;
@@ -269,22 +309,22 @@ canvas {
 }
 
 #game-over h1 {
+  padding-top: 60px;
   font-size: 34px;
   text-align: center;
-  padding-top: 60px;
 }
 
 #game-over h3 {
+  margin-top: 40px;
   font-size: 28px;
   text-align: center;
-  margin-top: 40px;
 }
 
 #game-over h5 {
-  font-size: 20px;
+  margin-top: 30px;
   padding: 10px;
   text-align: center;
-  margin-top: 30px;
+  font-size: 20px;
 }
 
 .scoreboard {
@@ -322,12 +362,12 @@ strong {
 /* -- LOADING SCREEN -- */
 
 #load {
-  z-index: 100;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 100;
   background-color: rgb(25, 0, 46);
 }
 
@@ -356,13 +396,13 @@ strong {
   color: #5efffc;
 }
 .loader::after {
-  content: "";
   position: absolute;
-  width: 10px;
-  height: 14px;
-  background: #25adda;
   left: -10px;
   bottom: 100%;
+  width: 10px;
+  height: 14px;
+  content: "";
+  background: #25adda;
   animation: l8-1 3s infinite linear;
 }
 
@@ -536,5 +576,12 @@ strong {
   100% {
     transform: rotate(-15deg);
     transform: rotate(-15deg) translateY(0);
+  }
+}
+
+
+@media screen and (max-width: 500px) {
+  #planet-title {
+    transform: translate(-50%, -60%);
   }
 }

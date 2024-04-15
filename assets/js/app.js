@@ -351,7 +351,8 @@ addEventListener("DOMContentLoaded", () => {
   function start() {
     if (!gameStart) {
       init();
-      gameStartScreen.classList.toggle("hide");
+      gameStartScreen.classList.add("hide");
+      mainMenu.modeSelect.classList.add('modal-passive');
       gameStart = true;
     }
     if (gameOver && gamePrepped) {
@@ -426,36 +427,12 @@ addEventListener("DOMContentLoaded", () => {
       case "ArrowLeft":
       case "a":
       case "A":
-        if (!gameStart || gameOver || gamePaused) {
-          return;
-        }
-        if (!player.losingHealth) {
-          player.losingHealth = true;
-        }
-        if (gameConfig.mode === "speed" && !speedTimeStart) {
-          speedTimeStart = true;
-          speedTime = new Date().getTime();
-        }
-        player.pos = 0;
-        player.isMoving = true;
-        player.health += player.healthAdd;
+        movePlayer(0);
         break;
       case "ArrowRight":
       case "d":
       case "D":
-        if (!gameStart || gameOver || gamePaused) {
-          return;
-        }
-        if (!player.losingHealth) {
-          player.losingHealth = true;
-        }
-        if (gameConfig.mode === "speed" && !speedTimeStart) {
-          speedTimeStart = true;
-          speedTime = new Date().getTime();
-        }
-        player.pos = 1;
-        player.isMoving = true;
-        player.health += player.healthAdd;
+        movePlayer(1);
         break;
       case "Enter":
         if (gameLoaded) {
@@ -467,15 +444,13 @@ addEventListener("DOMContentLoaded", () => {
   window.addEventListener("touchstart", (e) => {
     touch.x = Math.floor(e.changedTouches[0].clientX);
     if (touch.x < WIDTH / 2 && !gameOver) {
-      player.pos = 0;
-      player.isMoving = true;
+      movePlayer(0);
     } else if (touch.x >= WIDTH / 2 && !gameOver) {
-      player.pos = 1;
-      player.isMoving = true;
+      movePlayer(1);
     }
-    if (gameLoaded && gamePrepped) {
-      start();
-    }
+    // if (gameLoaded && gamePrepped) {
+    //   start();
+    // }
   });
   mainMenu.start.addEventListener('click', start);
   mainMenu.mode.addEventListener('click', function() {
