@@ -345,8 +345,13 @@ canvas {
   background-color: rgba(73, 17, 59, 0.843);
 }
 .how-to p span {
-  font-size: 22px;
+  display: inline-block;
+  width: 40%;
+  font-size: 25px;
+  font-weight: 800;
+  margin: 20px 30%;
   color: rgb(255, 0, 0);
+  text-align: center;
   text-shadow: 
   0 0 7px rgba(144, 230, 231, 0.842),
   1px 0 7px rgba(144, 230, 231, 0.842),
@@ -371,7 +376,7 @@ canvas {
 }
 .how-to h3 { 
   display: inline-block;
-  font-size: 26px;
+  font-size: 28px;
   padding: 12px;
   margin-top: 36px;
   margin-left: 20px;
