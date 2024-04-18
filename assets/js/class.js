@@ -32,7 +32,7 @@
       this.color = "#FF44FF";
       takesDamage ? this.losingHealth = true : this.losingHealth = false;
       this.health = 100;
-      this.healthRate = 0.08;
+      this.healthRate = 0.1;
       this.healthAdd = 1.1;
       this.healthBar = {};
     }

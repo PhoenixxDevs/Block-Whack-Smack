@@ -21,6 +21,7 @@ const mainMenu = {
   mode: document.getElementById("button-mode-select"),
   modeSelect: document.getElementById("mode-select"),
   help: document.getElementById("button-how-to"),
+  helpModal: document.getElementById("how-to-modal"),
   shop: document.getElementById("button-shop")
 }
 const modeOptions = {
@@ -28,6 +29,8 @@ const modeOptions = {
   speed: document.querySelector('span[value="speed"]'),
   endless: document.querySelector('span[value="endless"]')
 }
+const modalClosers =  document.querySelectorAll('.close-container');
+console.log(modalClosers)
 
 const modes = {
   arcade: {
@@ -353,6 +356,7 @@ addEventListener("DOMContentLoaded", () => {
       init();
       gameStartScreen.classList.add("hide");
       mainMenu.modeSelect.classList.add('modal-passive');
+      mainMenu.helpModal.classList.add('modal-passive');
       gameStart = true;
     }
     if (gameOver && gamePrepped) {
@@ -455,6 +459,21 @@ addEventListener("DOMContentLoaded", () => {
   mainMenu.start.addEventListener('click', start);
   mainMenu.mode.addEventListener('click', function() {
     mainMenu.modeSelect.classList.toggle('modal-passive');
+    if(mainMenu.helpModal.classList.contains('modal-passive')){
+      return;
+    }
+    else {
+      mainMenu.helpModal.classList.toggle('modal-passive');
+    }
+  });
+  mainMenu.help.addEventListener('click', function() {
+    mainMenu.helpModal.classList.toggle('modal-passive');
+    if(mainMenu.modeSelect.classList.contains('modal-passive')){
+      return;
+    }
+    else {
+      mainMenu.modeSelect.classList.toggle('modal-passive');
+    }
   });
   modeOptions.arcade.addEventListener('click', function(){
     handleModeSelect(modeOptions.arcade)
@@ -464,5 +483,11 @@ addEventListener("DOMContentLoaded", () => {
   });
   modeOptions.endless.addEventListener('click', function(){
     handleModeSelect(modeOptions.endless)
+  });
+  modalClosers[0].addEventListener('click', function(){
+    mainMenu.modeSelect.classList.toggle('modal-passive');
+  });
+  modalClosers[1].addEventListener('click', function(){
+    mainMenu.helpModal.classList.toggle('modal-passive');
   });
 });
