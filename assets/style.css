@@ -464,6 +464,13 @@ canvas {
   text-shadow: 0 0 2px #000;
 }
 
+strong {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+/* -- VOLUME ICON -- */
+
 .icon-volume {
   position: absolute;
   display: block;
@@ -506,9 +513,17 @@ canvas {
   background-color:white;
 }
 
-strong {
-  font-size: 28px;
-  font-weight: 800;
+.volume-ring {
+  top: 50%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  width: 10%;
+  height: 10%;
+  border: 5px solid white;
+  border-left: none;
+  border-top: none;
+  border-bottom: none;
+  border-radius: 50%;
 }
 
 /* -- LOADING SCREEN -- */
