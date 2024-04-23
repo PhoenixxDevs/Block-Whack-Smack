@@ -18,12 +18,12 @@
       <div class="loader"></div>
     </div>
 
-      <!-- SCOREBOARD -->
+    <!-- SCOREBOARD -->
     <h3 id="score" class="hide scoreboard"></h3>
     <h4 id="hi-score" class="hide scoreboard"></h4>
     <h3 id="endless-time"></h3>
 
-      <!-- MAIN MENU -->
+    <!-- MAIN MENU -->
     <div id="start-screen" class="idle">
       <div id="planet-title">
         <div class="menu-player-container" id="menu-player-left"></div>
@@ -37,7 +37,7 @@
             alt="Graphic of a green and purple planet."
           />
         </div>
-          <!-- MENU ITEMS -->
+        <!-- MENU ITEMS -->
         <div id="start-menu" class="menu-animation">
           <ul>
             <li id="button-start">Start Game<span class="key-enter"></span></li>
@@ -49,7 +49,7 @@
       </div>
     </div>
 
-      <!-- MODE SELECT MODAL -->
+    <!-- MODE SELECT MODAL -->
 
     <div id="mode-select" class="mode-select modal-passive">
       <div class="close-container mode-close">X</div>
@@ -57,58 +57,80 @@
       <div class="mode-form">
         <span class="mode-option mode-active" value="arcade"
           >ARCADE
-            <i class="fa-solid fa-question" tool="Lose life over time. Gain a small portion of life each time you whack a block. Medium Blorg spawn chance."></i>
-          </span
+          <i
+            class="fa-solid fa-question"
+            tool="Lose life over time. Gain a small portion of life each time you whack a block. Medium Blorg spawn chance."
+          ></i> </span
         ><br />
         <span class="mode-option" value="speed"
-          >SPEED<i class="fa-solid fa-question" tool="Fastest time to 100 blocks whacked. High Blorg spawn chance.">
+          >SPEED<i
+            class="fa-solid fa-question"
+            tool="Fastest time to 100 blocks whacked. High Blorg spawn chance."
+          >
           </i> </span
         ><br />
         <span class="mode-option" value="endless"
-          >ENDLESS<i class="fa-solid fa-question" tool="No life and no timer, see how long you can last before getting smacked! Low Blorg spawn chance.">
+          >ENDLESS<i
+            class="fa-solid fa-question"
+            tool="No life and no timer, see how long you can last before getting smacked! Low Blorg spawn chance."
+          >
           </i> </span
         ><br />
       </div>
     </div>
 
-      <!-- HOW TO PLAY MODAL -->
+    <!-- HOW TO PLAY MODAL -->
 
     <div class="how-to modal-passive" id="how-to-modal">
       <div class="close-container">X</div>
-      <h2> How to Play </h2>
+      <h2>How to Play</h2>
       <p id="instructions">
-        Use the Left and Right arrow keys or the 'A' and 'S' keys to mine the block in the center, earning a point for each one you successfully whack.
-        Each time you whack a block, the tower will shrink by 1. 
-        Be careful of the spiked branches above you though as they fall, if they smack you it will cause critical damage and trust me...
-        <br>
+        Use the Left and Right arrow keys or the 'A' and 'S' keys to mine the
+        block in the center, earning a point for each one you successfully
+        whack. Each time you whack a block, the tower will shrink by 1. Be
+        careful of the spiked branches above you though as they fall, if they
+        smack you it will cause critical damage and trust me...
+        <br />
         <span>You don't want that!</span>
-        <br>
-        Collect Blorgs to spend in the shop on some fancy new cosmetic items or game sounds!
-        There are three modes to choose from:
+        <br />
+        Collect Blorgs to spend in the shop on some fancy new cosmetic items or
+        game sounds! There are three modes to choose from:
       </p>
-        <ul>
-          <li>
-            <h3>Arcade</h3>
-            <p>You're injured but you still turned up for work? There's no saving you and you know it, but do your best to collect as many satte-logs as possible, 'kay champ? At least they provide a small amount of vitality so you won't meet your maker too quickly. Lets see just how long you can prolong the inevitable. Oh yeah, I almost forgot, there's a medium chance of finding Blorgs so grab as many as you can. I'll make sure your family get them.
-            </p>
-          </li>
-          <li>
-            <h3>Speed</h3>
-            <p>
-              Welcome back astro-ranger. Your mission is to mine 100 logs as fast as possible.
-              Try to beat your best time but remember there's a high chance of Blorgs appearing so you know what to do... unless you don't you want to be rich?
-            </p>
-          </li>
-          <li>
-            <h3>Endless</h3>
-            <p>
-              It's the weekend but you've decided to work overtime? Okay, no problem. Kick back and take your time, just be careful not to leave more blood on the spikes hahaha! Oh yeah, there's less Blorgs around on the weekends so I hope you're not trying to save up or anything.
-            </p>
-          </li>
-        </ul>
+      <ul>
+        <li>
+          <h3>Arcade</h3>
+          <p>
+            You're injured but you still turned up for work? There's no saving
+            you and you know it, but do your best to collect as many satte-logs
+            as possible, 'kay champ? At least they provide a small amount of
+            vitality so you won't meet your maker too quickly. Lets see just how
+            long you can prolong the inevitable. Oh yeah, I almost forgot,
+            there's a medium chance of finding Blorgs so grab as many as you
+            can. I'll make sure your family get them.
+          </p>
+        </li>
+        <li>
+          <h3>Speed</h3>
+          <p>
+            Welcome back astro-ranger. Your mission is to mine 100 logs as fast
+            as possible. Try to beat your best time but remember there's a high
+            chance of Blorgs appearing so you know what to do... unless you
+            don't you want to be rich?
+          </p>
+        </li>
+        <li>
+          <h3>Endless</h3>
+          <p>
+            It's the weekend but you've decided to work overtime? Okay, no
+            problem. Kick back and take your time, just be careful not to leave
+            more blood on the spikes hahaha! Oh yeah, there's less Blorgs around
+            on the weekends so I hope you're not trying to save up or anything.
+          </p>
+        </li>
+      </ul>
     </div>
 
-      <!-- GAME OVER SCREEN -->
+    <!-- GAME OVER SCREEN -->
     <div id="game-over" class="hide">
       <div class="game-over-container">
         <h1>GAME OVER</h1>
@@ -121,7 +143,7 @@
       </div>
     </div>
 
-    <div id="pause-screen" class="">
+    <div id="pause-screen" class="hide">
       <ul id="pause-menu">
         <li id="pause-resume">Resume</li>
         <li id="pause-options">Options</li>
@@ -131,7 +153,18 @@
         <li id="sfx-toggle" class="icon"></li>
       </ul>
     </div>
-      
+
+    <div class="icon-volume">
+      <div id="speaker"></div>
+      <div id="cone-mask">
+        <div id="cone"></div>
+      </div>
+      <!-- <div id="mute">x</div> -->
+      <div id="ring1"></div>
+      <div id="ring2"></div>
+      <div id="ring3"></div>
+    </div>
+
     <canvas id="canvas3" style="z-index: -7"></canvas>
     <canvas id="canvas"></canvas>
     <canvas id="canvas2"></canvas>
