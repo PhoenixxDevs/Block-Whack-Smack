@@ -474,11 +474,10 @@ strong {
 .icon-volume {
   position: absolute;
   display: block;
-  top: 50%;
-  left: 50%;
-  width: 400px;
-  height: 400px;
-  transform: translate(-50%, -50%);
+  top: 0; left: 0;
+  width: 40px;
+  height: 40px;
+  /* transform: translate(-50%, -50%); */
   background-color:red;
   z-index: 200;
 }
@@ -490,6 +489,8 @@ strong {
   left: 7%;
   width: 21%;
   height: 20%;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
   background-color:white;
 }
 #cone-mask {
@@ -541,7 +542,7 @@ strong {
   left: 70%;
   transform: translate(-30%, -55%);
   font-family: Arial;
-  font-size: 700%;
+  font-size: 100%;
   font-weight: 800;
   color: white;
 }
