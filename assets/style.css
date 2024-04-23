@@ -66,9 +66,9 @@ canvas {
 
 #menu-planet {
   position: relative;
-  left: -26%;
-  margin-bottom: -10%;
-  margin-top: 10%;
+  left: -20%;
+  margin-bottom: -5%;
+  margin-top: 8%;
   max-width: 100%;
   z-index: -10;
   animation: planet-spin 240s linear infinite;
@@ -115,8 +115,8 @@ canvas {
 
 #start-menu {
   position: absolute;
-  bottom: 15%;
-  right: -7%;
+  bottom: 20%;
+  right: -5%;
   width: 40%;
   height: 50%;
 }
@@ -429,6 +429,19 @@ canvas {
   font-size: 32px;
   color: rgb(244, 239, 209);
   text-shadow: 0 0 2px #000;
+}
+
+/* -- PAUSE SCREEN -- */
+#pause-screen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 150;
+}
+#pause-screen ul li {
+  list-style: none;
 }
 
 /* -- SCOREBOARD --  */
