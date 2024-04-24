@@ -439,9 +439,13 @@ canvas {
   transform: translate(-50%, -50%);
   text-align: center;
   z-index: 150;
+  background-color: wheat;
 }
 #pause-screen ul li {
   list-style: none;
+}
+#pause-options {
+  position: relative;
 }
 
 /* -- SCOREBOARD --  */
@@ -475,8 +479,8 @@ strong {
   position: absolute;
   display: block;
   top: 0; left: 0;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   /* transform: translate(-50%, -50%); */
   background-color:red;
   z-index: 200;
@@ -516,7 +520,7 @@ strong {
   transform: translate(-50%, -50%);
   width: 10%;
   height: 10%;
-  border: 12px solid white;
+  border: 3px solid white;
   border-left: none;
   border-top: none;
   border-bottom: none;
