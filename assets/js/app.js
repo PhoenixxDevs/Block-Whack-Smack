@@ -30,7 +30,7 @@ const modeOptions = {
   endless: document.querySelector('span[value="endless"]')
 }
 const modalClosers =  document.querySelectorAll('.close-container');
-console.log(modalClosers)
+const pauseScreen = document.getElementById('pause-container');
 
 const modes = {
   arcade: {
@@ -369,7 +369,7 @@ addEventListener("DOMContentLoaded", () => {
     loader.style.display = "none";
     gameLoaded = true;
     gamePrepped = true;
-  }, 10);
+  }, 50);
 
   ///////////////////////////// GAMELOOP
   function animate(timestamp) {
@@ -426,7 +426,14 @@ addEventListener("DOMContentLoaded", () => {
         if (!gameStart || gameOver) {
           return;
         }
-        !gamePaused ? (gamePaused = true) : (gamePaused = false);
+        if(!gamePaused) {
+          gamePaused = true;
+          pauseScreen.classList.remove('modal-passive');
+        } 
+        else {
+          gamePaused = false;
+          pauseScreen.classList.add('modal-passive');
+        } 
         break;
       case "ArrowLeft":
       case "a":

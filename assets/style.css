@@ -432,17 +432,46 @@ canvas {
 }
 
 /* -- PAUSE SCREEN -- */
+#pause-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
 #pause-screen {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  padding: 200px;
+  font-size: 30px;
+  letter-spacing: 6px;
+  line-height: 64px;
   text-align: center;
   z-index: 150;
-  background-color: wheat;
+  border-radius: 12px;
+  color: rgb(252, 250, 200);
+  background-color: rgba(126, 35, 103, 0.738);
+}
+#pause-screen ul {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
 }
 #pause-screen ul li {
   list-style: none;
+  cursor: pointer;
+  margin: 4px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+}
+#pause-screen ul li:hover {
+  background-color: rgba(3, 57, 60, 0.738);
+
 }
 #pause-options {
   position: relative;
@@ -478,10 +507,11 @@ strong {
 .icon-volume {
   position: absolute;
   display: block;
-  top: 0; left: 0;
+  top: 50%; left: 0;
   width: 30px;
   height: 30px;
   /* transform: translate(-50%, -50%); */
+  border-radius: 6px;
   background-color:red;
   z-index: 200;
 }
