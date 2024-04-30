@@ -16,6 +16,12 @@ const endScoreHi = document.getElementById("score-end-hi");
 const html = document.querySelector("html");
 const loader = document.querySelector("#load");
 const counterOnscreen = document.querySelector("#endless-time");
+const pauseMenu = {
+  resume: document.getElementById('pause-resume'),
+  options: document.getElementById('pause-options'),
+  restart: document.getElementById('pause-restart'),
+  exit: document.getElementById('pause-exit')
+}
 const mainMenu = {
   start: document.getElementById("button-start"),
   mode: document.getElementById("button-mode-select"),
@@ -497,4 +503,18 @@ addEventListener("DOMContentLoaded", () => {
   modalClosers[1].addEventListener('click', function(){
     mainMenu.helpModal.classList.toggle('modal-passive');
   });
+  pauseMenu.resume.addEventListener('click', function(){
+    if (!gameStart || gameOver) {
+      return;
+    }
+    if(!gamePaused) {
+      gamePaused = true;
+      pauseScreen.classList.remove('modal-passive');
+    } 
+    else {
+      gamePaused = false;
+      pauseScreen.classList.add('modal-passive');
+    } 
+  });
+  
 });

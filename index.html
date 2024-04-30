@@ -144,30 +144,33 @@
     </div>
 
     <div id="pause-container" class="modal-passive">
-    <div id="pause-screen">
-      <ul id="pause-menu">
-        <li id="pause-resume">Resume</li>
-        <li id="pause-options">
-          Options
-          <div id="music-toggle" class="icon">
-            <div class="icon-volume">
-              <div id="speaker"></div>
-              <div id="cone-mask">
-                <div id="cone"></div>
+      <div id="pause-screen">
+        <ul id="pause-menu">
+          <li id="pause-resume">Resume</li>
+          <li id="pause-options">
+            Options
+          </li>
+          <div id="options-drop-menu" class="hide-drop">
+            <div id="dummy">
+              <div id="music-toggle" class="icon">
+            </div>
+              <div class="icon-volume">
+                <div id="speaker"></div>
+                <div id="cone-mask">
+                  <div id="cone"></div>
+                </div>
+                <div id="ring1" class="volume-ring"></div>
+                <div id="ring2" class="volume-ring"></div>
+                <div id="ring3" class="volume-ring"></div>
+                <!-- <div id="mute">x</div> -->
               </div>
-              <div id="ring1" class="volume-ring"></div>
-              <div id="ring2" class="volume-ring"></div>
-              <div id="ring3" class="volume-ring"></div>
-              <div id="mute">x</div> 
             </div>
           </div>
-        <li id="sfx-toggle" class="icon"></li>
-        </li>
-        <li id="pause-restart">Restart</li>
-        <li id="pause-title">Exit To Title</li>
-      </ul>
+          <li id="pause-restart">Restart</li>
+          <li id="pause-exit">Exit To Title</li>
+        </ul>
+      </div>
     </div>
-  </div>
 
     <canvas id="canvas3" style="z-index: -7"></canvas>
     <canvas id="canvas"></canvas>

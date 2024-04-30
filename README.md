@@ -23,3 +23,4 @@ https://www.freepik.com/free-photo/aluminum-plate-with-indentations_932662.htm#q
 https://www.geeksforgeeks.org/how-to-place-background-image-using-before-pseudo-selectors-in-css/
 chat gpt "bestTime = bestTime ? parseFloat(bestTime) : 100;"
 https://stackoverflow.com/questions/2011142/how-to-change-the-style-of-the-title-attribute-inside-an-anchor-tag - tooltip
+https://stackoverflow.com/questions/10062811/can-i-set-the-height-of-a-div-based-on-a-percentage-based-width - volume button sizeq
