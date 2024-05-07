@@ -364,10 +364,23 @@ addEventListener("DOMContentLoaded", () => {
       mainMenu.modeSelect.classList.add('modal-passive');
       mainMenu.helpModal.classList.add('modal-passive');
       gameStart = true;
+      gamePassive = false;
     }
     if (gameOver && gamePrepped) {
       init();
     }
+  }
+  function exitTitle() {
+    gameStartScreen.classList.remove("hide");
+    prep();
+    gameStart = false;
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+    ctx2.clearRect(0, 0, WIDTH, HEIGHT);
+    ctx3.clearRect(0, 0, WIDTH, HEIGHT);
+    scoreboard.classList.add('hide');
+    scoreboardHi.classList.add('hide');
+    counterOnscreen.classList.add('hide');
+    pauseScreen.classList.add('modal-passive');
   }
 
   // Placeholder loader function
@@ -516,5 +529,6 @@ addEventListener("DOMContentLoaded", () => {
       pauseScreen.classList.add('modal-passive');
     } 
   });
+  pauseMenu.exit.addEventListener('click', exitTitle);
   
 });

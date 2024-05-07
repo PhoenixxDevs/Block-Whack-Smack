@@ -459,6 +459,7 @@ canvas {
   border-bottom: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 6px;
   background-color: rgba(74, 15, 60, 0.786);
+  box-shadow: 0 3px 4px rgba(255, 255, 255, 0.7);
   transition: all 0.1s ease-in-out;
 }
 #pause-screen ul li:hover {
