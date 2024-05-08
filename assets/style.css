@@ -22,7 +22,7 @@ body {
   width: 300%;
   height: 300%;
   z-index: -1000;
-  background-image: url(img/nebula01.png);
+  background-image: url(img/nebula01.webp);
   animation: moveBackground 100s ease-in-out infinite alternate-reverse;
 }
 
@@ -85,13 +85,13 @@ canvas {
 
 #menu-player-left {
   left: 5%;
-  background-image: url("img/players.png");
+  background-image: url("img/players.webp");
   background-position: 0 0;
 }
 
 #menu-player-right {
   right: 5%;
-  background-image: url("img/players.png");
+  background-image: url("img/players.webp");
   background-position: -100px -280px;
 }
 
@@ -99,7 +99,7 @@ canvas {
   width: 65%;
   margin: -20px auto;
   padding: 25px 10px;
-  background-image: url(img/aluminum-plate-with-indentations.png);
+  background-image: url(img/aluminum-plate-with-indentations.webp);
   background-position: center;
   background-size: 100%;
   border: 6px solid rgb(221, 218, 150);
@@ -150,19 +150,19 @@ canvas {
   content: "";
 }
 #start-menu ul li:nth-last-of-type(1)::before {
-  background: url("img/planets/planet08.png") no-repeat;
+  background: url("img/planets/planet08.webp") no-repeat;
   background-size: 60px 60px;
 }
 #start-menu ul li:nth-last-of-type(2)::before {
-  background: url("img/planets/planet09.png") no-repeat;
+  background: url("img/planets/planet09.webp") no-repeat;
   background-size: 60px 60px;
 }
 #start-menu ul li:nth-last-of-type(3)::before {
-  background: url("img/planets/planet05.png") no-repeat;
+  background: url("img/planets/planet05.webp") no-repeat;
   background-size: 60px 60px;
 }
 #start-menu ul li:nth-last-of-type(4)::before {
-  background: url("img/planets/planet00.png") no-repeat;
+  background: url("img/planets/planet00.webp") no-repeat;
   background-size: 60px 60px;
 }
 

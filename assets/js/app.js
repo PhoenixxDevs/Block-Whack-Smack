@@ -89,7 +89,7 @@ const dustFX = new Image();
 const dustFXRev = new Image();
 const blorg = new Image();
 
-playerSprite.src = "assets/img/players.png";
+playerSprite.src = "assets/img/players.webp";
 const playerSpriteDimensions = {
   width: 100,
   height: 140,
@@ -121,7 +121,7 @@ const player0Sprite_states = {
   },
 };
 const blockTextureConfig = {
-  src: "assets/img/metal.png",
+  src: "assets/img/metal.webp",
   width: 150,
   height: 225,
   pos: [
@@ -161,7 +161,7 @@ const blockTextureConfig = {
 };
 blockTexture.src = blockTextureConfig.src;
 const branchTextureConfig = {
-  src: "assets/img/branch.png",
+  src: "assets/img/branch.webp",
   width: 225,
   height: 76,
   pos: [
@@ -209,7 +209,7 @@ const branchTextureConfig = {
 };
 branchTexture.src = branchTextureConfig.src;
 const spikeTextureConfig = {
-  src: "assets/img/spikes.png",
+  src: "assets/img/spikes.webp",
   x: 0,
   y: 0,
   width: 128,
@@ -217,8 +217,8 @@ const spikeTextureConfig = {
 };
 spikeTexture.src = spikeTextureConfig.src;
 const dustFXConfig = {
-  src: "assets/img/dustfx.png",
-  srcRev: "assets/img/dustfx-rev.png",
+  src: "assets/img/dustfx.webp",
+  srcRev: "assets/img/dustfx-rev.webp",
   x: [0, 80, 160, 240, 320, 400, 480, 560, 640, 720, 800, 880, 960, 1040, 1120],
   y: [0, 100],
   width: 80,
@@ -227,7 +227,7 @@ const dustFXConfig = {
 dustFX.src = dustFXConfig.src;
 dustFXRev.src = dustFXConfig.srcRev;
 const blorgConfig = {
-  src: "assets/img/blorg.png",
+  src: "assets/img/blorg.webp",
   x: 0,
   y: 0,
   width: 300,
